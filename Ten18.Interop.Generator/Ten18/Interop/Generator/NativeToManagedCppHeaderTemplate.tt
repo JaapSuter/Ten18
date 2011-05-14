@@ -1,0 +1,22 @@
+﻿<#@ template debug="true" language="C#" #>
+#pragma once
+
+<# foreach (var nameSpaceName in NameSpaceNames) { #>namespace <#= nameSpaceName #> { <#}#>
+
+    class <#= Type.Name #>
+    {
+<# foreach (var methodInfo in MethodInfos) { #>
+        virtual <#=NativeReturnTypeOf(methodInfo)#> __stdcall <#= methodInfo.Name #>(<#=NativeParameterListOf(methodInfo)#>);
+<#}#>
+
+		virtual __stdcall ~<#= Type.Name #>() {};
+    };
+	
+/*
+extern "C" __declspec(dllexport) std::intptr_t __cdecl New<#= Type.Name #>()
+{
+	return reinterpret_cast<std::intptr_t>(new <#= Type.Name #>());
+}
+*/
+
+<# foreach (var nameSpaceName in NameSpaceNames) { #>}<#}#>

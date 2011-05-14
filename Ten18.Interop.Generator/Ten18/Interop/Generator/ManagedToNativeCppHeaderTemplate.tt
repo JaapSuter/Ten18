@@ -1,0 +1,13 @@
+﻿<#@ template debug="true" language="C#" #>
+#pragma once
+
+<# foreach (var nameSpaceName in NameSpaceNames) { #>namespace <#= nameSpaceName #> { <#}#>
+
+    struct __declspec(uuid("<#= Guid.ToString() #>")) <#= Type.Name #>  : IUnknown
+    {	
+<# foreach (var methodInfo in MethodInfos) { #>
+        virtual <#=NativeReturnTypeOf(methodInfo)#> __stdcall <#= methodInfo.Name #>(<#=NativeParameterListOf(methodInfo)#>) = 0;
+<#}#>
+    };
+	
+<# foreach (var nameSpaceName in NameSpaceNames) { #>}<#}#>

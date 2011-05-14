@@ -1,0 +1,14 @@
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.ilk
+*.log
+*.lib
+*.sbr
+*.sdf
+ipch/
+obj/
+bin/
+
