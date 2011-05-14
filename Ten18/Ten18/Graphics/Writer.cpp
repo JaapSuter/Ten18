@@ -129,10 +129,11 @@ ID3D11ShaderResourceView* Writer::Render(const wchar_t* text)
     return mD3D11ShaderResourceView.Raw();
 }
 
-IFACEMETHODIMP Writer::DrawGlyphRun(__maybenull void* clientDrawingContext, FLOAT baselineOriginX, FLOAT baselineOriginY,
-    DWRITE_MEASURING_MODE measuringMode, __in DWRITE_GLYPH_RUN const* glyphRun, __in DWRITE_GLYPH_RUN_DESCRIPTION const* glyphRunDescription,
+IFACEMETHODIMP Writer::DrawGlyphRun(__maybenull void*, FLOAT baselineOriginX, FLOAT baselineOriginY,
+    DWRITE_MEASURING_MODE, __in DWRITE_GLYPH_RUN const* glyphRun, __in DWRITE_GLYPH_RUN_DESCRIPTION const*,
     IUnknown* clientDrawingEffect)
 {
+    UNREFERENCED_PARAMETER(clientDrawingEffect);
     COM::COMPtr<ID2D1PathGeometry> path;
     Expect.HR = mD2D1Factory->CreatePathGeometry(path.AsTypedDoubleStar());        
 
@@ -162,37 +163,37 @@ IFACEMETHODIMP Writer::DrawGlyphRun(__maybenull void* clientDrawingContext, FLOA
     return S_OK;
 }
 
-IFACEMETHODIMP Writer::DrawUnderline(__maybenull void* clientDrawingContext, FLOAT baselineOriginX,
-    FLOAT baselineOriginY, __in DWRITE_UNDERLINE const* underline, IUnknown* clientDrawingEffect)
+IFACEMETHODIMP Writer::DrawUnderline(__maybenull void*, FLOAT,
+    FLOAT, __in DWRITE_UNDERLINE const*, IUnknown*)
 {
     return S_OK;
 }
 
-IFACEMETHODIMP Writer::DrawStrikethrough(__maybenull void* clientDrawingContext, FLOAT baselineOriginX,
-    FLOAT baselineOriginY, __in DWRITE_STRIKETHROUGH const* strikethrough, IUnknown* clientDrawingEffect)
+IFACEMETHODIMP Writer::DrawStrikethrough(__maybenull void*, FLOAT,
+    FLOAT, __in DWRITE_STRIKETHROUGH const*, IUnknown*)
 {
     return S_OK;
 }
 
-IFACEMETHODIMP Writer::DrawInlineObject(__maybenull void* clientDrawingContext, FLOAT originX, FLOAT originY,
-    IDWriteInlineObject* inlineObject, BOOL isSideways, BOOL isRightToLeft, IUnknown* clientDrawingEffect)
+IFACEMETHODIMP Writer::DrawInlineObject(__maybenull void*, FLOAT, FLOAT,
+    IDWriteInlineObject*, BOOL, BOOL, IUnknown*)
 {
     return E_NOTIMPL;
 }
 
-IFACEMETHODIMP Writer::IsPixelSnappingDisabled(__maybenull void* clientDrawingContext, __out BOOL* isDisabled)
+IFACEMETHODIMP Writer::IsPixelSnappingDisabled(__maybenull void*, __out BOOL* isDisabled)
 {
     *isDisabled = FALSE;
     return S_OK;
 }
 
-IFACEMETHODIMP Writer::GetCurrentTransform(__maybenull void* clientDrawingContext, __out DWRITE_MATRIX* transform)
+IFACEMETHODIMP Writer::GetCurrentTransform(__maybenull void*, __out DWRITE_MATRIX* transform)
 {
     mRenderTarget->GetTransform(reinterpret_cast<D2D1_MATRIX_3X2_F*>(transform));
     return S_OK;
 }
 
-IFACEMETHODIMP Writer::GetPixelsPerDip(__maybenull void* clientDrawingContext, __out FLOAT* pixelsPerDip)
+IFACEMETHODIMP Writer::GetPixelsPerDip(__maybenull void*, __out FLOAT* pixelsPerDip)
 {
     *pixelsPerDip = 1.0f;
     return S_OK;

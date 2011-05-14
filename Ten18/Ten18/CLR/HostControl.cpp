@@ -138,7 +138,7 @@ HRESULT STDMETHODCALLTYPE HostControl::CreateMalloc(DWORD dwMallocType, IHostMal
 }
         
 HRESULT STDMETHODCALLTYPE HostControl::VirtualAlloc(void *pAddress, SIZE_T dwSize, DWORD flAllocationType, DWORD flProtect,
-    EMemoryCriticalLevel eCriticalLevel, void **ppMem)
+    EMemoryCriticalLevel, void **ppMem)
 { 
     *ppMem = ::VirtualAlloc(pAddress, dwSize, flAllocationType, flProtect);
     return ppMem ? S_OK : E_OUTOFMEMORY;
@@ -182,7 +182,7 @@ HRESULT STDMETHODCALLTYPE HostControl::GetMemoryLoad(DWORD *pMemoryLoad, SIZE_T 
     else return HOST_E_CLRNOTAVAILABLE;
 }
         
-HRESULT STDMETHODCALLTYPE HostControl::RegisterMemoryNotificationCallback(ICLRMemoryNotificationCallback *pCallback) { return S_OK; }
-HRESULT STDMETHODCALLTYPE HostControl::NeedsVirtualAddressSpace(LPVOID startAddress, SIZE_T size) { return S_OK; }
-HRESULT STDMETHODCALLTYPE HostControl::AcquiredVirtualAddressSpace(LPVOID startAddress, SIZE_T size) { return S_OK; }
-HRESULT STDMETHODCALLTYPE HostControl::ReleasedVirtualAddressSpace(LPVOID startAddress) { return S_OK; }
+HRESULT STDMETHODCALLTYPE HostControl::RegisterMemoryNotificationCallback(ICLRMemoryNotificationCallback*) { return S_OK; }
+HRESULT STDMETHODCALLTYPE HostControl::NeedsVirtualAddressSpace(LPVOID, SIZE_T) { return S_OK; }
+HRESULT STDMETHODCALLTYPE HostControl::AcquiredVirtualAddressSpace(LPVOID, SIZE_T) { return S_OK; }
+HRESULT STDMETHODCALLTYPE HostControl::ReleasedVirtualAddressSpace(LPVOID) { return S_OK; }

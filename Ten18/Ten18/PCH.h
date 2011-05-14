@@ -155,17 +155,7 @@ extern "C"
 {
     #include <mmsystem.h>
     #include <mmreg.h>
-        
-    #pragma warning(push, 4)
-    #pragma warning(disable: 4201)
-    #include "External/WiiYourself/wdk/hidsdi.h"
-    #pragma warning(pop)
 }
-
-#include "External/DXUT11/Core/DXUT.h"
-#include "External/DXUT11/Core/DXUTDevice11.h"
-#include "External/DXUT11/Core/DXUTDevice9.h"
-#include "External/DXUT11/Core/DXUTmisc.h"
 
 #ifdef ReportEvent
     #undef ReportEvent

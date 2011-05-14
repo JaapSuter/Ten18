@@ -192,7 +192,7 @@ MediaFoundationCapture::~MediaFoundationCapture()
     mMediaSource->Shutdown();    
 }
 
-HRESULT MediaFoundationCapture::OnReadSample(HRESULT hr, DWORD dwStreamIndex, DWORD dwStreamFlags, LONGLONG timestamp, IMFSample* sample)
+HRESULT MediaFoundationCapture::OnReadSample(HRESULT hr, DWORD, DWORD dwStreamFlags, LONGLONG, IMFSample* sample)
 {
     OnExit oe([&]
     { 

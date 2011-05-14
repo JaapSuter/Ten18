@@ -28,6 +28,9 @@ static void SetDebugName(const COM::COMPtr<T>& ptr, const char name[])
     #ifdef _DEBUG
         if (ptr)
             ptr->SetPrivateData(WKPDID_D3DDebugObjectName, sizeof(name) / sizeof(*name), name);
+    #else
+        UNREFERENCED_PARAMETER(ptr);
+        UNREFERENCED_PARAMETER(name);
     #endif
 }
 

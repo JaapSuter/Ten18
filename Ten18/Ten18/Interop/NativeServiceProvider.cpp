@@ -8,7 +8,7 @@ void __stdcall NativeServiceProvider::ZeroArgsNoReturnTest()
 {
 }
 
-void __stdcall NativeServiceProvider::SetFunPtr(std::intptr_t funPtr)
+void __stdcall NativeServiceProvider::SetFunPtr(std::intptr_t)
 {
 }
 		

@@ -30,7 +30,7 @@ HostMalloc::HostMalloc(HostMalloc&& other)
     : mHeap(std::move(other.mHeap))
 {}
 
-HRESULT STDMETHODCALLTYPE HostMalloc::Alloc(SIZE_T cbSize, EMemoryCriticalLevel eCriticalLevel, void** ppMem)
+HRESULT STDMETHODCALLTYPE HostMalloc::Alloc(SIZE_T cbSize, EMemoryCriticalLevel, void** ppMem)
 {
     Ten18_ASSERT(ppMem);
     if (!ppMem)
@@ -49,8 +49,7 @@ HRESULT STDMETHODCALLTYPE HostMalloc::Free(void* pMem)
     return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE HostMalloc::DebugAlloc(SIZE_T cbSize, EMemoryCriticalLevel eCriticalLevel,
-                                                  char* pszFileName, int iLineNo, void** ppMem)
+HRESULT STDMETHODCALLTYPE HostMalloc::DebugAlloc(SIZE_T cbSize, EMemoryCriticalLevel, char*, int, void** ppMem)
 {
     Ten18_ASSERT(ppMem);
     if (!ppMem)

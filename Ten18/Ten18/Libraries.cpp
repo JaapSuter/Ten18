@@ -10,7 +10,6 @@
 
 #pragma comment(lib, "setupapi.lib")
 #pragma comment(lib, "winmm.lib")
-#pragma comment(lib, "External/WiiYourself/wdk/hid.lib")
 
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3d11.lib")

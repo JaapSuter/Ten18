@@ -21,7 +21,7 @@ using namespace Ten18::Windows;
 using namespace Ten18::Graphics;
 using namespace Ten18::Capture;
 
-int Ten18::Program(HINSTANCE hInstance, int nCmdShow, Ten18::CLR::Host* host)
+int Ten18::Program(HINSTANCE, int nCmdShow, Ten18::CLR::Host*)
 {   
     Window first(L"Ten18 Calibration");
     Window second(L"Ten18 Camera");

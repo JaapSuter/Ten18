@@ -31,6 +31,7 @@ std::vector<HMODULE> Ten18::Util::EnumerateModules()
 
 int Ten18::Util::EnumerateNativeThreads(bool traceFullInfo, const char* msg)
 {
+    UNREFERENCED_PARAMETER(traceFullInfo);
     DebugOut("%s", msg);
 
     int numThreads = 0;
