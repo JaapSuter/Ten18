@@ -39,65 +39,66 @@ namespace Ten18.Interop
             
             #line default
             #line hidden
-            this.Write("\r\n    struct __declspec(uuid(\"");
+            this.Write("\r\n\tclass Renderer;\r\n\tclass NativeServiceProvider;\r\n\t\r\n    struct __declspec(uuid(" +
+                    "\"");
             
-            #line 6 "D:\Projects\Code\Ten18\Code\Ten18.Interop.Generator\Ten18\Interop\Generator\ManagedToNativeCppHeaderTemplate.tt"
+            #line 9 "D:\Projects\Code\Ten18\Code\Ten18.Interop.Generator\Ten18\Interop\Generator\ManagedToNativeCppHeaderTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Guid.ToString()));
             
             #line default
             #line hidden
             this.Write("\")) ");
             
-            #line 6 "D:\Projects\Code\Ten18\Code\Ten18.Interop.Generator\Ten18\Interop\Generator\ManagedToNativeCppHeaderTemplate.tt"
+            #line 9 "D:\Projects\Code\Ten18\Code\Ten18.Interop.Generator\Ten18\Interop\Generator\ManagedToNativeCppHeaderTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Type.Name));
             
             #line default
             #line hidden
             this.Write("  : IUnknown\r\n    {\t\r\n");
             
-            #line 8 "D:\Projects\Code\Ten18\Code\Ten18.Interop.Generator\Ten18\Interop\Generator\ManagedToNativeCppHeaderTemplate.tt"
+            #line 11 "D:\Projects\Code\Ten18\Code\Ten18.Interop.Generator\Ten18\Interop\Generator\ManagedToNativeCppHeaderTemplate.tt"
  foreach (var methodInfo in MethodInfos) { 
             
             #line default
             #line hidden
             this.Write("        virtual ");
             
-            #line 9 "D:\Projects\Code\Ten18\Code\Ten18.Interop.Generator\Ten18\Interop\Generator\ManagedToNativeCppHeaderTemplate.tt"
+            #line 12 "D:\Projects\Code\Ten18\Code\Ten18.Interop.Generator\Ten18\Interop\Generator\ManagedToNativeCppHeaderTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(NativeReturnTypeOf(methodInfo)));
             
             #line default
             #line hidden
             this.Write(" __stdcall ");
             
-            #line 9 "D:\Projects\Code\Ten18\Code\Ten18.Interop.Generator\Ten18\Interop\Generator\ManagedToNativeCppHeaderTemplate.tt"
+            #line 12 "D:\Projects\Code\Ten18\Code\Ten18.Interop.Generator\Ten18\Interop\Generator\ManagedToNativeCppHeaderTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(methodInfo.Name));
             
             #line default
             #line hidden
             this.Write("(");
             
-            #line 9 "D:\Projects\Code\Ten18\Code\Ten18.Interop.Generator\Ten18\Interop\Generator\ManagedToNativeCppHeaderTemplate.tt"
+            #line 12 "D:\Projects\Code\Ten18\Code\Ten18.Interop.Generator\Ten18\Interop\Generator\ManagedToNativeCppHeaderTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(NativeParameterListOf(methodInfo)));
             
             #line default
             #line hidden
             this.Write(") = 0;\r\n");
             
-            #line 10 "D:\Projects\Code\Ten18\Code\Ten18.Interop.Generator\Ten18\Interop\Generator\ManagedToNativeCppHeaderTemplate.tt"
+            #line 13 "D:\Projects\Code\Ten18\Code\Ten18.Interop.Generator\Ten18\Interop\Generator\ManagedToNativeCppHeaderTemplate.tt"
 }
             
             #line default
             #line hidden
             this.Write("    };\r\n\t\r\n");
             
-            #line 13 "D:\Projects\Code\Ten18\Code\Ten18.Interop.Generator\Ten18\Interop\Generator\ManagedToNativeCppHeaderTemplate.tt"
+            #line 16 "D:\Projects\Code\Ten18\Code\Ten18.Interop.Generator\Ten18\Interop\Generator\ManagedToNativeCppHeaderTemplate.tt"
  foreach (var nameSpaceName in NameSpaceNames) { 
             
             #line default
             #line hidden
             this.Write("}");
             
-            #line 13 "D:\Projects\Code\Ten18\Code\Ten18.Interop.Generator\Ten18\Interop\Generator\ManagedToNativeCppHeaderTemplate.tt"
+            #line 16 "D:\Projects\Code\Ten18\Code\Ten18.Interop.Generator\Ten18\Interop\Generator\ManagedToNativeCppHeaderTemplate.tt"
 }
             
             #line default

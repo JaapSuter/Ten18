@@ -22,7 +22,12 @@ namespace Ten18.Interop
     {
         public static string NativeCppNameOf(Type type)
         {
-            return mNativeCppNames[type.FullName];
+            string ret = null;
+            if (mNativeCppNames.TryGetValue(type.FullName, out ret))
+                return ret;
+
+            Debug.Assert(type.IsInterface);
+            return String.Concat("::", GetFullNameAsInCSharp(type).Replace(".", "::").Replace("::" + type.Name, "::" + type.Name.Substring(1)), "*");
         }
 
         struct TypeComparer : IComparer<Type>
@@ -52,5 +57,12 @@ namespace Ten18.Interop
             { typeof(String).FullName, "std::u16string" },
             { typeof(Char).FullName, "std::char16_t" },
         };
+
+        public static string GetFullNameAsInCSharp(Type type)
+        {
+            return mCodeProvider.GetTypeOutput(new CodeTypeReference(type));
+        }
+
+        private static CodeDomProvider mCodeProvider = CSharpCodeProvider.CreateProvider("C#");
     }
 }

@@ -4,9 +4,8 @@
 #include "Ten18/CLR/HostMalloc.h"
 
 namespace Ten18 {
-    namespace Hosting {
-        struct IManagedServiceProvider;
-    }
+    
+    struct IManagedServiceProvider;
 
     namespace CLR {
 
@@ -15,7 +14,7 @@ namespace Ten18 {
     public:
 
         void Tick();
-        Hosting::IManagedServiceProvider* GetManagedServiceProvider() { return mManagedServiceProvider; }
+        IManagedServiceProvider* GetManagedServiceProvider() { return mManagedServiceProvider; }
         HostControl();
         
         Ten18_QUERY_INTERFACE_BEGIN(IHostControl)
@@ -96,7 +95,7 @@ namespace Ten18 {
         HostControl(const HostControl&);
         HostControl& operator = (const HostControl&);
         
-        Hosting::IManagedServiceProvider* mManagedServiceProvider;
+        IManagedServiceProvider* mManagedServiceProvider;
         ULONG mUniqueAssemblyIds;
         std::vector<HostMalloc> mHostMallocs;
     };

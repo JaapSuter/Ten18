@@ -132,10 +132,10 @@
     <ClCompile Include="Ten18\Graphics\Vertex.cpp" />
     <ClCompile Include="Ten18\Graphics\Writer.cpp" />
     <ClCompile Include="Ten18\Image.cpp" />
-    <ClCompile Include="Ten18\Interop\NativeServiceProvider.cpp" />
-    <ClCompile Include="Ten18\Interop\Renderer.cpp" />
     <ClCompile Include="Ten18\Libraries.cpp" />
+    <ClCompile Include="Ten18\NativeServiceProvider.cpp" />
     <ClCompile Include="Ten18\Program.cpp" />
+    <ClCompile Include="Ten18\Renderer.cpp" />
     <ClCompile Include="Ten18\Sandbox.cpp" />
     <ClCompile Include="Ten18\Tests.cpp" />
     <ClCompile Include="Ten18\Timer.cpp" />

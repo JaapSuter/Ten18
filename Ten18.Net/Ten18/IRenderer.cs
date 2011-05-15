@@ -7,12 +7,11 @@ using System.Threading;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 
-namespace Ten18.Interop
+namespace Ten18
 {
-    [NativeToManaged]
-    public interface INativeServiceProvider
-    {
-        void ZeroArgsNoReturnTest();
-        void SetFunPtr(IntPtr funPtr);
+    [Interop.NativeToManaged]
+    public interface IRenderer
+    {        
+        void Present();
     }
 }

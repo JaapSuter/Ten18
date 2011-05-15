@@ -5,12 +5,11 @@
 #include "Ten18/Expect.h"
 #include "Ten18/COM/StackBasedSafeArray.h"
 #include "Ten18/COM/EmbeddedResourceStream.h"
-#include "Ten18/Hosting/IManagedServiceProvider.Generated.h"
+#include "Ten18/IManagedServiceProvider.Generated.h"
 
 using namespace Ten18;
 using namespace Ten18::CLR;
 using namespace Ten18::COM;
-using namespace Ten18::Hosting;
 
 HostControl::HostControl() :
     mUniqueAssemblyIds(1018),

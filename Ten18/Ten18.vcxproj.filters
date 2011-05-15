@@ -85,11 +85,11 @@
     <ClCompile Include="Ten18\Program.cpp">
       <Filter>Ten18</Filter>
     </ClCompile>
-    <ClCompile Include="Ten18\Interop\Renderer.cpp">
-      <Filter>Ten18\Interop</Filter>
+    <ClCompile Include="Ten18\NativeServiceProvider.cpp">
+      <Filter>Ten18</Filter>
     </ClCompile>
-    <ClCompile Include="Ten18\Interop\NativeServiceProvider.cpp">
-      <Filter>Ten18\Interop</Filter>
+    <ClCompile Include="Ten18\Renderer.cpp">
+      <Filter>Ten18</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -211,9 +211,6 @@
     </Filter>
     <Filter Include="Ten18\COM">
       <UniqueIdentifier>{4c6caf62-37f4-44fc-8b9c-0b9c76828970}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Ten18\Interop">
-      <UniqueIdentifier>{3a5702a5-bc74-46a9-bfec-dc41ac893384}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

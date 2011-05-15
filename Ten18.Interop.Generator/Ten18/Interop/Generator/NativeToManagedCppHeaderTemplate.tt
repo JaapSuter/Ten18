@@ -3,6 +3,9 @@
 
 <# foreach (var nameSpaceName in NameSpaceNames) { #>namespace <#= nameSpaceName #> { <#}#>
 
+	class Renderer;
+	class NativeServiceProvider;
+	
     class <#= Type.Name #>
     {
 <# foreach (var methodInfo in MethodInfos) { #>
@@ -12,11 +15,4 @@
 		virtual __stdcall ~<#= Type.Name #>() {};
     };
 	
-/*
-extern "C" __declspec(dllexport) std::intptr_t __cdecl New<#= Type.Name #>()
-{
-	return reinterpret_cast<std::intptr_t>(new <#= Type.Name #>());
-}
-*/
-
 <# foreach (var nameSpaceName in NameSpaceNames) { #>}<#}#>

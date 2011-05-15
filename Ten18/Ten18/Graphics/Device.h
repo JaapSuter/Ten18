@@ -22,7 +22,7 @@ namespace Ten18 { namespace Graphics {
         void TickFrameRate();
 
     private:
-    public: // Todo, March 2011, Jaap Suter needs to get things done.
+    public: // Todo, April 2011, Jaap Suter needs to get things done.
 
         void InitializeShaders(WORD vsid, WORD psid, COM::COMPtr<ID3D11VertexShader>& vs, COM::COMPtr<ID3D11PixelShader>& ps);
 
@@ -63,7 +63,7 @@ namespace Ten18 { namespace Graphics {
         std::vector<SwapChain*>                 mSwapChains;
     
     public:
-        // Todo, Jaap Suter, March 2011
+        // Todo, Jaap Suter, April 2011
         std::vector<std::function<void ()>>     mTickSignalRequests;
     };
 

@@ -9,8 +9,8 @@
 *.sbr
 *.sdf
 *.vcxproj.user
+*.csproj.user
 *.opensdf
 ipch/
 obj/
 bin/
-

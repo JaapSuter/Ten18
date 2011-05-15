@@ -9,7 +9,7 @@ using System.Security.Permissions;
 using System.Collections.Generic;
 using Ten18.Interop;
 
-namespace Ten18.Hosting
+namespace Ten18
 {
     [ComVisible(true)]
     [Guid("B0A493DA-A684-4AC9-B823-7EEA1CAB0A04")]
@@ -18,6 +18,9 @@ namespace Ten18.Hosting
     public interface IManagedServiceProvider
     {
         [PreserveSig]
-        int TwoArgsOneReturnTest(int a, int b);        
+        void Rendevouz(INativeServiceProvider nativeServiceProvider);
+
+        [PreserveSig]
+        void Tick();
     }
 }

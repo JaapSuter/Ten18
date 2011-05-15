@@ -222,7 +222,7 @@ void Device::TickDynamicTextures(Image::Ptr&& img)
     mDynamicTexturesLRU = (mDynamicTexturesLRU + 1) % DynamicTextureCount;
     auto& lru = mDynamicTextures[mDynamicTexturesLRU];
     
-    // Todo, Jaap Suter ,March 2011: figure out why D3D11_MAP_FLAG_DO_NOT_WAIT doesn't jive with D3D11_MAP_WRITE_DISCARD here.
+    // Todo, Jaap Suter, April 2011: figure out why D3D11_MAP_FLAG_DO_NOT_WAIT doesn't jive with D3D11_MAP_WRITE_DISCARD here.
     D3D11_MAPPED_SUBRESOURCE msr = {};
     {
         auto hr = mImmediateContext->Map(lru.Raw(), 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);

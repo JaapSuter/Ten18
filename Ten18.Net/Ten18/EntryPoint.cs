@@ -9,27 +9,16 @@ using Ten18.Async;
 
 namespace Ten18
 {
-    class EntryPoint
+    static class EntryPoint
     {
         public static int HostedMain(string arg)
         {
             Debug.Assert(AppDomain.CurrentDomain.IsDefaultAppDomain());
             Console.WriteLine("EntryPoint.HostedMain says: {0}", arg);
 
-            Sandbox.Run();
             CoroutineTest.Test();
 
             return 0;
-        }
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate int InteropMainDelegate(IntPtr arg);
-
-        public static InteropMainDelegate InteropMainDelegateClosed = new InteropMainDelegate(EntryPoint.InteropMain);
-
-        public static int InteropMain(IntPtr arg)
-        {
-            return HostedMain(Marshal.PtrToStringUni(arg));
         }
     }
 }

@@ -647,7 +647,7 @@ static std::string GuidToString(const GUID& guid)
 
 static std::string GuidToName(const GUID& guid)
 {
-    // Todo, Jaap Suter, June 2010: not thread safe;
+    // Todo, Jaap Suter, June 2011: not thread safe;
     static bool initialized = false;
     if (!initialized)
     {

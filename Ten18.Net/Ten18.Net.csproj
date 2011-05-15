@@ -148,18 +148,17 @@
     <Compile Include="External\ParallelExtensionsExtras\TaskSchedulers\ThreadPerTaskkScheduler.cs" />
     <Compile Include="External\ParallelExtensionsExtras\TaskSchedulers\WorkStealingTaskScheduler.cs" />
     <Compile Include="External\ParallelExtensionsExtras\Utils\SortedTopN.cs" />
-    <Compile Include="Ten18\Hosting\IManagedServiceProvider.cs" />
-    <Compile Include="Ten18\Interop\IRenderer.cs" />
+    <Compile Include="Ten18\IManagedServiceProvider.cs" />
+    <Compile Include="Ten18\IRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Ten18\Async\CoroutineAwaiterT.cs" />
     <Compile Include="Ten18\Async\CoroutineTest.cs" />
     <Compile Include="Ten18\Async\CoroutineSynchronizationContext.cs" />
     <Compile Include="Ten18\Async\SingleThreadedConstraint.cs" />
     <Compile Include="Ten18\Async\CoroutineScheduler.cs" />
-    <Compile Include="Ten18\Interop\INativeServiceProvider.cs" />
-    <Compile Include="Ten18\Sandbox.cs" />
+    <Compile Include="Ten18\INativeServiceProvider.cs" />
     <Compile Include="Ten18\Util.cs" />
-    <Compile Include="Ten18\Hosting\AppDomainManager.cs" />
+    <Compile Include="Ten18\Program.cs" />
     <Compile Include="Ten18\EntryPoint.cs" />
   </ItemGroup>
   <ItemGroup>

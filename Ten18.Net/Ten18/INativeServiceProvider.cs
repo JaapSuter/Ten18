@@ -7,11 +7,11 @@ using System.Threading;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 
-namespace Ten18.Interop
+namespace Ten18
 {
-    [NativeToManaged]
-    public interface IRenderer
-    {        
-        void Present();
+    [Interop.NativeToManaged]
+    public interface INativeServiceProvider
+    {
+        IRenderer Renderer { get; }        
     }
 }

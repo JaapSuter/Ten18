@@ -78,9 +78,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Ten18\Interop\Generator\ManagedToNativeCppHeader.cs" />
-    <Compile Include="Ten18\Interop\Generator\Sandbox.cs" />
     <Compile Include="Ten18\Interop\Generator\AssemblyGenerator.cs" />
-    <Compile Include="Ten18\Interop\Generator\AssemblyNativeExporter.cs" />
     <Compile Include="Ten18\Interop\Generator\DelegateGenerator.cs" />
     <Compile Include="Ten18\Interop\Generator\ExceptionFilterGenerator.cs" />
     <Compile Include="Ten18\Interop\Generator\ManagedToNative.cs" />

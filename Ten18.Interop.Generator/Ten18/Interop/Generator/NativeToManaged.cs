@@ -33,7 +33,7 @@ namespace Ten18.Interop
 
         private static void Emit(Type type, ModuleBuilder moduleBuilder, string cppDstDir)
         {
-            var nameParts = GetFullNameAsInCSharp(type).Split('.');
+            var nameParts = TypeMap.GetFullNameAsInCSharp(type).Split('.');
             var nameSpaceNames = nameParts.Take(nameParts.Count() - 1);
             var typeName = nameParts.Last();
 
@@ -116,12 +116,6 @@ namespace Ten18.Interop
             il.Emit(OpCodes.Ret);
         }
 
-        private static string GetFullNameAsInCSharp(Type type)
-        {
-            return mCodeProvider.GetTypeOutput(new CodeTypeReference(type));
-        }
-
-        private static CodeDomProvider mCodeProvider = CSharpCodeProvider.CreateProvider("C#");
         private static Type PrimitiveIntPtrType = typeof(Int32).MakePointerType();
         private static int PrimitiveIntPtrSize = sizeof(Int32);
     }

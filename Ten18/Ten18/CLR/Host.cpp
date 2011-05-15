@@ -8,7 +8,7 @@
 #include "Ten18/Tracer.h"
 #include "Ten18/Expect.h"
 #include "Ten18/Util.h"
-#include "Ten18/Hosting/IManagedServiceProvider.Generated.h"
+#include "Ten18/IManagedServiceProvider.Generated.h"
 
 using namespace Ten18::CLR;
 using namespace Ten18::COM;
@@ -29,7 +29,7 @@ private:
                 AssemblyName(L"Ten18.Net, Version=1.0.0.0, PublicKeyToken=39a56a431d4ba826, culture=neutral"),
                 TypeName(L"Ten18.EntryPoint"),
                 MethodName(L"HostedMain"),
-                DomainManager(L"Ten18.Hosting.AppDomainManager"),
+                DomainManager(L"Ten18.Program"),
                 DotNetRuntimeVersion(L"v4.0.30319") {}
             
         const wchar_t* const AssemblyPath;
@@ -114,8 +114,7 @@ HostImpl::HostImpl() :
 
     Ten18_ASSERT(mHostControl.GetManagedServiceProvider() != nullptr);
     
-    auto ret = mHostControl.GetManagedServiceProvider()->TwoArgsOneReturnTest(3, 4);
-    DebugOut("ret: %d", ret);
+    mHostControl.GetManagedServiceProvider()->Rendevouz(nullptr);
 }
 
 }
