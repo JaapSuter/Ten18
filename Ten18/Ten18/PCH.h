@@ -1,5 +1,7 @@
 #pragma once
 #pragma warning(disable:4127) // conditional expression is constant
+#pragma warning(disable:4355) // 'this' : used in base member initializer list
+
 
 #if defined DEBUG
     #error Must not define DEBUG before we do it below

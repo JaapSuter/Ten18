@@ -121,8 +121,11 @@
     <ClCompile Include="Ten18\Capture\MediaFoundationCapture.cpp" />
     <ClCompile Include="Ten18\Capture\MediaFoundationLogger.cpp" />
     <ClCompile Include="Ten18\CLR\Host.cpp" />
+    <ClCompile Include="Ten18\CLR\HostAssemblyManager.cpp" />
+    <ClCompile Include="Ten18\CLR\HostAssemblyStore.cpp" />
     <ClCompile Include="Ten18\CLR\HostControl.cpp" />
     <ClCompile Include="Ten18\CLR\HostMalloc.cpp" />
+    <ClCompile Include="Ten18\CLR\HostMemoryManager.cpp" />
     <ClCompile Include="Ten18\COM\COMPtr.cpp" />
     <ClCompile Include="Ten18\Console.cpp" />
     <ClCompile Include="Ten18\Expect.cpp" />
@@ -133,9 +136,7 @@
     <ClCompile Include="Ten18\Graphics\Writer.cpp" />
     <ClCompile Include="Ten18\Image.cpp" />
     <ClCompile Include="Ten18\Libraries.cpp" />
-    <ClCompile Include="Ten18\NativeServiceProvider.cpp" />
     <ClCompile Include="Ten18\Program.cpp" />
-    <ClCompile Include="Ten18\Renderer.cpp" />
     <ClCompile Include="Ten18\Sandbox.cpp" />
     <ClCompile Include="Ten18\Tests.cpp" />
     <ClCompile Include="Ten18\Timer.cpp" />
@@ -150,8 +151,12 @@
     <ClInclude Include="Ten18\Capture\MediaFoundationCapture.h" />
     <ClInclude Include="Ten18\Capture\MediaFoundationLogger.h" />
     <ClInclude Include="Ten18\CLR\Host.h" />
+    <ClInclude Include="Ten18\CLR\HostAssemblyManager.h" />
+    <ClInclude Include="Ten18\CLR\HostAssemblyStore.h" />
     <ClInclude Include="Ten18\CLR\HostControl.h" />
     <ClInclude Include="Ten18\CLR\HostMalloc.h" />
+    <ClInclude Include="Ten18\CLR\HostMemoryManager.h" />
+    <ClInclude Include="Ten18\CLR\IAppDomainManagerEx.h" />
     <ClInclude Include="Ten18\COM\COMPtr.h" />
     <ClInclude Include="Ten18\COM\EmbeddedResourceStream.h" />
     <ClInclude Include="Ten18\COM\ImplUnknown.h" />

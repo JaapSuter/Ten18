@@ -60,6 +60,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="SlimMath, Version=1.0.0.0, Culture=neutral, PublicKeyToken=eb5b190254be1642, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libraries\SlimMath.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.CoreEx, Version=1.0.2856.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Drawing" />
@@ -72,26 +76,23 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Ten18\Interop\Generator\ManagedToNativeCppHeaderTemplate.cs">
-      <DependentUpon>ManagedToNativeCppHeaderTemplate.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Ten18\Interop\Generator\ManagedToNativeCppHeader.cs" />
-    <Compile Include="Ten18\Interop\Generator\AssemblyGenerator.cs" />
-    <Compile Include="Ten18\Interop\Generator\DelegateGenerator.cs" />
-    <Compile Include="Ten18\Interop\Generator\ExceptionFilterGenerator.cs" />
-    <Compile Include="Ten18\Interop\Generator\ManagedToNative.cs" />
-    <Compile Include="Ten18\Interop\Generator\NativeToManaged.cs" />
-    <Compile Include="Ten18\Interop\Generator\TypeMap.cs" />
-    <Compile Include="Ten18\Interop\Generator\NativeToManagedCppHeader.cs" />
-    <Compile Include="Ten18\Interop\Generator\NativeToManagedCppHeaderTemplate.cs">
+    <Compile Include="Ten18\Interop\InteropType.cs" />
+    <Compile Include="Ten18\Interop\MethodGenerator.cs" />
+    <Compile Include="Ten18\Interop\TypeGenerator.cs" />
+    <Compile Include="Ten18\Interop\ClassGenerator.cs" />
+    <Compile Include="Ten18\Interop\EnumGenerator.cs" />
+    <Compile Include="Ten18\Interop\StructGenerator.cs" />
+    <Compile Include="Ten18\Interop\Generator.cs" />
+    <Compile Include="Ten18\Interop\DelegateGenerator.cs" />
+    <Compile Include="Ten18\Interop\ExceptionFilterGenerator.cs" />
+    <Compile Include="Ten18\Interop\NativeToManagedCppHeader.cs" />
+    <Compile Include="Ten18\Interop\NativeToManagedCppHeaderTemplate.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>NativeToManagedCppHeaderTemplate.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Ten18\Interop\Generator\EntryPoint.cs" />
+    <Compile Include="Ten18\Interop\EntryPoint.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
@@ -104,12 +105,7 @@
     <EmbeddedResource Include="..\Ten18.snk">
       <Link>Ten18.snk</Link>
     </EmbeddedResource>
-    <None Include="Ten18\Interop\Generator\ManagedToNativeCppHeaderTemplate.tt">
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>ManagedToNativeCppHeaderTemplate.cs</LastGenOutput>
-      <CustomToolNamespace>Ten18.Interop</CustomToolNamespace>
-    </None>
-    <None Include="Ten18\Interop\Generator\NativeToManagedCppHeaderTemplate.tt">
+    <None Include="Ten18\Interop\NativeToManagedCppHeaderTemplate.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>NativeToManagedCppHeaderTemplate.cs</LastGenOutput>
       <CustomToolNamespace>Ten18.Interop</CustomToolNamespace>

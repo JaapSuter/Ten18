@@ -58,10 +58,15 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AsyncCtpLibrary">
-      <HintPath>Libraries\AsyncCtpLibrary.dll</HintPath>
+    <Reference Include="AsyncCtpLibrary, Version=1.0.4107.18181, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libraries\AsyncCtpLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="SlimMath, Version=1.0.0.0, Culture=neutral, PublicKeyToken=eb5b190254be1642, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libraries\SlimMath.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.CoreEx, Version=1.0.2856.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Interactive, Version=1.0.2856.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -70,6 +75,10 @@
     <Reference Include="System.Reactive.ClientProfile, Version=1.0.2856.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Reactive.ExtendedProfile, Version=1.0.2856.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Reactive.Testing, Version=1.0.2856.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Ten18.Interop.Core.Interop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=39a56a431d4ba826, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\obj\Win32\Debug\Ten18.Interop.Core.Interop.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="External\ParallelExtensionsExtras\CoordinationDataStructures\AbstractStreamBase.cs" />
@@ -94,16 +103,11 @@
     <Compile Include="External\ParallelExtensionsExtras\Extensions\AggregateExceptionExtensions.cs" />
     <Compile Include="External\ParallelExtensionsExtras\Extensions\APM\FileAsync.cs" />
     <Compile Include="External\ParallelExtensionsExtras\Extensions\APM\StreamExtensions.cs" />
-    <Compile Include="External\ParallelExtensionsExtras\Extensions\APM\WebRequestExtensions.cs" />
     <Compile Include="External\ParallelExtensionsExtras\Extensions\BlockingCollectionExtensions.cs" />
     <Compile Include="External\ParallelExtensionsExtras\Extensions\CancellationTokenExtensions.cs" />
     <Compile Include="External\ParallelExtensionsExtras\Extensions\CompletedTask.cs" />
     <Compile Include="External\ParallelExtensionsExtras\Extensions\DelegateBasedObserver.cs" />
     <Compile Include="External\ParallelExtensionsExtras\Extensions\DelegateExtensions.cs" />
-    <Compile Include="External\ParallelExtensionsExtras\Extensions\EAP\EAPCommon.cs" />
-    <Compile Include="External\ParallelExtensionsExtras\Extensions\EAP\PingExtensions.cs" />
-    <Compile Include="External\ParallelExtensionsExtras\Extensions\EAP\SmtpClientExtensions.cs" />
-    <Compile Include="External\ParallelExtensionsExtras\Extensions\EAP\WebClientExtensions.cs" />
     <Compile Include="External\ParallelExtensionsExtras\Extensions\IProducerConsumerCollectionExtensions.cs" />
     <Compile Include="External\ParallelExtensionsExtras\Extensions\LazyExtensions.cs" />
     <Compile Include="External\ParallelExtensionsExtras\Extensions\LinqToTasks.cs" />
@@ -148,17 +152,14 @@
     <Compile Include="External\ParallelExtensionsExtras\TaskSchedulers\ThreadPerTaskkScheduler.cs" />
     <Compile Include="External\ParallelExtensionsExtras\TaskSchedulers\WorkStealingTaskScheduler.cs" />
     <Compile Include="External\ParallelExtensionsExtras\Utils\SortedTopN.cs" />
-    <Compile Include="Ten18\IManagedServiceProvider.cs" />
-    <Compile Include="Ten18\IRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Ten18\Async\CoroutineAwaiterT.cs" />
     <Compile Include="Ten18\Async\CoroutineTest.cs" />
     <Compile Include="Ten18\Async\CoroutineSynchronizationContext.cs" />
     <Compile Include="Ten18\Async\SingleThreadedConstraint.cs" />
     <Compile Include="Ten18\Async\CoroutineScheduler.cs" />
-    <Compile Include="Ten18\INativeServiceProvider.cs" />
     <Compile Include="Ten18\Util.cs" />
-    <Compile Include="Ten18\Program.cs" />
+    <Compile Include="Ten18\AppDomainManagerEx.cs" />
     <Compile Include="Ten18\EntryPoint.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -176,7 +177,11 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>$(TargetDir)Ten18.Interop.Generator.exe $(TargetPath)</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>$(TargetDir)Ten18.Interop.Generator.exe</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

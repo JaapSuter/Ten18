@@ -36,15 +36,17 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, LPWSTR, int nCmdShow)
     Expect.HR = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE | COINIT_SPEED_OVER_MEMORY);
     
     Console::Initialize(L"Ten18 Console");
-    Timer::Initialize();    
+    Timer::Initialize();
     
-    Host::Initialize();
+    Sandbox();    
+    
+    Host host;    
+    host.RendezVous();
 
     InitializeCrtDebug();
 
     RunTests();
-    Sandbox();
-
+    
     const auto procExitCode = Program(hInstance, nCmdShow, nullptr);
 
     CoUninitialize();

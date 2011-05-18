@@ -85,11 +85,14 @@
     <ClCompile Include="Ten18\Program.cpp">
       <Filter>Ten18</Filter>
     </ClCompile>
-    <ClCompile Include="Ten18\NativeServiceProvider.cpp">
-      <Filter>Ten18</Filter>
+    <ClCompile Include="Ten18\CLR\HostMemoryManager.cpp">
+      <Filter>Ten18\CLR</Filter>
     </ClCompile>
-    <ClCompile Include="Ten18\Renderer.cpp">
-      <Filter>Ten18</Filter>
+    <ClCompile Include="Ten18\CLR\HostAssemblyStore.cpp">
+      <Filter>Ten18\CLR</Filter>
+    </ClCompile>
+    <ClCompile Include="Ten18\CLR\HostAssemblyManager.cpp">
+      <Filter>Ten18\CLR</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -188,6 +191,18 @@
     </ClInclude>
     <ClInclude Include="Ten18\Program.h">
       <Filter>Ten18</Filter>
+    </ClInclude>
+    <ClInclude Include="Ten18\CLR\IAppDomainManagerEx.h">
+      <Filter>Ten18\CLR</Filter>
+    </ClInclude>
+    <ClInclude Include="Ten18\CLR\HostMemoryManager.h">
+      <Filter>Ten18\CLR</Filter>
+    </ClInclude>
+    <ClInclude Include="Ten18\CLR\HostAssemblyStore.h">
+      <Filter>Ten18\CLR</Filter>
+    </ClInclude>
+    <ClInclude Include="Ten18\CLR\HostAssemblyManager.h">
+      <Filter>Ten18\CLR</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
