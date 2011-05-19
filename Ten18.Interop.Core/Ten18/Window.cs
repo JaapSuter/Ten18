@@ -30,7 +30,6 @@ namespace Ten18
         public abstract bool IsFullScreen { get; }
         public abstract void MakeFullScreen();
 
-        public abstract int Z_StdCallFoo(int a0, int a1, int a2);
-        public abstract int Z_ThisCallFoo(int a0, int a1, int a2);
+        public abstract Vector3 Z_ThisCallFoo(int a0, ref Vector3 a1, int a2);
     }
 }

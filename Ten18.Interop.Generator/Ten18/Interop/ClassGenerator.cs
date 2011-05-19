@@ -121,6 +121,10 @@ namespace Ten18.Interop
             var methodInfo = methodGenerator.MethodInfo;
             var paramInfos = methodInfo.GetParameters();
             var paramTypes = paramInfos.Select(pi => pi.ParameterType).ToArray();
+            var returnType = methodInfo.ReturnType;
+
+            var returnIsLarge = Marshal.SizeOf(returnType) > SizeOfRegisterReturn;
+            var returnLocal = (LocalBuilder)null;
 
             var methodAttributes = methodInfo.Attributes & ~(MethodAttributes.Abstract | MethodAttributes.NewSlot) | MethodAttributes.Final;
             var methodBuilder = typeBuilder.DefineMethod(methodInfo.Name, methodAttributes, CallingConventions.HasThis, methodInfo.ReturnType, paramTypes);
@@ -138,6 +142,13 @@ namespace Ten18.Interop
                 else il.Emit(OpCodes.Ldarg_S, (byte)(j + 1));
             }
 
+            if (returnIsLarge)
+            {
+                returnLocal = il.DeclareLocal(returnType);
+                il.Emit(OpCodes.Ldloca_S, returnLocal.LocalIndex);
+                il.Emit(OpCodes.Conv_I);
+            }
+
             il.Emit(OpCodes.Ldarg_0);
             il.Emit(OpCodes.Ldfld, cppThisPtr);
             il.Emit(OpCodes.Conv_I);
@@ -147,10 +158,15 @@ namespace Ten18.Interop
             il.Emit(OpCodes.Conv_I);
             il.Emit(OpCodes.Ldind_I);
 
-            if (methodInfo.Name.Contains("ThisCall"))
-                il.EmitCalli(OpCodes.Calli, CallingConvention.ThisCall, methodInfo.ReturnType, paramTypes.StartWith(typeof(IntPtr)).ToArray());
-            else
-            il.EmitCalli(OpCodes.Calli, CallingConvention.StdCall, methodInfo.ReturnType, paramTypes.StartWith(typeof(IntPtr)).ToArray());
+            paramTypes = paramTypes.StartWith(typeof(IntPtr)).ToArray(); // returnIsLarge
+                       // ? paramTypes.StartWith(typeof(IntPtr), typeof(IntPtr)).ToArray()
+                       // : paramTypes.StartWith(typeof(IntPtr)).ToArray();
+
+            il.EmitCalli(OpCodes.Calli, CallingConvention.FastCall, methodInfo.ReturnType, paramTypes);
+
+            // if (returnIsLarge)
+                // il.Emit(OpCodes.Ldloc_S, returnLocal.LocalIndex);
+
             il.Emit(OpCodes.Ret);
 
             methodGenerator.MethodBuilder = methodBuilder;
@@ -168,6 +184,7 @@ namespace Ten18.Interop
         // get to a x64 or ARM port anyway... ha!
         private static readonly Type CppThisPtrType = typeof(Int32).MakePointerType();
         private static readonly int VTableSlotSize = sizeof(Int32);
+        private static readonly int SizeOfRegisterReturn = sizeof(Int32);
 
         private static readonly BindingFlags BindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
     }

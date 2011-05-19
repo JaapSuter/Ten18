@@ -170,9 +170,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Ten18.Interop.Core\Ten18.Interop.Core.csproj">
+    <ProjectReference Include="..\Ten18.Interop.Core\Ten18.Interop.csproj">
       <Project>{202A67BE-EC74-4F9A-872C-BB59CDC1595E}</Project>
-      <Name>Ten18.Interop.Core</Name>
+      <Name>Ten18.Interop</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

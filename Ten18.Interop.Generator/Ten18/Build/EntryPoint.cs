@@ -14,8 +14,9 @@ using System.Runtime.CompilerServices;
 using Ten18.Interop;
 using System.Linq.Expressions;
 using System.IO;
+using Ten18.Interop;
 
-namespace Ten18.Interop
+namespace Ten18.Build
 {
     class EntryPoint
     {

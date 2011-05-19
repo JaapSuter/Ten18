@@ -12,9 +12,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ten18", "Ten18\Ten18.vcxpro
 		{467AFF4B-574D-49AE-B1AE-7D4D67EBC63C} = {467AFF4B-574D-49AE-B1AE-7D4D67EBC63C}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ten18.Interop.Core", "Ten18.Interop.Core\Ten18.Interop.Core.csproj", "{202A67BE-EC74-4F9A-872C-BB59CDC1595E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ten18.Interop", "Ten18.Interop.Core\Ten18.Interop.csproj", "{202A67BE-EC74-4F9A-872C-BB59CDC1595E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ten18.Interop.Generator", "Ten18.Interop.Generator\Ten18.Interop.Generator.csproj", "{D084C3C0-BB71-4FF6-8741-FE71478E4A45}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ten18.Build", "Ten18.Interop.Generator\Ten18.Build.csproj", "{D084C3C0-BB71-4FF6-8741-FE71478E4A45}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ten18.Content", "Ten18.Content\Ten18.Content.vcxproj", "{467AFF4B-574D-49AE-B1AE-7D4D67EBC63C}"
 EndProject
