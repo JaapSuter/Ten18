@@ -41,4 +41,4 @@
 #endif
 
 
-#pragma comment(lib, "Libraries/CLEyeMulticam.lib")
+#pragma comment(lib, "../Libraries/CLEyeMulticam.lib")

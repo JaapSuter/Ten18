@@ -2,7 +2,7 @@
 #include "Ten18/Expect.h"
 #include "Ten18/Timer.h"
 #include "Ten18/Image.h"
-#include "Libraries/CLEyeMulticam.h"
+#include "../Libraries/CLEyeMulticam.h"
 
 using namespace Ten18;
 using namespace Ten18::Capture;

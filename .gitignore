@@ -6,6 +6,7 @@
 *.ilk
 *.log
 *.lib
+!Libraries/CLEyeMulticam.lib
 *.sbr
 *.sdf
 *.vcxproj.user

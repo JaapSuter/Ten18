@@ -6,6 +6,8 @@
 #include "Ten18/COM/StackBasedSafeArray.h"
 #include "Ten18/COM/EmbeddedResourceStream.h"
 
+#include "Ten18.Interop.Impl.dll.h"
+
 using namespace Ten18;
 using namespace Ten18::CLR;
 using namespace Ten18::COM;
@@ -37,11 +39,11 @@ HRESULT STDMETHODCALLTYPE HostAssemblyStore::ProvideAssembly(
 
     static const std::tuple<const wchar_t* const, const WORD, const wchar_t* const, bool> embeddedAssemblies[] =
     {
-        std::make_tuple(L"Ten18.Net",                  IDR_TEN_18_ASSEMBLY_0, L"processorarchitecture=x86", true),
-        std::make_tuple(L"Ten18.Interop.Core",         IDR_TEN_18_ASSEMBLY_1, L"processorarchitecture=x86", true),
-        std::make_tuple(L"Ten18.Interop.Core.Interop", IDR_TEN_18_ASSEMBLY_2, L"processorarchitecture=x86", true),
-        std::make_tuple(L"SlimMath",                   IDR_TEN_18_ASSEMBLY_3, L"processorarchitecture=x86", true),
-        std::make_tuple(L"AsyncCtpLibrary",            IDR_TEN_18_ASSEMBLY_4, L"processorarchitecture=msil", false),
+        std::make_tuple(L"Ten18.Net",          IDR_TEN_18_ASSEMBLY_0, L"processorarchitecture=x86", true),
+        std::make_tuple(L"Ten18.Interop",      IDR_TEN_18_ASSEMBLY_1, L"processorarchitecture=x86", true),
+        std::make_tuple(L"Ten18.Interop.Impl", IDR_TEN_18_ASSEMBLY_2, L"processorarchitecture=x86", true),
+        std::make_tuple(L"SlimMath",           IDR_TEN_18_ASSEMBLY_3, L"processorarchitecture=x86", true),
+        std::make_tuple(L"AsyncCtpLibrary",    IDR_TEN_18_ASSEMBLY_4, L"processorarchitecture=msil", false),
     };
 
     for (int i = 0; i < ARRAYSIZE(embeddedAssemblies); ++i)
@@ -56,12 +58,17 @@ HRESULT STDMETHODCALLTYPE HostAssemblyStore::ProvideAssembly(
 
             const auto securityCookie = 0xBA5E1018;
             *pContext = securityCookie;
-            *ppStmAssemblyImage = new EmbeddedResourceStream(std::get<1>(embeddedAssemblies[i]));
+
+            if (i == 1)
+                *ppStmAssemblyImage = new EmbeddedResourceStream(g_Ten18_Interop_Impl_dll, g_Ten18_Interop_Impl_dllSize);
+            else
+                *ppStmAssemblyImage = new EmbeddedResourceStream(std::get<1>(embeddedAssemblies[i]));
+
             *pAssemblyId = mUniqueAssemblyIds + i;
 
             if (std::get<3>(embeddedAssemblies[i]))
             {            
-                const std::wstring dir(L"D://Projects//Code//Ten18//Code//obj//Win32//Debug//");
+                const std::wstring dir(L"D://Projects//Code//Ten18//Code//obj//x86//Debug//");
                 auto pdb = dir + std::get<0>(embeddedAssemblies[i]) + L".pdb";            
                 Expect.HR = SHCreateStreamOnFileEx(pdb.c_str(), STGM_READ | STGM_SHARE_DENY_NONE, 0, FALSE, nullptr, ppStmPDB);
             }

@@ -5,17 +5,12 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F066F00D-681B-4385-B363-0000BA000000}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AssemblyName>Ten18.Net</AssemblyName>
+    <ProjectGuid>{D084C3C0-BB71-4FF6-8741-FE71478E4A45}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>Ten18.Build</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>$(MSBuildProjectDirectory)\..\Ten18.snk</AssemblyOriginatorKeyFile>
     <RootNamespace>Ten18</RootNamespace>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\Ten18.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <PlatformTarget>x86</PlatformTarget>
@@ -27,6 +22,9 @@
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <NoStdLib>false</NoStdLib>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <Optimize>false</Optimize>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <PlatformTarget>x86</PlatformTarget>
@@ -41,15 +39,7 @@
     <NoStdLib>false</NoStdLib>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AsyncCtpLibrary, Version=1.0.4107.18181, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libraries\AsyncCtpLibrary.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="SlimMath, Version=1.0.0.0, Culture=neutral, PublicKeyToken=eb5b190254be1642, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libraries\SlimMath.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.CoreEx, Version=1.0.2856.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Interactive, Version=1.0.2856.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -58,22 +48,40 @@
     <Reference Include="System.Reactive.ClientProfile, Version=1.0.2856.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Reactive.ExtendedProfile, Version=1.0.2856.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Reactive.Testing, Version=1.0.2856.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="Ten18.Interop.Impl, Version=1.0.1.8, Culture=neutral, PublicKeyToken=39a56a431d4ba826, processorArchitecture=x86">
+    <Reference Include="SlimMath, Version=1.0.0.0, Culture=neutral, PublicKeyToken=eb5b190254be1642, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(OutputPath)Ten18.Interop.Impl.dll</HintPath>
+      <HintPath>..\Libraries\SlimMath.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Async\CompletedTask.cs" />
+    <Compile Include="Build\BinToHeader.cs" />
+    <Compile Include="Build\Paths.cs" />
+    <Compile Include="Interop\NativeToManagedCppHeaderTemplate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Async\CoroutineAwaiterT.cs" />
-    <Compile Include="Async\CoroutineTest.cs" />
-    <Compile Include="Async\CoroutineSynchronizationContext.cs" />
-    <Compile Include="Async\SingleThreadedConstraint.cs" />
-    <Compile Include="Async\CoroutineScheduler.cs" />
-    <Compile Include="Util.cs" />
-    <Compile Include="AppDomainManagerEx.cs" />
     <Compile Include="EntryPoint.cs" />
+    <Compile Include="Interop\InteropType.cs" />
+    <Compile Include="Interop\MethodGenerator.cs" />
+    <Compile Include="Interop\TypeGenerator.cs" />
+    <Compile Include="Interop\ClassGenerator.cs" />
+    <Compile Include="Interop\EnumGenerator.cs" />
+    <Compile Include="Interop\StructGenerator.cs" />
+    <Compile Include="Interop\AssemblyGenerator.cs" />
+    <Compile Include="Interop\DelegateGenerator.cs" />
+    <Compile Include="Interop\ExceptionFilterGenerator.cs" />
+    <Compile Include="Interop\NativeToManagedCppHeader.cs" />
+    <Compile Include="Interop\NativeToManagedCppHeaderTemplate.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>NativeToManagedCppHeaderTemplate.tt</DependentUpon>
+    </Compile>
+    <None Include="Interop\NativeToManagedCppHeaderTemplate.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>NativeToManagedCppHeaderTemplate.Generated.cs</LastGenOutput>
+      <CustomToolNamespace>Ten18.Interop</CustomToolNamespace>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Ten18.Interop\Ten18.Interop.csproj">
@@ -82,18 +90,4 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PreBuildEvent>$(OutputPath)\Ten18.Build.exe</PreBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
