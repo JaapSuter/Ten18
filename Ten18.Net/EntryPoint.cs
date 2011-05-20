@@ -21,7 +21,7 @@ namespace Ten18
 
         public static void HostedMain(string arg)
         {
-            Console.WriteLine("EntryPoint.HostedMain enter...");
+            Console.WriteLine("EntryPoint.HostedMain Enter...");
 
             Debug.Assert(AppDomain.CurrentDomain.IsDefaultAppDomain());
             
@@ -33,7 +33,7 @@ namespace Ten18
             Console.WriteLine("({0}, {1}, {2})", i0.X, i0.Y, i0.Z);
             
             var window = new WindowImpl();
-
+            
             var v3 = new Vector3() { X = 1, Y = 2, Z = 3 };
             var i1 = window.Z_ThisCallFoo(0xF1, ref v3, 0xF3);
 
@@ -42,7 +42,7 @@ namespace Ten18
             var position = window.Position;
             var size = window.Size;
             
-            Console.WriteLine("EntryPoint.HostedMain says: {0}, ({1}, {2})", arg, position, size);
+            Console.WriteLine("EntryPoint.HostedMain Says: {0}, ({1}, {2})", arg, position, size);
 
             window.MakeFullScreen();
             

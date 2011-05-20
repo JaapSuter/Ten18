@@ -94,11 +94,11 @@
     <ClCompile Include="Ten18\CLR\HostAssemblyManager.cpp">
       <Filter>Ten18\CLR</Filter>
     </ClCompile>
+    <ClCompile Include="Ten18\Content\Index.cpp">
+      <Filter>Ten18\Content</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Ten18\Resources\Resources.h">
-      <Filter>Ten18\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="Ten18\PCH.h">
       <Filter>Ten18</Filter>
     </ClInclude>
@@ -204,13 +204,13 @@
     <ClInclude Include="Ten18\CLR\HostAssemblyManager.h">
       <Filter>Ten18\CLR</Filter>
     </ClInclude>
+    <ClInclude Include="Ten18\Content\Index.h">
+      <Filter>Ten18\Content</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Ten18">
       <UniqueIdentifier>{35d7c303-9f87-474d-82ec-cdfe92de116f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Ten18\Resources">
-      <UniqueIdentifier>{df3c55f0-e1bf-4061-b6a8-847541f89a1f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Ten18\Graphics">
       <UniqueIdentifier>{1f3e45cb-ac74-4db0-bd78-cbb449834145}</UniqueIdentifier>
@@ -227,10 +227,8 @@
     <Filter Include="Ten18\COM">
       <UniqueIdentifier>{4c6caf62-37f4-44fc-8b9c-0b9c76828970}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Ten18\Resources\Resources.rc">
-      <Filter>Ten18\Resources</Filter>
-    </ResourceCompile>
+    <Filter Include="Ten18\Content">
+      <UniqueIdentifier>{b5d0d301-f47f-44e4-96c4-47921ed4614e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

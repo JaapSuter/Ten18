@@ -8,37 +8,27 @@
     <ProjectGuid>{D084C3C0-BB71-4FF6-8741-FE71478E4A45}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AssemblyName>Ten18.Build</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <RootNamespace>Ten18</RootNamespace>
   </PropertyGroup>
+  <Import Project="$(SolutionDir)Ten18.proj" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <PlatformTarget>x86</PlatformTarget>
-    <OutputPath>$(MSBuildProjectDirectory)\..\obj\x86\Debug\</OutputPath>
-    <OutDir>$(OutputPath)</OutDir>
-    <IntermediateOutputPath>$(MSBuildProjectDirectory)\obj\x86\Debug\</IntermediateOutputPath>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DebugType>full</DebugType>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <NoStdLib>false</NoStdLib>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <Optimize>false</Optimize>
-    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <PlatformTarget>x86</PlatformTarget>
-    <OutputPath>$(MSBuildProjectDirectory)\..\obj\x86\Release\</OutputPath>
-    <OutDir>$(OutputPath)</OutDir>
-    <IntermediateOutputPath>$(MSBuildProjectDirectory)\obj\x86\Release\</IntermediateOutputPath>
     <DebugType>pdbonly</DebugType>
     <DebugSymbols>true</DebugSymbols>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Optimize>true</Optimize>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <NoStdLib>false</NoStdLib>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Build" />
+    <Reference Include="Microsoft.Build.Conversion.v4.0" />
+    <Reference Include="Microsoft.Build.Engine" />
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.Build.Tasks.v4.0" />
+    <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.CoreEx, Version=1.0.2856.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -54,7 +44,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Build\BinToHeader.cs" />
+    <Compile Include="Build\Args.cs" />
+    <Compile Include="Build\EmEsBuilderify.cs" />
+    <Compile Include="Build\Index.cs" />
     <Compile Include="Build\Paths.cs" />
     <Compile Include="Interop\NativeToManagedCppHeaderTemplate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

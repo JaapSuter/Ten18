@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <!--<Message Text="Project File Name = $(MSBuildProjectFile)" Importance="high"/>-->
+    <PlatformTarget>x86</PlatformTarget>
+    
+    <SolutionIntermediateDir>$(SolutionDir)obj\$(PlatformTarget)\$(Configuration)\</SolutionIntermediateDir>
+    <SolutionOutputDir>$(SolutionDir)bin\$(PlatformTarget)\$(Configuration)\</SolutionOutputDir>
+    <ProjectIntermediateDir>$(ProjectDir)obj\$(PlatformTarget)\$(Configuration)\</ProjectIntermediateDir>
+    <ProjectOutputDir>$(SolutionIntermediateDir)</ProjectOutputDir>
+
+    <OutDir>$(ProjectOutputDir)</OutDir>
+    <OutputPath>$(ProjectOutputDir)</OutputPath>
+    <IntDir>$(ProjectIntermediateDir)</IntDir>
+    <IntermediateOutputPath>$(ProjectIntermediateDir)</IntermediateOutputPath>
+
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>    
+    <AssemblyOriginatorKeyFile>$(SolutionDir)Ten18.snk</AssemblyOriginatorKeyFile>
+    <RootNamespace>Ten18</RootNamespace>
+    
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+
+    <LibraryPath>$(SolutionIntermediateDir);$(ProjectDir);$(DXSDK_DIR)Lib\x86;$(LibraryPath)</LibraryPath>
+    
+  </PropertyGroup>
+</Project>

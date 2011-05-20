@@ -5,8 +5,7 @@
 #include "Ten18/Expect.h"
 #include "Ten18/COM/StackBasedSafeArray.h"
 #include "Ten18/COM/EmbeddedResourceStream.h"
-
-#include "Ten18.Interop.Impl.dll.h"
+#include "Ten18/Content/Index.h"
 
 using namespace Ten18;
 using namespace Ten18::CLR;
@@ -28,6 +27,19 @@ HRESULT STDMETHODCALLTYPE HostAssemblyStore::ProvideAssembly(
     *pContext = 0;
     *ppStmAssemblyImage = nullptr;
     *ppStmPDB = nullptr;
+
+    DebugOut("pBindInfo->lpPostPolicyIdentity: %S", pBindInfo->lpPostPolicyIdentity);
+    DebugOut("pBindInfo->lpReferencedIdentity: %S", pBindInfo->lpReferencedIdentity);
+
+    auto entry = Content::Index::Get(pBindInfo->lpPostPolicyIdentity);
+
+    const auto securityCookie = 0xBA5E1018;
+    *pContext = securityCookie;
+    *ppStmAssemblyImage = new EmbeddedResourceStream(entry.Data, entry.Size);
+    *pAssemblyId = reinterpret_cast<UINT64>(entry.Data);
+
+    return S_OK;
+    /*   
 
     std::wstring postPolicyIdentity(pBindInfo->lpPostPolicyIdentity);
 
@@ -78,6 +90,8 @@ HRESULT STDMETHODCALLTYPE HostAssemblyStore::ProvideAssembly(
     }
     
     return COR_E_FILENOTFOUND;
+    
+    */    
 }
         
 HRESULT STDMETHODCALLTYPE HostAssemblyStore::ProvideModule( 

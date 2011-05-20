@@ -8,34 +8,19 @@
     <ProjectGuid>{202A67BE-EC74-4F9A-872C-BB59CDC1595E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AssemblyName>Ten18.Interop</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>$(MSBuildProjectDirectory)\..\Ten18.snk</AssemblyOriginatorKeyFile>
-    <RootNamespace>Ten18</RootNamespace>
   </PropertyGroup>
+  <Import Project="$(SolutionDir)Ten18.proj" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <PlatformTarget>x86</PlatformTarget>
-    <OutputPath>$(MSBuildProjectDirectory)\..\obj\x86\Debug\</OutputPath>
-    <OutDir>$(OutputPath)</OutDir>
-    <IntermediateOutputPath>$(MSBuildProjectDirectory)\obj\x86\Debug\</IntermediateOutputPath>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DebugType>full</DebugType>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <NoStdLib>false</NoStdLib>
     <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <PlatformTarget>x86</PlatformTarget>
-    <OutputPath>$(MSBuildProjectDirectory)\..\obj\x86\Release\</OutputPath>
-    <OutDir>$(OutputPath)</OutDir>
-    <IntermediateOutputPath>$(MSBuildProjectDirectory)\obj\x86\Release\</IntermediateOutputPath>
     <DebugType>pdbonly</DebugType>
     <DebugSymbols>true</DebugSymbols>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Optimize>true</Optimize>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <NoStdLib>false</NoStdLib>
   </PropertyGroup>
   <ItemGroup>
@@ -59,17 +44,6 @@
     <Compile Include="Input\InputEvent.cs" />
     <Compile Include="Input\Input.cs" />
     <Compile Include="Window.cs" />
-  </ItemGroup>
+  </ItemGroup>  
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

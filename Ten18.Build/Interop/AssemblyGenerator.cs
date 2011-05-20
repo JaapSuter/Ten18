@@ -14,6 +14,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.CSharp;
 using Ten18.Interop;
 using System.IO;
+using Ten18.Build;
 
 namespace Ten18.Interop
 {

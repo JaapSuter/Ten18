@@ -15,11 +15,12 @@ using System.Linq.Expressions;
 using System.IO;
 using Ten18.Interop;
 
-namespace Ten18
+namespace Ten18.Build
 {
     static class Paths
     {
         public static string SolutionDir { get; private set; }
+        public static string WorkingDir { get; private set; }
         public static string KeyFile { get; private set; }
         
         public static string WindowsSdkDir { get; private set; }
@@ -73,20 +74,21 @@ namespace Ten18
 
             Debug.Assert(File.Exists(Path.Combine(slnDir, "Ten18.sln")));
             SolutionDir = slnDir;
+            Console.WriteLine(SolutionDir);
 
             KeyFile = Path.Combine(slnDir, "Ten18.snk");
             Debug.Assert(File.Exists(KeyFile));
 
-            WindowsSdkDir = Environment.GetCommandLineArgs().SkipWhile(arg => arg != "-WindowsSdkDir").FirstOrDefault(arg => Directory.Exists(arg))
-                         ?? new []
+            WindowsSdkDir = Args.Get("WindowsSdkDir", Directory.Exists, () =>
+                            new []
                             {
                                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), @"Microsoft SDKs\Windows\v7.0A\bin\"),
                                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), @"Microsoft SDKs\Windows\v7.0\bin\"),
                                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), @"Microsoft SDKs\Windows\v6.1\bin\"),
-                                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"Microsoft SDKs\Windows\v7.0A\bin\"),
-                                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"Microsoft SDKs\Windows\v7.0\bin\"),
-                                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"Microsoft SDKs\Windows\v6.1\bin\"),
-                            }.FirstOrDefault(arg => Directory.Exists(arg));
+                                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),    @"Microsoft SDKs\Windows\v7.0A\bin\"),
+                                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),    @"Microsoft SDKs\Windows\v7.0\bin\"),
+                                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),    @"Microsoft SDKs\Windows\v6.1\bin\"),
+                            }.FirstOrDefault(Directory.Exists));
 
             Debug.Assert(WindowsSdkDir != null);
 
@@ -97,6 +99,8 @@ namespace Ten18
             ILAsmExe = Path.Combine(RuntimeEnvironment.GetRuntimeDirectory(), "ilasm.exe");
             ILDasmExe = Path.Combine(NetFxToolsDir, "ildasm.exe");
             PEVerifyExe = Path.Combine(NetFxToolsDir, "PEVerify.exe");
+
+            WorkingDir = Args.Get<string>("WorkingDir", Directory.Exists, Environment.CurrentDirectory);
         }
     }
 }

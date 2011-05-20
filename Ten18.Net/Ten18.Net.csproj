@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)Ten18.proj"/>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -8,36 +9,19 @@
     <ProjectGuid>{F066F00D-681B-4385-B363-0000BA000000}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AssemblyName>Ten18.Net</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>$(MSBuildProjectDirectory)\..\Ten18.snk</AssemblyOriginatorKeyFile>
-    <RootNamespace>Ten18</RootNamespace>
   </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\Ten18.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
+  <Import Project="$(SolutionDir)Ten18.proj"/>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <PlatformTarget>x86</PlatformTarget>
-    <OutputPath>$(MSBuildProjectDirectory)\..\obj\x86\Debug\</OutputPath>
-    <OutDir>$(OutputPath)</OutDir>
-    <IntermediateOutputPath>$(MSBuildProjectDirectory)\obj\x86\Debug\</IntermediateOutputPath>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DebugType>full</DebugType>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <NoStdLib>false</NoStdLib>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <PlatformTarget>x86</PlatformTarget>
-    <OutputPath>$(MSBuildProjectDirectory)\..\obj\x86\Release\</OutputPath>
-    <OutDir>$(OutputPath)</OutDir>
-    <IntermediateOutputPath>$(MSBuildProjectDirectory)\obj\x86\Release\</IntermediateOutputPath>
     <DebugType>pdbonly</DebugType>
     <DebugSymbols>true</DebugSymbols>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Optimize>true</Optimize>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <NoStdLib>false</NoStdLib>
   </PropertyGroup>
   <ItemGroup>
@@ -60,7 +44,7 @@
     <Reference Include="System.Reactive.Testing, Version=1.0.2856.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Ten18.Interop.Impl, Version=1.0.1.8, Culture=neutral, PublicKeyToken=39a56a431d4ba826, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(OutputPath)Ten18.Interop.Impl.dll</HintPath>
+      <HintPath>$(SolutionIntermediateDir)Ten18.Interop.Impl.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -87,13 +71,6 @@
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>$(OutputPath)\Ten18.Build.exe</PreBuildEvent>
+    <PreBuildEvent>$(OutputPath)\Ten18.Build.exe -ImplementInteropAssembly -WorkingDir $(SolutionIntermediateDir)</PreBuildEvent>
   </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

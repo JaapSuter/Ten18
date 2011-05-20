@@ -24,7 +24,7 @@ namespace Ten18 { namespace Graphics {
     private:
     public: // Todo, April 2011, Jaap Suter needs to get things done.
 
-        void InitializeShaders(WORD vsid, WORD psid, COM::COMPtr<ID3D11VertexShader>& vs, COM::COMPtr<ID3D11PixelShader>& ps);
+        void InitializeShaders(const wchar_t* vsid, const wchar_t* psid, COM::COMPtr<ID3D11VertexShader>& vs, COM::COMPtr<ID3D11PixelShader>& ps);
 
         friend class SwapChain;
         

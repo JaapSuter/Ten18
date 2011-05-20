@@ -15,6 +15,7 @@
     <ProjectGuid>{B8FF81B5-9B26-4931-8353-0000BA000000}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
+  <Import Project="$(SolutionDir)Ten18.proj" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -29,20 +30,10 @@
   <ImportGroup Label="ExtensionSettings" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <ExecutablePath>$(DXSDK_DIR)Utilities\bin\x64;$(DXSDK_DIR)Utilities\bin\x86;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>$(ProjectDir);$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir);$(DXSDK_DIR)Lib\x86;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)\bin\x86\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)\obj\x86\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <GenerateManifest>true</GenerateManifest>
-    <ExecutablePath>$(DXSDK_DIR)Utilities\bin\Win32;$(DXSDK_DIR)Utilities\bin\x86;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>$(ProjectDir);$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir);$(DXSDK_DIR)Lib\x86;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)\bin\x86\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)\obj\x86\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -55,11 +46,11 @@
       <PrecompiledHeaderFile>Ten18/PCH.h</PrecompiledHeaderFile>
       <TreatWarningAsError>true</TreatWarningAsError>
       <CompileAsManaged>false</CompileAsManaged>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>Ten18/PCH.h</ForcedIncludeFiles>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <AdditionalIncludeDirectories>$(SolutionIntermediateDir);$(ProjectDir);$(DXSDK_DIR)Include;$(IncludePath)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -72,6 +63,9 @@
     <Manifest>
       <EnableDPIAwareness>true</EnableDPIAwareness>
     </Manifest>
+    <PreBuildEvent>
+      <Command>$(SolutionIntermediateDir)Ten18.Build.exe -EmbedContent -WorkingDir $(SolutionIntermediateDir)</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -95,10 +89,10 @@
       <CompileAsManaged>false</CompileAsManaged>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>Ten18/PCH.h</ForcedIncludeFiles>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>$(SolutionIntermediateDir);$(ProjectDir);$(DXSDK_DIR)Include;$(IncludePath)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -111,6 +105,9 @@
     <Manifest>
       <EnableDPIAwareness>true</EnableDPIAwareness>
     </Manifest>
+    <PreBuildEvent>
+      <Command>$(SolutionIntermediateDir)Ten18.Build.exe -EmbedContent -WorkingDir $(SolutionIntermediateDir)</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Ten18\Assert.cpp" />
@@ -126,6 +123,7 @@
     <ClCompile Include="Ten18\CLR\HostMemoryManager.cpp" />
     <ClCompile Include="Ten18\COM\COMPtr.cpp" />
     <ClCompile Include="Ten18\Console.cpp" />
+    <ClCompile Include="Ten18\Content\Index.cpp" />
     <ClCompile Include="Ten18\Expect.cpp" />
     <ClCompile Include="Ten18\Graphics\Device.cpp" />
     <ClCompile Include="Ten18\Graphics\Display.cpp" />
@@ -160,6 +158,7 @@
     <ClInclude Include="Ten18\COM\ImplUnknown.h" />
     <ClInclude Include="Ten18\COM\StackBasedSafeArray.h" />
     <ClInclude Include="Ten18\Console.h" />
+    <ClInclude Include="Ten18\Content\Index.h" />
     <ClInclude Include="Ten18\Expect.h" />
     <ClInclude Include="Ten18\Graphics\Constants.h" />
     <ClInclude Include="Ten18\Graphics\Device.h" />
@@ -169,7 +168,6 @@
     <ClInclude Include="Ten18\Image.h" />
     <ClInclude Include="Ten18\OnExit.h" />
     <ClInclude Include="Ten18\Program.h" />
-    <ClInclude Include="Ten18\Resources\Resources.h" />
     <ClInclude Include="Ten18\PCH.h" />
     <ClCompile Include="Ten18\PCH.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
@@ -182,12 +180,6 @@
     <ClInclude Include="Ten18\Util.h" />
     <ClInclude Include="Ten18\Windows\RawInput.h" />
     <ClInclude Include="Ten18\Windows\Window.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Ten18\Resources\Resources.rc">
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_DEBUG;_UNICODE;UNICODE;</PreprocessorDefinitions>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NDEBUG;_UNICODE;UNICODE;</PreprocessorDefinitions>
-    </ResourceCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

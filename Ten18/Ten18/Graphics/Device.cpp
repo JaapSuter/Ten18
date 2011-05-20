@@ -9,8 +9,8 @@
 #include "Ten18/OnExit.h"
 #include "Ten18/COM/COMPtr.h"
 #include "Ten18/COM/EmbeddedResourceStream.h"
-#include "Ten18/Resources/Resources.h"
 #include "Ten18/Tracer.h"
+#include "Ten18/Content/Index.h"
 
 using namespace Ten18;
 using namespace Ten18::Graphics;
@@ -70,8 +70,8 @@ Device::Device() :
         { XMFLOAT3(hso + hsw, hsh, 0.5f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), XMFLOAT2( hsw / tsw, hsh / tsh) },
     };
 
-    InitializeShaders(IDR_TEN_18_HLSL_VS_CAPTURE, IDR_TEN_18_HLSL_PS_CAPTURE, mCaptureVertexShader, mCapturePixelShader);
-    InitializeShaders(IDR_TEN_18_HLSL_VS_GRAY_CODE, IDR_TEN_18_HLSL_PS_GRAY_CODE, mGrayCodeVertexShader, mGrayCodePixelShader);
+    InitializeShaders(L"Ten18.Content.Shaders.Capture.VS", L"Ten18.Content.Shaders.Capture.PS", mCaptureVertexShader, mCapturePixelShader);
+    InitializeShaders(L"Ten18.Content.Shaders.GrayCode.VS", L"Ten18.Content.Shaders.GrayCode.PS", mGrayCodeVertexShader, mGrayCodePixelShader);
 
     D3D11_BUFFER_DESC vbd = {};
     vbd.Usage = D3D11_USAGE_DEFAULT;
@@ -91,6 +91,8 @@ Device::Device() :
     Expect.HR = mD3D11Device->CreateBuffer(&cbd, NULL, mConstantBuffer.AsTypedDoubleStar());
     SetDebugName(mConstantBuffer, "Constant Buffer");
 
+    const auto& entry = Content::Index::Get(L"Ten18.Content.Images.Panorama");
+    Expect.HR = D3DX11CreateShaderResourceViewFromMemory(mD3D11Device.Raw(), entry.Data nullptr, nullptr, mTextureRV.AsTypedDoubleStar(), nullptr);    
     Expect.HR = D3DX11CreateShaderResourceViewFromResource(mD3D11Device.Raw(), GetModuleHandle(nullptr), MAKEINTRESOURCE(IDR_TEN_18_TEXTURE_JPG), nullptr, nullptr, mTextureRV.AsTypedDoubleStar(), nullptr);
     SetDebugName(mTextureRV, "Shader Resource View");
     
@@ -147,14 +149,14 @@ Device::Device() :
     mWriter.Initialize(*mDXGIAdapter1, *mD3D11Device);
 }
 
-void Device::InitializeShaders(WORD vsid, WORD psid, COM::COMPtr<ID3D11VertexShader>& vs, COM::COMPtr<ID3D11PixelShader>& ps)
+void Device::InitializeShaders(const wchar_t* vsid, const wchar_t* psid, COM::COMPtr<ID3D11VertexShader>& vs, COM::COMPtr<ID3D11PixelShader>& ps)
 {
-    EmbeddedResourceStream vsBlob(vsid);    
-    Expect.HR = mD3D11Device->CreateVertexShader(vsBlob.GetBufferPointer(), vsBlob.GetBufferSize(), nullptr, vs.AsTypedDoubleStar());    
+    const auto& vsBlob = Content::Index::Get(vsid);
+    Expect.HR = mD3D11Device->CreateVertexShader(vsBlob.Data, vsBlob.Size, nullptr, vs.AsTypedDoubleStar());    
     SetDebugName(vs, "Vertex Shader");
     
-    EmbeddedResourceStream psBlob(psid);    
-    Expect.HR = mD3D11Device->CreatePixelShader(psBlob.GetBufferPointer(), psBlob.GetBufferSize(), nullptr, ps.AsTypedDoubleStar());
+    const auto& vsBlob = Content::Index::Get(psid);
+    Expect.HR = mD3D11Device->CreatePixelShader(psBlob.Data, psBlob.Size, nullptr, ps.AsTypedDoubleStar());
     SetDebugName(ps, "Pixel Shader");
 
     if (!mVertexLayout)
