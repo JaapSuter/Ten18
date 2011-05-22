@@ -6,38 +6,27 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Diagnostics;
 using Ten18.Async;
+using SlimMath;
 
 namespace Ten18
 {
     static class EntryPoint
     {
-        class Foo
-        {
-            public virtual Vector3 LargeReturn()
-            {
-                return new Vector3() { X = 424242, Y = 2, Z = 666 };
-            }
-        }
-
         public static void HostedMain(string arg)
         {
             Console.WriteLine("EntryPoint.HostedMain Enter...");
 
             Debug.Assert(AppDomain.CurrentDomain.IsDefaultAppDomain());
             
-            var f = new Foo();
-            var i0 = new Vector3();
-
-
-            i0 = f.LargeReturn();
-            Console.WriteLine("({0}, {1}, {2})", i0.X, i0.Y, i0.Z);
-            
             var window = new WindowImpl();
-            
-            var v3 = new Vector3() { X = 1, Y = 2, Z = 3 };
-            var i1 = window.Z_ThisCallFoo(0xF1, ref v3, 0xF3);
 
-            Console.WriteLine("({0}, {1}, {2})", i1.X, i1.Y, i1.Z);
+            var v1 = new Vector4(3, 5, 6, 5);
+            var v2 = window.Position;
+            Console.WriteLine("({0}, {1})", v2.X, v2.Y);
+
+            window.Position = new Vector2(30, 40);
+            v2 = window.Position;
+            Console.WriteLine("({0}, {1})", v2.X, v2.Y);
 
             var position = window.Position;
             var size = window.Size;

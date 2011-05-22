@@ -27,7 +27,7 @@ namespace Ten18.Interop
             Debug.Assert(type.IsEnum);
         }
 
-        protected override void GenerateCpp(string cppRootDir)
+        protected override void GenerateCpp()
         {
         }
 

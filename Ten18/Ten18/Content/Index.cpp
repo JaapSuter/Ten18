@@ -25,17 +25,27 @@ static bool CompareName(const Index::Entry& entry, const wchar_t* name)
     return false;
 }
 
-const Index::Entry& Index::Get(const wchar_t* name)
+const Index::Entry* Index::TryGet(const wchar_t* name)
 {
     for (int i = 0; i < NumEntries; ++i)
         if (CompareName(Table[i], name))
-            return Table[i];
+            return &Table[i];
+    
+    return nullptr;
+}
 
-    Ten18_ASSERT_FAIL("Unable to find embedded data with name: %S", name);
-
-    static const Ten18::Content::Index::Entry Null = { "Ten18.Content.Index.Null", 0, nullptr };
-
-    return Null;
+const Index::Entry& Index::Get(const wchar_t* name)
+{
+    auto ret = TryGet(name);
+    
+    if (ret == nullptr)
+    {
+        Ten18_ASSERT_FAIL("Unable to find embedded data with name: %S", name);    
+        static const Ten18::Content::Index::Entry Null = { "Ten18.Content.Index.Null", 0, nullptr };
+        return Null;
+    }
+    
+    return *ret;
 }
 
     

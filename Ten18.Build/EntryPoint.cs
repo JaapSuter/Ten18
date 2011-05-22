@@ -36,6 +36,7 @@ namespace Ten18
                 catch (Exception e)
                 {
                     Console.WriteLine(e.Message);
+                    Console.WriteLine(e);
                     return -1;
                 }
     
@@ -48,7 +49,10 @@ namespace Ten18
                 ImplementInteropAssembly();
 
             if (Args.Get<bool>("EmbedContent"))
-                EmbedAssemblies();            
+            {
+                CompileShaders();
+                EmbedAssemblies();
+            }
         }
 
         private static void ImplementInteropAssembly()
@@ -57,6 +61,30 @@ namespace Ten18
             var assemblyGenerator = new AssemblyGenerator(interopAssembly);
             
             assemblyGenerator.Generate();
+        }
+
+        private static void CompileShaders()
+        {
+            string flags = "/nologo /WX /Ges /Od /Op /O0 /Zi /Gdp ";
+            // Todo, Jaap Suter, May 2011, release flags:   /nologo /WX /Ges /O3 /Qstrip_reflect /Qstrip_debug
+
+            var dir = Path.Combine(Args.Get<string>("WorkingDir"), "Ten18/Content/Shaders");
+            if (!Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+
+            foreach (var shader in Directory.EnumerateFiles(Path.Combine(Paths.SolutionDir, "Ten18.Content/Shaders"), "*.fx"))
+            {
+                var name = Path.GetFileNameWithoutExtension(shader);
+
+                var vso = Path.Combine(dir, name + ".vso");
+                var pso = Path.Combine(dir, name + ".pso");
+
+                Paths.RunExe(Paths.FxcExe, "{0} /Tvs_4_0 /EVS /Fo{1} {2}", flags, vso, shader);
+                Paths.RunExe(Paths.FxcExe, "{0} /Tps_4_0 /EPS /Fo{1} {2}", flags, pso, shader);
+
+                Build.Index.Add("Ten18.Content.Shaders." + name + ".VS", vso);
+                Build.Index.Add("Ten18.Content.Shaders." + name + ".PS", pso);
+            }
         }
 
         private static void EmbedAssemblies()
@@ -70,16 +98,8 @@ namespace Ten18
                 Build.Index.Add(contentName, dll);
             }
 
-            Build.Index.Add(Path.Combine(Paths.SolutionDir, @"Ten18.Content\Images\Panorama.jpg"), "Ten18.Content.Images.Panorama");
-            Build.Index.Add(Path.Combine(Paths.SolutionDir, @"Ten18.Content\Shaders\Capture.pso"), "Ten18.Content.Shaders.Capture.PS");
-            Build.Index.Add(Path.Combine(Paths.SolutionDir, @"Ten18.Content\Shaders\Capture.vso"), "Ten18.Content.Shaders.Capture.VS");
-            Build.Index.Add(Path.Combine(Paths.SolutionDir, @"Ten18.Content\Shaders\GrayCode.pso"), "Ten18.Content.Shaders.GrayCode.PS");
-            Build.Index.Add(Path.Combine(Paths.SolutionDir, @"Ten18.Content\Shaders\GrayCode.vso"), "Ten18.Content.Shaders.GrayCode.VS");
-
-            var dir = Path.Combine(Paths.SolutionDir, @"obj\x86\Debug\Ten18\Content");
-            if (!Directory.Exists(dir))
-                Directory.CreateDirectory(dir);
-            Build.Index.Generate(Path.Combine(dir, "Index.Generated.h"));
+            Build.Index.Add("Ten18.Content.Images.Panorama", Path.Combine(Paths.SolutionDir, @"Ten18.Content\Images\Panorama.jpg"));
+            Build.Index.GenerateHeaders();
         }
     }
 }

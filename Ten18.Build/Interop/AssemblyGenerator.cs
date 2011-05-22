@@ -49,7 +49,7 @@ namespace Ten18.Interop
             var assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(mAssemblyName, AssemblyBuilderAccess.Save, mAssemblyDir);
             var moduleBuilder = assemblyBuilder.DefineDynamicModule(mAssemblyName.Name, assemblyFileName, emitSymbolInfo: true);
 
-            mTypeGenerators.Run(tg => tg.Generate(mAssemblyDir, moduleBuilder));
+            mTypeGenerators.Run(tg => tg.Generate(moduleBuilder));
 
             assemblyBuilder.Save(assemblyFileName, PortableExecutableKinds.Required32Bit | PortableExecutableKinds.ILOnly, ImageFileMachine.I386);
 

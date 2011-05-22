@@ -6,13 +6,13 @@
 	class Renderer;
 	class NativeServiceProvider;
 	
-    class <#= Type.Name #>
+    class <#= InteropType.Type.Name #>
     {
-<# foreach (var methodInfo in MethodInfos) { #>
-        virtual <#= InteropType.Get(methodInfo.ReturnType).FullNameInCpp #> __stdcall <#= methodInfo.Name #>(<#=NativeParameterListOf(methodInfo)#>);
+<# foreach (var mg in MethodGenerators) { #>
+        virtual <#= mg.NativeReturnType #> __stdcall <#= mg.MethodBuilder.Name #>(<#= mg.NativeParameterListOf() #>);
 <#}#>
 
-		virtual __stdcall ~<#= Type.Name #>() {};
+		virtual __stdcall ~<#= InteropType.Type.Name #>() {};
     };
 	
 <# foreach (var nameSpaceName in NameSpaceNames) { #>}<#}#>

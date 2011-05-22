@@ -25,17 +25,21 @@ namespace Ten18.Interop
         {
             Debug.Assert(!type.IsNested);
             mInteropType = InteropType.Get(type);
+            mCppHeaderFile = Path.Combine(Args.Get<string>("WorkingDir"), mInteropType.FullNameInCSharp.Replace(".", "\\") + ".Generated.h");
+            if (!Directory.Exists(Path.GetDirectoryName(mCppHeaderFile)))
+                Directory.CreateDirectory(Path.GetDirectoryName(mCppHeaderFile));
         }
 
-        public void Generate(string cppRootDir, ModuleBuilder moduleBuilder)
+        public void Generate(ModuleBuilder moduleBuilder)
         {
-            GenerateCpp(cppRootDir);
             GenerateCli(moduleBuilder);
+            GenerateCpp();
         }
 
-        protected abstract void GenerateCpp(string cppRootDir);
+        protected abstract void GenerateCpp();
         protected abstract void GenerateCli(ModuleBuilder moduleBuilder);
         
         protected readonly InteropType mInteropType;
+        protected readonly string mCppHeaderFile;
     }
 }

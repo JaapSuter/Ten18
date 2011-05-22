@@ -22,12 +22,17 @@ namespace Ten18.Build
     {
         public static void Add(string name, string path)
         {
-            sEntries.Add(Normalize(name), path);
+            sEntries.Add(Asciify(name), path);
         }
 
-        public static void Generate(string generatedHeaderFilePath)
+        public static void GenerateHeaders()
         {
-            using (var tw = File.CreateText(generatedHeaderFilePath))
+            var dir = Path.Combine(Args.Get<string>("WorkingDir"), "Ten18/Content");
+            if (!Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+            
+            var header = Path.Combine(dir, "Index.Generated.h");            
+            using (var tw = File.CreateText(header))
             {
                 tw.WriteLine("#include \"Ten18/Content/Index.h\"");
                 tw.WriteLine();
@@ -60,7 +65,7 @@ namespace Ten18.Build
             }
         }
 
-        private static string Normalize(string str)
+        private static string Asciify(string str)
         {
             byte[] ascii = Encoding.Convert(Encoding.Unicode, Encoding.ASCII, Encoding.Unicode.GetBytes(str));
             return new string(Encoding.ASCII.GetChars(ascii));

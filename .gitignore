@@ -9,8 +9,6 @@
 !Libraries/CLEyeMulticam.lib
 *.sbr
 *.sdf
-*.vcxproj.user
-*.csproj.user
 *.opensdf
 ipch/
 obj/

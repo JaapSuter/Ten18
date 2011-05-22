@@ -92,8 +92,7 @@ Device::Device() :
     SetDebugName(mConstantBuffer, "Constant Buffer");
 
     const auto& entry = Content::Index::Get(L"Ten18.Content.Images.Panorama");
-    Expect.HR = D3DX11CreateShaderResourceViewFromMemory(mD3D11Device.Raw(), entry.Data nullptr, nullptr, mTextureRV.AsTypedDoubleStar(), nullptr);    
-    Expect.HR = D3DX11CreateShaderResourceViewFromResource(mD3D11Device.Raw(), GetModuleHandle(nullptr), MAKEINTRESOURCE(IDR_TEN_18_TEXTURE_JPG), nullptr, nullptr, mTextureRV.AsTypedDoubleStar(), nullptr);
+    Expect.HR = D3DX11CreateShaderResourceViewFromMemory(mD3D11Device.Raw(), entry.Data, entry.Size, nullptr, nullptr, mTextureRV.AsTypedDoubleStar(), nullptr);
     SetDebugName(mTextureRV, "Shader Resource View");
     
     D3D11_SAMPLER_DESC sampDesc = {};
@@ -155,13 +154,13 @@ void Device::InitializeShaders(const wchar_t* vsid, const wchar_t* psid, COM::CO
     Expect.HR = mD3D11Device->CreateVertexShader(vsBlob.Data, vsBlob.Size, nullptr, vs.AsTypedDoubleStar());    
     SetDebugName(vs, "Vertex Shader");
     
-    const auto& vsBlob = Content::Index::Get(psid);
+    const auto& psBlob = Content::Index::Get(psid);
     Expect.HR = mD3D11Device->CreatePixelShader(psBlob.Data, psBlob.Size, nullptr, ps.AsTypedDoubleStar());
     SetDebugName(ps, "Pixel Shader");
 
     if (!mVertexLayout)
     {
-        Expect.HR = mD3D11Device->CreateInputLayout(Vertex::Layout, Vertex::LayoutCount, vsBlob.GetBufferPointer(), vsBlob.GetBufferSize(), mVertexLayout.AsTypedDoubleStar());
+        Expect.HR = mD3D11Device->CreateInputLayout(Vertex::Layout, Vertex::LayoutCount, vsBlob.Data, vsBlob.Size, mVertexLayout.AsTypedDoubleStar());
         SetDebugName(mVertexLayout, "Vertex Layout");
     }
 }

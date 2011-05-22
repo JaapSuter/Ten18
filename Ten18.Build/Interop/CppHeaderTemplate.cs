@@ -18,16 +18,10 @@ using System.IO;
 
 namespace Ten18.Interop
 {
-    partial class NativeToManagedCppHeaderTemplate
+    partial class CppHeaderTemplate
     {
         internal IEnumerable<string> NameSpaceNames;
-        internal Type Type;
-        internal MethodInfo[] MethodInfos;
-
-        public string NativeParameterListOf(MethodInfo methodInfo)
-        {
-            return String.Join(", ",
-                from pi in methodInfo.GetParameters() select String.Format("{0}* {1}", InteropType.Get(pi.ParameterType).FullNameInCpp, pi.Name));
-        }
+        internal InteropType InteropType;
+        internal MethodGenerator[] MethodGenerators;
     }
 }

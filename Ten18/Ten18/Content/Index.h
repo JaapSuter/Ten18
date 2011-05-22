@@ -13,6 +13,7 @@ namespace Ten18 { namespace Content
             const char* Data;
         };
         
+        static const Entry* TryGet(const wchar_t* name);
         static const Entry& Get(const wchar_t* name);
 
     private:

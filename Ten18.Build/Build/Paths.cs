@@ -25,10 +25,12 @@ namespace Ten18.Build
         
         public static string WindowsSdkDir { get; private set; }
         public static string NetFxToolsDir { get; private set; }
+        public static string DxSdkDir { get; private set; }
 
         public static string ILAsmExe { get; private set; }
         public static string ILDasmExe { get; private set; }
         public static string PEVerifyExe { get; private set; }
+        public static string FxcExe { get; private set; }
 
         public static void RunExe(string exe, string argsFmt, params string[] fmtArgs)
         {
@@ -37,7 +39,7 @@ namespace Ten18.Build
             // my battles... sigh. Stringbuilder...Schwingbuilder, at least it's mildly interesting and 2:07 AM.
             var stderr = "";
             var stdout = "";
-            var maxTimeOutMs = 3000;
+            var maxTimeOutMs = 5000;
             var proc = new Process()
             {            
                 StartInfo = new ProcessStartInfo(exe, String.Format(argsFmt, fmtArgs))
@@ -101,6 +103,9 @@ namespace Ten18.Build
             PEVerifyExe = Path.Combine(NetFxToolsDir, "PEVerify.exe");
 
             WorkingDir = Args.Get<string>("WorkingDir", Directory.Exists, Environment.CurrentDirectory);
+
+            DxSdkDir = Environment.GetEnvironmentVariable("DXSDK_DIR") ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), @"Microsoft DirectX SDK (June 2010)");
+            FxcExe = Path.Combine(DxSdkDir + @"Utilities\bin\x86\fxc.exe");        
         }
     }
 }

@@ -28,7 +28,7 @@ namespace Ten18.Interop
             Debug.Assert(type.IsLayoutSequential);
         }
 
-        protected override void GenerateCpp(string cppRootDir)
+        protected override void GenerateCpp()
         {
         }
 

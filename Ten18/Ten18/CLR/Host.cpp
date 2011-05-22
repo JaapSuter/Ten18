@@ -46,7 +46,7 @@ Host::Host() :
     Expect.HR = mRuntimeInfo->SetDefaultStartupFlags(startupFlags, nullptr);
             
     Expect.HR = mClrControl->GetCLRManager(IID_ICLRGCManager, reinterpret_cast<void**>(&mGCManager));
-
+    
     const DWORD segmentSize = 8 * 1024 * 1024;
     const DWORD maxGen0Size = 128 * 1024;
     Expect.HR = mGCManager->SetGCStartupLimits(segmentSize, maxGen0Size);

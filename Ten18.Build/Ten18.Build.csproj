@@ -45,10 +45,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Build\Args.cs" />
-    <Compile Include="Build\EmEsBuilderify.cs" />
     <Compile Include="Build\Index.cs" />
     <Compile Include="Build\Paths.cs" />
-    <Compile Include="Interop\NativeToManagedCppHeaderTemplate.cs" />
+    <Compile Include="Interop\CppHeaderTemplate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EntryPoint.cs" />
     <Compile Include="Interop\InteropType.cs" />
@@ -58,17 +57,14 @@
     <Compile Include="Interop\EnumGenerator.cs" />
     <Compile Include="Interop\StructGenerator.cs" />
     <Compile Include="Interop\AssemblyGenerator.cs" />
-    <Compile Include="Interop\DelegateGenerator.cs" />
-    <Compile Include="Interop\ExceptionFilterGenerator.cs" />
-    <Compile Include="Interop\NativeToManagedCppHeader.cs" />
-    <Compile Include="Interop\NativeToManagedCppHeaderTemplate.Generated.cs">
+    <Compile Include="Interop\CppHeaderTemplate.Generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>NativeToManagedCppHeaderTemplate.tt</DependentUpon>
+      <DependentUpon>CppHeaderTemplate.tt</DependentUpon>
     </Compile>
-    <None Include="Interop\NativeToManagedCppHeaderTemplate.tt">
+    <None Include="Interop\CppHeaderTemplate.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>NativeToManagedCppHeaderTemplate.Generated.cs</LastGenOutput>
+      <LastGenOutput>CppHeaderTemplate.Generated.cs</LastGenOutput>
       <CustomToolNamespace>Ten18.Interop</CustomToolNamespace>
     </None>
   </ItemGroup>

@@ -31,12 +31,14 @@ HRESULT STDMETHODCALLTYPE HostAssemblyStore::ProvideAssembly(
     DebugOut("pBindInfo->lpPostPolicyIdentity: %S", pBindInfo->lpPostPolicyIdentity);
     DebugOut("pBindInfo->lpReferencedIdentity: %S", pBindInfo->lpReferencedIdentity);
 
-    auto entry = Content::Index::Get(pBindInfo->lpPostPolicyIdentity);
-
+    auto entry = Content::Index::TryGet(pBindInfo->lpPostPolicyIdentity);
+    if (nullptr == entry)
+        return COR_E_FILENOTFOUND;
+    
     const auto securityCookie = 0xBA5E1018;
     *pContext = securityCookie;
-    *ppStmAssemblyImage = new EmbeddedResourceStream(entry.Data, entry.Size);
-    *pAssemblyId = reinterpret_cast<UINT64>(entry.Data);
+    *ppStmAssemblyImage = new EmbeddedResourceStream(entry->Data, entry->Size);
+    *pAssemblyId = reinterpret_cast<UINT64>(entry->Data);
 
     return S_OK;
     /*   

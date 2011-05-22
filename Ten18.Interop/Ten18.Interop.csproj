@@ -44,6 +44,6 @@
     <Compile Include="Input\InputEvent.cs" />
     <Compile Include="Input\Input.cs" />
     <Compile Include="Window.cs" />
-  </ItemGroup>  
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

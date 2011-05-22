@@ -21,8 +21,5 @@
     
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-
-    <LibraryPath>$(SolutionIntermediateDir);$(ProjectDir);$(DXSDK_DIR)Lib\x86;$(LibraryPath)</LibraryPath>
-    
   </PropertyGroup>
 </Project>
