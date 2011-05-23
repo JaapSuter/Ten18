@@ -1,63 +1,56 @@
 ﻿using System;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Threading;
-using System.Diagnostics;
-using System.Security.Policy;
-using System.Reflection.Emit;
-using System.Reflection;
-using System.CodeDom;
-using System.CodeDom.Compiler;
-using System.Runtime.CompilerServices;
-using Microsoft.CSharp;
-using Ten18.Interop;
 using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
 using Ten18.Build;
+using Mono.Cecil.Rocks;
+using Mono.Cecil;
+using FieldAttributes = Mono.Cecil.FieldAttributes;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Ten18.Interop
 {
     class AssemblyGenerator
     {
-        public AssemblyGenerator(Assembly assembly)
+        public AssemblyGenerator(string assemblyPath)
         {
-            mAssembly = assembly;
-            mAssemblyDir = Path.GetDirectoryName(assembly.Location);
+            mAssemblyPath = assemblyPath;
+            mAssemblyDef = AssemblyDefinition.ReadAssembly(mAssemblyPath, new ReaderParameters(ReadingMode.Immediate));
+            mAssemblyDir = Path.GetDirectoryName(assemblyPath);
 
-            mAssemblyName = new AssemblyName(assembly.GetName().Name + ".Impl");
-            mAssemblyName.ProcessorArchitecture = ProcessorArchitecture.X86;
-            mAssemblyName.Version = mAssembly.GetName().Version;
+            InteropType.Initialize(mAssemblyDef.MainModule);
 
-            using (var keyFileStream = File.OpenRead(Paths.KeyFile))
-                mAssemblyName.KeyPair = new StrongNameKeyPair(keyFileStream);
-            
-            var tgs = from t in assembly.GetExportedTypes()
-                      let tg = t.IsEnum ? new EnumGenerator(t)
-                             : t.IsValueType ? new StructGenerator(t)
-                             : t.IsClass ? new ClassGenerator(t)
-                             : (TypeGenerator)null
-                      where tg != null
-                      select tg;
-
-            mTypeGenerators = tgs.ToArray();
+            foreach (var md in mAssemblyDef.Modules)
+            {
+                var requiredModuleAttributes = ModuleAttributes.ILOnly | ModuleAttributes.StrongNameSigned | ModuleAttributes.Required32Bit;
+                Debug.Assert(md.Attributes == requiredModuleAttributes);
+                mTypeGenerators.AddRange(from td in md.Types
+                                         let tg = TypeGenerator.Create(td)
+                                         where tg != null
+                                         select tg);
+            }
         }
 
         public void Generate()
         {
-            var assemblyFileName = mAssemblyName.Name + ".dll";
-            var assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(mAssemblyName, AssemblyBuilderAccess.Save, mAssemblyDir);
-            var moduleBuilder = assemblyBuilder.DefineDynamicModule(mAssemblyName.Name, assemblyFileName, emitSymbolInfo: true);
+            mTypeGenerators.Run(tg => tg.Generate());
 
-            mTypeGenerators.Run(tg => tg.Generate(moduleBuilder));
+            InteropType.CompleteNativeTypeFactory(mAssemblyDef.MainModule);
+            
+            mAssemblyDef.MainModule.Architecture = TargetArchitecture.I386;
 
-            assemblyBuilder.Save(assemblyFileName, PortableExecutableKinds.Required32Bit | PortableExecutableKinds.ILOnly, ImageFileMachine.I386);
+            var backupAssemblyPath = Path.ChangeExtension(mAssemblyPath, ".Backup.dll");
+            if (File.Exists(backupAssemblyPath))
+                File.Delete(backupAssemblyPath);
+            File.Move(mAssemblyPath, backupAssemblyPath);
 
-            var assemblyFullPath = Path.Combine(mAssemblyDir, assemblyFileName);
+            mAssemblyDef.Write(mAssemblyPath, new WriterParameters { WriteSymbols = true, StrongNameKeyPair = new StrongNameKeyPair(File.ReadAllBytes(Paths.KeyFile)) });
 
-            PostProcess(assemblyFullPath);
+            PostProcess(mAssemblyPath);
 
-            Console.WriteLine("Updated: {0}", assemblyFullPath);
+            Console.WriteLine("Updated: {0}", mAssemblyPath);
         }
 
         private static void PostProcess(string assemblyFullPath)
@@ -70,11 +63,9 @@ namespace Ten18.Interop
             Paths.RunExe(Paths.PEVerifyExe, "{0} /VERBOSE /NOLOGO /HRESULT /IGNORE=0x80131860", assemblyFullPath);
         }
 
-        private readonly AssemblyName mAssemblyName;
         private readonly string mAssemblyDir;
-
-        private readonly Assembly mAssembly;
-        
-        private readonly TypeGenerator[] mTypeGenerators;
+        private readonly string mAssemblyPath;
+        private readonly AssemblyDefinition mAssemblyDef;
+        private readonly List<TypeGenerator> mTypeGenerators = new List<TypeGenerator>();
     }
 }

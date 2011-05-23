@@ -6,43 +6,50 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Diagnostics;
 using System.Security.Policy;
-using System.Reflection.Emit;
 using System.Reflection;
 using System.CodeDom;
 using System.CodeDom.Compiler;
-using System.Runtime.CompilerServices;
 using Microsoft.CSharp;
 using Ten18.Interop;
 using System.IO;
 using System.Linq.Expressions;
-
+using Mono.Cecil;
+using Mono.Cecil.Rocks;
+using Mono.Cecil.Cil;
 
 namespace Ten18.Interop
 {
     class MethodGenerator
     {
-        public MethodBuilder MethodBuilder { get; set; }
-        
-        public MethodInfo MethodInfo { get; private set; }        
+        public MethodDefinition MethodDefinition { get; set; }        
         public int VTableSlotIndex { get; private set; }
 
-        public string NativeReturnType { get { return InteropType.Get(DoesNotFitInRegister(MethodInfo.ReturnType) ? typeof(void) : MethodInfo.ReturnType).FullNameInCpp; } }
+        private static int SizeOfWhenPassedAround(TypeReference typeRef)
+        {
+            if (typeRef.IsValueType)
+            {
+                var assembly = Assembly.Load(typeRef.Resolve().Module.Assembly.Name.FullName);
+                return Marshal.SizeOf(assembly.GetType(typeRef.FullName));
+            }
+            else return InteropType.SizeOfRegisterReturn;
+        }
 
+        public TypeReference NativeReturnTypeRef { get { return DoesNotFitInRegister(MethodDefinition.ReturnType) ? InteropType.VoidTypeRef : MethodDefinition.ReturnType; } }
+        private static bool DoesNotFitInRegister(TypeReference td) { return SizeOfWhenPassedAround(td) > SizeOfRegisterReturn; }
+        
         public string NativeParameterListOf()
         {
             return String.Join(", ",
-                from pi in MethodInfo.GetParameters() select String.Format("{0}* {1}", InteropType.Get(pi.ParameterType).FullNameInCpp, pi.Name));
+                from pi in MethodDefinition.Parameters select String.Format("{0}* {1}", InteropType.Get(pi.ParameterType).FullNameInCpp, pi.Name));
         }
 
-        public MethodGenerator(InteropType interopType, MethodInfo methodInfo, int vTableSlotIndex)
+        public MethodGenerator(MethodDefinition methodDefinition, int vTableSlotIndex)
         {
-            Debug.Assert(methodInfo.IsPublic);
-            Debug.Assert(methodInfo.IsVirtual);
-            Debug.Assert(methodInfo.IsAbstract);
-            Debug.Assert(!methodInfo.IsStatic); // Virtual methods can't be static anyway, but what the heck...
-
-            MethodInfo = methodInfo;
+            MethodDefinition = methodDefinition;
             VTableSlotIndex = vTableSlotIndex;
+            
+            Debug.Assert(methodDefinition.IsAbstract);
+            Debug.Assert(!methodDefinition.IsStatic);
         }
 
         public void GenerateCpp()
@@ -50,68 +57,75 @@ namespace Ten18.Interop
             
         }
 
-        public void GenerateCli(TypeBuilder typeBuilder, FieldInfo cppThisPtr)
+        public void GenerateCli(FieldDefinition cppThisPtrDef)
         {
-            var paramInfos = MethodInfo.GetParameters();
-            var returnType = MethodInfo.ReturnType;
-            var paramTypes = paramInfos.Select(pi => pi.ParameterType).ToArray();
+            MethodDefinition.IsAbstract = false;
+            MethodDefinition.IsVirtual = false;
+            MethodDefinition.IsNewSlot = false;
+            MethodDefinition.IsHideBySig = true;
 
-            var returnLocal = (LocalBuilder)null;
+            var paramDefs = MethodDefinition.Parameters;
+            var returnTypeRef = MethodDefinition.ReturnType;
+            var returnTypeIsLarge = DoesNotFitInRegister(returnTypeRef.Resolve());
+            var nativeReturnTypeDef = returnTypeIsLarge ? MethodDefinition.Module.TypeSystem.Void : returnTypeRef;
+            var ilp = MethodDefinition.Body.GetILProcessor();
 
-            var methodAttributes = MethodInfo.Attributes & ~(MethodAttributes.Abstract | MethodAttributes.NewSlot) | MethodAttributes.Final;
-            var methodBuilder = MethodBuilder = typeBuilder.DefineMethod(MethodInfo.Name, methodAttributes, CallingConventions.HasThis, MethodInfo.ReturnType, paramTypes);
+            ilp.Emit(OpCodes.Ldarg_0);
+            ilp.Emit(OpCodes.Ldfld, cppThisPtrDef);
 
-            var il = methodBuilder.GetILGenerator();
-
-            il.Emit(OpCodes.Ldarg_0);
-            il.Emit(OpCodes.Ldfld, cppThisPtr);
-
-            if (DoesNotFitInRegister(returnType))
+            VariableDefinition returnLocal = null;
+            if (returnTypeIsLarge)
             {
-                returnLocal = il.DeclareLocal(returnType);
-                il.Emit(OpCodes.Ldloca_S, returnLocal.LocalIndex);
+                returnLocal = new VariableDefinition("ret", returnTypeRef);
+                MethodDefinition.Body.Variables.Add(returnLocal);
+                MethodDefinition.Body.InitLocals = true;
+
+                ilp.Emit(OpCodes.Ldloca_S, (byte)returnLocal.Index);
             }
 
-            for (int j = 0; j < paramTypes.Length; ++j)
+            for (int j = 0; j < paramDefs.Count; ++j)
             {
-                if (Marshal.SizeOf(paramTypes[j]) > SizeOfRegisterReturn)
-                    il.Emit(OpCodes.Ldarga_S, (byte)(j + 1));
-                else if (j == 0) il.Emit(OpCodes.Ldarg_1);
-                else if (j == 1) il.Emit(OpCodes.Ldarg_2);
-                else if (j == 2) il.Emit(OpCodes.Ldarg_3);
-                else il.Emit(OpCodes.Ldarg_S, (byte)(j + 1));
+                if (SizeOfWhenPassedAround(paramDefs[j].ParameterType.Resolve()) > SizeOfRegisterReturn)
+                    ilp.Emit(OpCodes.Ldarga_S, (byte)(j + 1));
+                else if (j == 0) ilp.Emit(OpCodes.Ldarg_1);
+                else if (j == 1) ilp.Emit(OpCodes.Ldarg_2);
+                else if (j == 2) ilp.Emit(OpCodes.Ldarg_3);
+                else ilp.Emit(OpCodes.Ldarg_S, (byte)(j + 1));
             }
 
-            il.Emit(OpCodes.Ldarg_0);
-            il.Emit(OpCodes.Ldfld, cppThisPtr);
-            il.Emit(OpCodes.Ldind_U4);
-            il.Emit(OpCodes.Ldc_I4, VTableSlotIndex * VTableSlotSize);
-            il.Emit(OpCodes.Add);
-            il.Emit(OpCodes.Ldind_U4);
+            ilp.Emit(OpCodes.Ldarg_0);
+            ilp.Emit(OpCodes.Ldfld, cppThisPtrDef);
+            ilp.Emit(OpCodes.Ldind_U4);
+            ilp.Emit(OpCodes.Ldc_I4, VTableSlotIndex * InteropType.VTableSlotSize);
+            ilp.Emit(OpCodes.Add);
+            ilp.Emit(OpCodes.Ldind_U4);
 
-            paramTypes = DoesNotFitInRegister(returnType)
-                       ? paramTypes.StartWith(typeof(IntPtr), returnType.MakeByRefType()).ToArray()
-                       : paramTypes.StartWith(typeof(IntPtr)).Select(paramType => DoesNotFitInRegister(paramType)
-                                                                                ? paramType.MakeByRefType()
-                                                                                : paramType).ToArray();
+            var nativeCallSite = new CallSite(nativeReturnTypeDef)
+            {
+                CallingConvention = MethodCallingConvention.ThisCall,
+                HasThis = true,
+                ExplicitThis = true,
+            };
 
-            il.EmitCalli(OpCodes.Calli, CallingConvention.ThisCall, DoesNotFitInRegister(returnType) ? typeof(void) : MethodInfo.ReturnType, paramTypes);
+            nativeCallSite.Parameters.Add(new ParameterDefinition("thisPtr", Mono.Cecil.ParameterAttributes.In, InteropType.CppThisPtrTypeRef));
+            if (returnTypeIsLarge)
+                nativeCallSite.Parameters.Add(new ParameterDefinition("ret", Mono.Cecil.ParameterAttributes.Out, returnTypeRef.MakeByReferenceType()));
+            foreach (var parameterDef in MethodDefinition.Parameters)
+            {
+                var nativeParameterDef = DoesNotFitInRegister(parameterDef.ParameterType.Resolve())
+                                       ? new ParameterDefinition(parameterDef.Name, parameterDef.Attributes, parameterDef.ParameterType.MakeByReferenceType())
+                                       : new ParameterDefinition(parameterDef.Name, parameterDef.Attributes, parameterDef.ParameterType);                
+                nativeCallSite.Parameters.Add(nativeParameterDef);
+            }
 
-            if (DoesNotFitInRegister(returnType))
-                il.Emit(OpCodes.Ldloc_S, returnLocal.LocalIndex);
+            ilp.Emit(OpCodes.Calli, nativeCallSite);
 
-            il.Emit(OpCodes.Ret);
+            if (returnTypeIsLarge)
+                ilp.Emit(OpCodes.Ldloc_S, (byte)returnLocal.Index);
 
-            Console.WriteLine("sizeof({0}.{1}): {2}", methodBuilder.DeclaringType.Name, methodBuilder.Name, il.ILOffset);
+            ilp.Emit(OpCodes.Ret);
         }
-
-        private static bool DoesNotFitInRegister(Type type) { return Marshal.SizeOf(type) > SizeOfRegisterReturn; }
-
-        // Would've liked to use IntPtr, but its IL behaviour annoyed me a bit because it's a compound struct, so 
-        // I dropped down to a plain old 32 bit integer, which 'll work on x86 just fine. It's not like I'll ever
-        // get to a x64 or ARM port anyway... ha!
-        public static readonly Type CppThisPtrType = typeof(UInt32);
-        public static readonly int VTableSlotSize = sizeof(UInt32);
+        
         public static readonly int SizeOfRegisterReturn = sizeof(UInt32);
     }
 }

@@ -15,24 +15,25 @@ using Microsoft.CSharp;
 using Ten18.Interop;
 using System.IO;
 using System.Linq.Expressions;
+using Mono.Cecil;
 
 
 namespace Ten18.Interop
 {
     class StructGenerator : TypeGenerator
     {
-        public StructGenerator(Type type)
-            : base(type)
+        public StructGenerator(TypeDefinition typeDef)
+            : base(typeDef)
         {
-            Debug.Assert(type.IsValueType);
-            Debug.Assert(type.IsLayoutSequential);
+            Debug.Assert(typeDef.IsValueType);
+            Debug.Assert(typeDef.HasLayoutInfo);
         }
 
         protected override void GenerateCpp()
         {
         }
 
-        protected override void GenerateCli(ModuleBuilder moduleBuilder)
+        protected override void GenerateCli()
         {
         }
     }

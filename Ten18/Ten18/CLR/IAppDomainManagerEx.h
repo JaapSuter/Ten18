@@ -6,9 +6,11 @@
 namespace Ten18 {
     
     namespace CLR {
-
+                    
     struct __declspec(uuid("37D42543-4326-4A49-9320-A1BF1716AB54")) IAppDomainManagerEx : IUnknown
     {
-        virtual void __stdcall RendezVous();
+        virtual void __stdcall Rendezvous(std::intptr_t nativeTypeFactory) = 0;
+        virtual void __stdcall Tick() = 0;
     };
+
 }}

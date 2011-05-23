@@ -42,7 +42,7 @@ namespace Ten18.Interop
             this.Write("\r\n\tclass Renderer;\r\n\tclass NativeServiceProvider;\r\n\t\r\n    class ");
             
             #line 9 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(InteropType.Type.Name));
+            this.Write(this.ToStringHelper.ToStringWithCulture(InteropType.TypeRef.Name));
             
             #line default
             #line hidden
@@ -56,14 +56,14 @@ namespace Ten18.Interop
             this.Write("        virtual ");
             
             #line 12 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(mg.NativeReturnType));
+            this.Write(this.ToStringHelper.ToStringWithCulture(mg.NativeReturnTypeRef.FullName));
             
             #line default
             #line hidden
-            this.Write(" __stdcall ");
+            this.Write(" __thiscall ");
             
             #line 12 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(mg.MethodBuilder.Name));
+            this.Write(this.ToStringHelper.ToStringWithCulture(mg.MethodDefinition.Name));
             
             #line default
             #line hidden
@@ -84,7 +84,7 @@ namespace Ten18.Interop
             this.Write("\r\n\t\tvirtual __stdcall ~");
             
             #line 15 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(InteropType.Type.Name));
+            this.Write(this.ToStringHelper.ToStringWithCulture(InteropType.TypeRef.Name));
             
             #line default
             #line hidden

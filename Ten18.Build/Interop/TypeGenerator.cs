@@ -15,31 +15,45 @@ using Microsoft.CSharp;
 using Ten18.Interop;
 using System.IO;
 using System.Linq.Expressions;
+using Mono.Cecil;
 
 
 namespace Ten18.Interop
 {
     abstract class TypeGenerator
     {
-        public TypeGenerator(Type type)
+        public InteropType InteropType { get; private set; }
+        public TypeDefinition TypeDef { get; private set; }
+
+        protected string CppHeaderFile { get; private set; }
+
+        public static TypeGenerator Create(TypeDefinition typeDef)
         {
-            Debug.Assert(!type.IsNested);
-            mInteropType = InteropType.Get(type);
-            mCppHeaderFile = Path.Combine(Args.Get<string>("WorkingDir"), mInteropType.FullNameInCSharp.Replace(".", "\\") + ".Generated.h");
-            if (!Directory.Exists(Path.GetDirectoryName(mCppHeaderFile)))
-                Directory.CreateDirectory(Path.GetDirectoryName(mCppHeaderFile));
+            if (typeDef.IsClass && !typeDef.IsValueType && typeDef.IsAbstract)
+                return new ClassGenerator(typeDef);
+            else if (typeDef.IsEnum)
+                return null;
+            else
+                return null;
         }
 
-        public void Generate(ModuleBuilder moduleBuilder)
+        public TypeGenerator(TypeDefinition typeDef)
         {
-            GenerateCli(moduleBuilder);
+            Debug.Assert(!typeDef.IsNested);
+            InteropType = InteropType.Get(typeDef);
+            TypeDef = typeDef;
+            CppHeaderFile = Path.Combine(Args.Get<string>("WorkingDir"), InteropType.FullNameInCSharp.Replace(".", "\\") + ".Generated.h");
+            if (!Directory.Exists(Path.GetDirectoryName(CppHeaderFile)))
+                Directory.CreateDirectory(Path.GetDirectoryName(CppHeaderFile));
+        }
+
+        public void Generate()
+        {
+            GenerateCli();
             GenerateCpp();
         }
 
         protected abstract void GenerateCpp();
-        protected abstract void GenerateCli(ModuleBuilder moduleBuilder);
-        
-        protected readonly InteropType mInteropType;
-        protected readonly string mCppHeaderFile;
+        protected abstract void GenerateCli();
     }
 }

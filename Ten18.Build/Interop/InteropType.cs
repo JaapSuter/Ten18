@@ -6,70 +6,109 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Diagnostics;
 using System.Security.Policy;
-using System.Reflection.Emit;
-using System.Reflection;
 using System.CodeDom;
 using System.CodeDom.Compiler;
+using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 using Microsoft.CSharp;
 using System.IO;
+using Mono.Cecil;
 
 namespace Ten18.Interop
 {
     class InteropType
     {
-        public Type Type { get; private set; }
+        // Would've liked to use IntPtr, but its IL behaviour annoyed me a bit because it's a compound struct, so 
+        // I dropped down to a plain old 32 bit integer, which 'll work on x86 just fine. It's not like I'll ever
+        // get to a x64 or ARM port anyway... ha!
+        public static TypeReference CppThisPtrTypeRef { get; private set; }
+        public static TypeReference VoidTypeRef { get; private set; }
+        public static TypeReference ObjectTypeRef { get; private set; }        
+        public static int VTableSlotSize { get; private set; }
+        public static int SizeOfRegisterReturn { get; private set; }
+        public static TypeDefinition NativeTypeFactoryDef { get; private set; }
+        public static FieldDefinition NativeTypeFactoryInstanceDef { get; private set; }
+
+        public static void Initialize(ModuleDefinition moduleDef)
+        {
+            VoidTypeRef = moduleDef.TypeSystem.Void;
+            ObjectTypeRef = moduleDef.TypeSystem.Object;
+            CppThisPtrTypeRef = moduleDef.TypeSystem.UInt32;
+            VTableSlotSize = sizeof(UInt32);
+            SizeOfRegisterReturn = sizeof(UInt32);
+
+            DefineNativeTypeFactory(moduleDef);
+
+            new InteropType(moduleDef.TypeSystem.Void, "void");
+            new InteropType(moduleDef.TypeSystem.Boolean, "bool");
+            new InteropType(moduleDef.TypeSystem.Single, "float");
+            new InteropType(moduleDef.TypeSystem.Double, "double");
+            new InteropType(moduleDef.TypeSystem.IntPtr, "std::intptr_t");
+            new InteropType(moduleDef.TypeSystem.UIntPtr, "std::uintptr_t");
+            new InteropType(moduleDef.TypeSystem.Char, "std::char16_t");
+            new InteropType(moduleDef.TypeSystem.SByte, "std::int8_t");
+            new InteropType(moduleDef.TypeSystem.Int16, "std::int16_t");
+            new InteropType(moduleDef.TypeSystem.Int32, "std::int32_t");
+            new InteropType(moduleDef.TypeSystem.Int64, "std::int64_t");
+            new InteropType(moduleDef.TypeSystem.Byte, "std::uint8_t");
+            new InteropType(moduleDef.TypeSystem.UInt16, "std::uint16_t");
+            new InteropType(moduleDef.TypeSystem.UInt32, "std::uint32_t");
+            new InteropType(moduleDef.TypeSystem.UInt64, "std::uint64_t");
+        }
+
+        public TypeReference TypeRef { get; private set; }
 
         public string FullNameInCSharp { get; private set; }
         public string FullNameInCpp { get; private set; }
 
-        public static InteropType Get(Type type)
+        public static InteropType Get(TypeReference typeRef)
         {
-            InteropType it;
-            if (!sCache.TryGetValue(type, out it))
-                return new InteropType(type);
+            if (sCache.Contains(typeRef))
+                return sCache[typeRef];
             else
-                return it;
+                return new InteropType(typeRef);
         }
 
-        private InteropType(Type type)
-            : this(type, sCodeProvider.GetTypeOutput(new CodeTypeReference(type)))
-        { }
-
-        private InteropType(Type type, string fullNameInCSharp)
-            : this(type, fullNameInCSharp, String.Concat("::", fullNameInCSharp.Replace(".", "::")))
-        { }
-
-        private InteropType(Type type, string fullNameInCSharp, string fullNameInCpp)
+        public static string GetFullNameInCpp(TypeReference typeRef)
         {
-            Debug.Assert(!sCache.ContainsKey(type));
-            Type = type;
-            FullNameInCSharp = fullNameInCSharp;
+            return Get(typeRef).FullNameInCpp;
+        }
+
+        private InteropType(TypeReference typeRef)
+            : this(typeRef, String.Concat("::", typeRef.FullName.Replace(".", "::")))
+        { }
+
+        private InteropType(TypeReference typeRef, string fullNameInCpp)
+        {
+            Debug.Assert(!sCache.Contains(typeRef));
+            TypeRef = typeRef;
+            FullNameInCSharp = typeRef.FullName;
             FullNameInCpp = fullNameInCpp;
 
-            sCache.Add(type, this);
+            sCache.Add(this);
         }
 
-        private static Dictionary<Type, InteropType> sCache = new Dictionary<Type, InteropType>();
-        private static CodeDomProvider sCodeProvider = CSharpCodeProvider.CreateProvider("C#");
-
-        static InteropType()
+        private static void DefineNativeTypeFactory(ModuleDefinition moduleDef)
         {
-            new InteropType(typeof(void), "void", "void");
-            new InteropType(typeof(bool), "bool", "bool");
-            new InteropType(typeof(float), "float", "float");
-            new InteropType(typeof(double), "double", "double");
-            new InteropType(typeof(IntPtr), "System.IntPtr", "std::intptr_t");
-            new InteropType(typeof(UIntPtr), "System.UIntPtr", "std::uintptr_t");
-            new InteropType(typeof(Char), "char", "std::char16_t");
-            new InteropType(typeof(SByte), "sbyte", "std::int8_t");
-            new InteropType(typeof(Int16), "short", "std::int16_t");
-            new InteropType(typeof(Int32), "int", "std::int32_t");
-            new InteropType(typeof(Int64), "long", "std::int64_t");
-            new InteropType(typeof(Byte), "byte", "std::uint8_t");
-            new InteropType(typeof(UInt16), "ushort", "std::uint16_t");
-            new InteropType(typeof(UInt32), "uint", "std::uint32_t");
-            new InteropType(typeof(UInt64), "ulong", "std::uint64_t");
+            NativeTypeFactoryDef = new TypeDefinition("Ten18.Interop", "NativeTypeFactory", TypeAttributes.Class | TypeAttributes.Abstract | TypeAttributes.Public);
+            NativeTypeFactoryInstanceDef = new FieldDefinition("Instance", FieldAttributes.Public | FieldAttributes.Static, NativeTypeFactoryDef);
+            NativeTypeFactoryDef.Fields.Add(NativeTypeFactoryInstanceDef);            
         }
+
+        public static void CompleteNativeTypeFactory(ModuleDefinition moduleDef)
+        {            
+            TypeGenerator.Create(NativeTypeFactoryDef).Generate();
+            moduleDef.Types.Add(NativeTypeFactoryDef);
+        }
+
+        private class Cache : KeyedCollection<TypeReference, InteropType>
+        {
+            protected override TypeReference GetKeyForItem(InteropType item)
+            {
+                return item.TypeRef;
+            }
+        }
+
+        private static Cache sCache = new Cache();
     }
 }

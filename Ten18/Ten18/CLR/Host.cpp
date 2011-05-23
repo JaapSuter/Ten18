@@ -12,6 +12,8 @@
 using namespace Ten18::CLR;
 using namespace Ten18::COM;
 
+extern "C" std::intptr_t gNativeTypeFactory;
+
 namespace Ten18 {
     
 Host::Host() :
@@ -52,17 +54,19 @@ Host::Host() :
     Expect.HR = mGCManager->SetGCStartupLimits(segmentSize, maxGen0Size);
 
     const auto assemblyName = L"Ten18.Net, Version=1.0.1.8, PublicKeyToken=39a56a431d4ba826, culture=neutral";
-    const auto domainManager = L"Ten18.AppDomainManagerEx";
+    const auto domainManager = L"Ten18.Interop.AppDomainManagerEx";
     Expect.HR = mClrControl->SetAppDomainManagerType(assemblyName, domainManager);
         
     Ten18_ASSERT(mAppDomainManagerEx == nullptr);
-    Expect.HR = mRuntimeHost->Start();    
+    Expect.HR = mRuntimeHost->Start();
     Ten18_ASSERT(mAppDomainManagerEx != nullptr);
+
+    mAppDomainManagerEx->Rendezvous(gNativeTypeFactory);
 }
 
 void Host::RendezVous()
-{
-    mAppDomainManagerEx->RendezVous();
+{   
+    mAppDomainManagerEx->Tick();
 }
 
 }

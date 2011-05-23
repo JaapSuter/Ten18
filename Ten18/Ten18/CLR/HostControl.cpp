@@ -40,5 +40,6 @@ HRESULT STDMETHODCALLTYPE HostControl::SetAppDomainManager(DWORD dwAppDomainID, 
     Ten18_ASSERT(ad == nullptr);
     Expect.HR = appDomainManagerAsUnknown->QueryInterface(__uuidof(ad), reinterpret_cast<void**>(&ad));
     Ten18_ASSERT(ad != nullptr);
+        
     return S_OK;
 }

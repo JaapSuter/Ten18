@@ -10,7 +10,7 @@ using System.Linq.Expressions;
 using System.Diagnostics;
 using System.Disposables;
 
-namespace Ten18
+namespace Ten18.Interop
 {    
     [ComVisible(true)]
     [Guid("37D42543-4326-4A49-9320-A1BF1716AB54")]
@@ -18,7 +18,7 @@ namespace Ten18
     public interface IAppDomainManagerEx
     {
         [PreserveSig]
-        void Rendezvous();
+        void Rendezvous(IntPtr nativeTypeFactory);
 
         [PreserveSig]
         void Tick();

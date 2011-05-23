@@ -10,9 +10,8 @@ using System.Linq.Expressions;
 using System.Diagnostics;
 using System.Disposables;
 
-namespace Ten18
+namespace Ten18.Interop
 {    
-    [ComVisible(true)]
     public sealed class AppDomainManagerEx : AppDomainManager, IAppDomainManagerEx
     {
         public AppDomainManagerEx()
@@ -21,13 +20,14 @@ namespace Ten18
             InitializationFlags = AppDomainManagerInitializationOptions.RegisterWithHost;
         }
 
-        public void Rendezvous()
+        void IAppDomainManagerEx.Rendezvous(IntPtr nativeTypeFactory)
         {
-            EntryPoint.HostedMain("EntryPoint using AppDomainManagerEx.Rendezvous");
+            NativeTypeFactory.Instance = new NativeTypeFactory((uint)nativeTypeFactory.ToInt32());
         }
 
-        public void Tick()
+        void IAppDomainManagerEx.Tick()
         {
+            EntryPoint.HostedMain("EntryPoint using AppDomainManagerEx.Tick");
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(SolutionDir)Ten18.proj"/>
+  <Import Project="$(SolutionDir)Ten18.proj" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -11,7 +11,7 @@
     <AssemblyName>Ten18.Net</AssemblyName>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
-  <Import Project="$(SolutionDir)Ten18.proj"/>
+  <Import Project="$(SolutionDir)Ten18.proj" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugType>full</DebugType>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
@@ -42,13 +42,14 @@
     <Reference Include="System.Reactive.ClientProfile, Version=1.0.2856.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Reactive.ExtendedProfile, Version=1.0.2856.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Reactive.Testing, Version=1.0.2856.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="Ten18.Interop.Impl, Version=1.0.1.8, Culture=neutral, PublicKeyToken=39a56a431d4ba826, processorArchitecture=x86">
+    <Reference Include="Ten18.Interop, Version=1.0.1.8, Culture=neutral, PublicKeyToken=39a56a431d4ba826, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(SolutionIntermediateDir)Ten18.Interop.Impl.dll</HintPath>
+      <HintPath>..\obj\x86\Debug\Ten18.Interop.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Async\CompletedTask.cs" />
+    <Compile Include="Interop\IAppDomainManagerEx.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Async\CoroutineAwaiterT.cs" />
     <Compile Include="Async\CoroutineTest.cs" />
@@ -56,14 +57,8 @@
     <Compile Include="Async\SingleThreadedConstraint.cs" />
     <Compile Include="Async\CoroutineScheduler.cs" />
     <Compile Include="Util.cs" />
-    <Compile Include="AppDomainManagerEx.cs" />
+    <Compile Include="Interop\AppDomainManagerEx.cs" />
     <Compile Include="EntryPoint.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Ten18.Interop\Ten18.Interop.csproj">
-      <Project>{202A67BE-EC74-4F9A-872C-BB59CDC1595E}</Project>
-      <Name>Ten18.Interop</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
@@ -71,6 +66,7 @@
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>$(OutputPath)\Ten18.Build.exe -ImplementInteropAssembly -WorkingDir $(SolutionIntermediateDir)</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>

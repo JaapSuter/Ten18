@@ -18,7 +18,7 @@ namespace Ten18
 
             Debug.Assert(AppDomain.CurrentDomain.IsDefaultAppDomain());
             
-            var window = new WindowImpl();
+            var window = new Window();
 
             var v1 = new Vector4(3, 5, 6, 5);
             var v2 = window.Position;

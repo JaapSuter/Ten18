@@ -15,23 +15,24 @@ using Microsoft.CSharp;
 using Ten18.Interop;
 using System.IO;
 using System.Linq.Expressions;
+using Mono.Cecil;
 
 
 namespace Ten18.Interop
 {
     class EnumGenerator : TypeGenerator
     {
-        public EnumGenerator(Type type)
-            : base(type)
+        public EnumGenerator(TypeDefinition typeDef)
+            : base(typeDef)
         {
-            Debug.Assert(type.IsEnum);
+            Debug.Assert(typeDef.IsEnum);
         }
 
         protected override void GenerateCpp()
         {
         }
 
-        protected override void GenerateCli(ModuleBuilder moduleBuilder)
+        protected override void GenerateCli()
         {
         }
     }

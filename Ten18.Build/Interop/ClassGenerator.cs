@@ -1,133 +1,98 @@
 ﻿using System;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Threading;
 using System.Diagnostics;
-using System.Security.Policy;
-using System.Reflection.Emit;
-using System.Reflection;
-using System.CodeDom;
-using System.CodeDom.Compiler;
-using System.Runtime.CompilerServices;
-using Microsoft.CSharp;
-using Ten18.Interop;
 using System.IO;
-using System.Linq.Expressions;
-using SlimMath;
-
+using System.Linq;
+using Mono.Cecil;
+using Mono.Cecil.Cil;
+using Mono.Cecil.Rocks;
 
 namespace Ten18.Interop
 {
     class ClassGenerator : TypeGenerator
     {
-        public ClassGenerator(Type type)
-            : base(type)
+        public ClassGenerator(TypeDefinition typeDef)
+            : base(typeDef)
         {
-            Debug.Assert(type.IsClass);
-            Debug.Assert(type.IsAbstract);
-            Debug.Assert(!type.IsSealed);
-
-            mMethodGenerators = type.GetMethods(BindingFlags)
-                                    .Where(mi => mi.IsAbstract)
-                                    .Select((mi, idx) => new MethodGenerator(mInteropType, mi, idx))
-                                    .ToArray();
+            Debug.Assert(typeDef.IsClass);
+            Debug.Assert(typeDef.IsAbstract);
+            
+            mMethodGenerators = typeDef.Methods
+                                       .Where(md => md.IsAbstract)
+                                       .Select((md, idx) => new MethodGenerator(md, idx))
+                                       .ToArray();
         }
 
         protected override void GenerateCpp()
         {
             var cppHeaderTemplate = new CppHeaderTemplate()
             {
-                NameSpaceNames = mInteropType.FullNameInCSharp.Split('.'),
-                InteropType = mInteropType,
+                NameSpaceNames = InteropType.FullNameInCSharp.Split('.'),
+                InteropType = InteropType,
                 MethodGenerators = mMethodGenerators,
             };
 
             var code = cppHeaderTemplate.TransformText();
-            File.WriteAllText(mCppHeaderFile, code);
+            File.WriteAllText(CppHeaderFile, code);
 
-            Console.WriteLine("Updated: {0}", mCppHeaderFile);
+            Console.WriteLine("Updated: {0}", CppHeaderFile);
         }
 
-        protected override void GenerateCli(ModuleBuilder moduleBuilder)
+        protected override void GenerateCli()
         {
-            var fullName = String.Concat(mInteropType.FullNameInCSharp, "Impl");
-
-            var typeAttributes = TypeAttributes.Class | TypeAttributes.Sealed | TypeAttributes.Public;
-            var typeBuilder = moduleBuilder.DefineType(fullName, typeAttributes, mInteropType.Type, Type.EmptyTypes);
-
-            var fieldAttributes = FieldAttributes.Private | FieldAttributes.InitOnly;
-            var cppThisPtr = typeBuilder.DefineField("mCppThisPtr", MethodGenerator.CppThisPtrType, fieldAttributes);
-
-            GenerateCliCtor(typeBuilder, cppThisPtr);
-
+            TypeDef.IsAbstract = false;
+            TypeDef.IsSealed = true;
             
-            mMethodGenerators.Run(mg => mg.GenerateCli(typeBuilder, cppThisPtr));
+            var cppThisPtrDef = new FieldDefinition("mCppThisPtr", FieldAttributes.InitOnly | FieldAttributes.Private, InteropType.CppThisPtrTypeRef);
+            TypeDef.Fields.Add(cppThisPtrDef);
+            
+            if (TypeDef == InteropType.NativeTypeFactoryDef)
+                CreateNativeTypeFactoryCtor(cppThisPtrDef);
+            else
+                TypeDef.Methods.Where(md => md.IsConstructor).Run(md => PatchCtor(md, cppThisPtrDef));
 
-            GeneratorCliProperties(typeBuilder);
-
-            typeBuilder.CreateType();
+            mMethodGenerators.Run(mg => mg.GenerateCli(cppThisPtrDef));
         }
 
-        private static void GenerateCliCtor(TypeBuilder typeBuilder, FieldInfo cppThisPtr)
+        private void CreateNativeTypeFactoryCtor(FieldDefinition cppThisPtrDef)
         {
-            var nativeNewObj = typeBuilder.DefinePInvokeMethod("New" + typeBuilder.Name, "Ten18.exe",
-              MethodAttributes.Private | MethodAttributes.Static | MethodAttributes.PinvokeImpl,
-              CallingConventions.Standard, MethodGenerator.CppThisPtrType, Type.EmptyTypes, CallingConvention.StdCall, CharSet.Unicode);
-            nativeNewObj.SetImplementationFlags(MethodImplAttributes.PreserveSig | nativeNewObj.GetMethodImplementationFlags());
+            Debug.Assert(TypeDef == InteropType.NativeTypeFactoryDef);
 
-            var ctorBuilder = typeBuilder.DefineConstructor(MethodAttributes.Public | MethodAttributes.HideBySig, CallingConventions.Standard, Type.EmptyTypes);
-            var ctorInBase = typeBuilder.BaseType.GetConstructor(BindingFlags, null, Type.EmptyTypes, null);
-            
-            var il = ctorBuilder.GetILGenerator();
-            il.Emit(OpCodes.Ldarg_0);
-            il.Emit(OpCodes.Call, ctorInBase);
-            il.Emit(OpCodes.Ldarg_0);
-            il.Emit(OpCodes.Call, nativeNewObj);
-            il.Emit(OpCodes.Stfld, cppThisPtr);
+            var ctorDef = new MethodDefinition(".ctor",
+                MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName | MethodAttributes.HideBySig, InteropType.VoidTypeRef);
+            var paramDef = new ParameterDefinition("cppThisPtr", ParameterAttributes.In, cppThisPtrDef.FieldType);
+            ctorDef.Parameters.Add(paramDef);
 
-            il.EmitWriteLine("SizeOf in Bytecode: ");
-            var localSizeOf = il.DeclareLocal(typeof(int));
-            il.Emit(OpCodes.Sizeof, typeof(Vector3));
-            il.Emit(OpCodes.Stloc, localSizeOf.LocalIndex);
-            il.EmitWriteLine(localSizeOf);
+            var baseCtor = new MethodReference(".ctor", InteropType.VoidTypeRef, TypeDef.BaseType ?? InteropType.ObjectTypeRef) { HasThis = true };
+            var ilp = ctorDef.Body.GetILProcessor();            
+            ilp.Emit(OpCodes.Ldarg_0);
+            ilp.Emit(OpCodes.Call, baseCtor);
+            ilp.Emit(OpCodes.Ldarg_0);
+            ilp.Emit(OpCodes.Ldarg_1);
+            ilp.Emit(OpCodes.Stfld, cppThisPtrDef);
+            ilp.Emit(OpCodes.Ret);
             
-            il.Emit(OpCodes.Ret);
+            TypeDef.Methods.Add(ctorDef);
         }
 
-        private void GeneratorCliProperties(TypeBuilder typeBuilder)
+        private static void PatchCtor(MethodDefinition ctorDef, FieldDefinition cppThisPtrDef)
         {
-            var pgs = from propertyInfo in mInteropType.Type.GetProperties(BindingFlags)
-                      let getMethodBase = propertyInfo.GetGetMethod(nonPublic: true)
-                      let setMethodBase = propertyInfo.GetSetMethod(nonPublic: true)
-                      where getMethodBase != null && getMethodBase.IsAbstract
-                         || setMethodBase != null && setMethodBase.IsAbstract
-                      let getMethodImpl = mMethodGenerators.SingleOrDefault(mg => mg.MethodInfo == getMethodBase)
-                      let setMethodImpl = mMethodGenerators.SingleOrDefault(mg => mg.MethodInfo == setMethodBase)
-                      where getMethodImpl != null 
-                         || setMethodImpl != null
-                      select new
-                      {
-                          PropertyInfo = propertyInfo,
-                          SetMethod = setMethodImpl,
-                          GetMethod = getMethodImpl,
-                      };
+            Debug.Assert(ctorDef.IsConstructor);
+            ctorDef.IsPublic = true;
 
-            foreach (var pg in pgs)
-            {
-                var propertyBuilder = typeBuilder.DefineProperty(pg.PropertyInfo.Name, pg.PropertyInfo.Attributes, pg.PropertyInfo.PropertyType, Type.EmptyTypes);
+            var ilp = ctorDef.Body.GetILProcessor();
+            var afterPatchInst = ctorDef.Body.Instructions.First(i => i.OpCode == OpCodes.Call).Next;
 
-                if (pg.GetMethod != null)
-                    propertyBuilder.SetGetMethod(pg.GetMethod.MethodBuilder);
+            var factoryMethodDef = new MethodDefinition("CreateNative" + ctorDef.DeclaringType.Name,
+                MethodAttributes.Abstract | MethodAttributes.Assembly, InteropType.CppThisPtrTypeRef);
+                        
+            InteropType.NativeTypeFactoryDef.Methods.Add(factoryMethodDef);
 
-                if (pg.SetMethod != null)
-                    propertyBuilder.SetSetMethod(pg.SetMethod.MethodBuilder);
-            }
+            ilp.InsertBefore(afterPatchInst, Instruction.Create(OpCodes.Ldarg_0));
+            ilp.InsertBefore(afterPatchInst, Instruction.Create(OpCodes.Ldsfld, InteropType.NativeTypeFactoryInstanceDef));
+            ilp.InsertBefore(afterPatchInst, Instruction.Create(OpCodes.Call, factoryMethodDef));
+            ilp.InsertBefore(afterPatchInst, Instruction.Create(OpCodes.Stfld, cppThisPtrDef));
         }
 
         private readonly MethodGenerator[] mMethodGenerators;
-
-        private static readonly BindingFlags BindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
     }
 }

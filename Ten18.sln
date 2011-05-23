@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ten18.Interop", "Ten18.Interop\Ten18.Interop.csproj", "{202A67BE-EC74-4F9A-872C-BB59CDC1595E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D084C3C0-BB71-4FF6-8741-FE71478E4A45} = {D084C3C0-BB71-4FF6-8741-FE71478E4A45}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ten18.Build", "Ten18.Build\Ten18.Build.csproj", "{D084C3C0-BB71-4FF6-8741-FE71478E4A45}"
 EndProject

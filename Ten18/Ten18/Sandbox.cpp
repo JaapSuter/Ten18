@@ -5,24 +5,18 @@
 
 using namespace Ten18;
 
-struct Vector3
-{
-    float X, Y, Z;
-};
-
 class WindowImpl
 {
 public:
-    virtual bool __thiscall get_IsFullScreen() const { return false; }
-
-    virtual void __thiscall get_Position(XMFLOAT2& ret) const { ret = mPosition; }
     virtual void __thiscall get_Size(XMFLOAT2& ret) const { ret = mSize; }
+    virtual void __thiscall set_Size(const XMFLOAT2& value) { mSize = value; }
+    
+    virtual void __thiscall get_Position(XMFLOAT2& ret) const { ret = mPosition; }
+    virtual void __thiscall set_Position(const XMFLOAT2& value) { mPosition = value; }
 
-    virtual void __stdcall MakeFullScreen() {}
-    
-    virtual void set_Position(const XMFLOAT2& value) { mPosition = value; }
-    virtual void set_Size(const XMFLOAT2& value) { mSize = value; }
-    
+    virtual bool __thiscall get_IsFullScreen() const { return false; }
+    virtual void __thiscall MakeFullScreen() {}
+
     WindowImpl()
         : mPosition(), mSize()
     {}
@@ -33,11 +27,23 @@ private:
     XMFLOAT2 mSize;
 };
 
-extern "C" __declspec(dllexport) std::intptr_t __stdcall NewWindowImpl()
+class NativeTypeFactory
 {
-    auto wndImpl = new WindowImpl();
-    return reinterpret_cast<std::intptr_t>(wndImpl);
-}
+    virtual std::intptr_t __thiscall CreateNativeInput()
+    {
+        return 0;
+    }
+
+    virtual std::intptr_t __thiscall CreateNativeWindow()
+    {
+        auto wndImpl = new WindowImpl();
+        return reinterpret_cast<std::intptr_t>(wndImpl);
+    }
+
+	virtual __stdcall ~NativeTypeFactory() {};
+};
+
+extern "C" std::intptr_t gNativeTypeFactory = reinterpret_cast<std::intptr_t>(new NativeTypeFactory());
 
 void Ten18::Sandbox()
 {

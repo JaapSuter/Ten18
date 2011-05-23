@@ -15,6 +15,7 @@ using System.Linq.Expressions;
 using System.IO;
 using Ten18.Interop;
 using Ten18.Build;
+using Mono.Cecil;
 
 namespace Ten18
 {
@@ -45,21 +46,24 @@ namespace Ten18
 
         private static void MaybeThrowingMain()
         {
-            if (Args.Get<bool>("ImplementInteropAssembly"))
-                ImplementInteropAssembly();
+            var interopAssemblyPath = Args.Get<string>("ImplementInteropAssembly");
+            if (interopAssemblyPath != null)
+                ImplementInteropAssembly(interopAssemblyPath);
 
             if (Args.Get<bool>("EmbedContent"))
             {
                 CompileShaders();
                 EmbedAssemblies();
+                Build.Index.Add("Ten18.Content.Images.Panorama", Path.Combine(Paths.SolutionDir, @"Ten18.Content\Images\Panorama.jpg"));
+                Build.Index.GenerateHeaders();
             }
         }
 
-        private static void ImplementInteropAssembly()
+        private static void ImplementInteropAssembly(string assemblyPath)
         {
-            var interopAssembly = typeof(IAppDomainManagerEx).Assembly;
-            var assemblyGenerator = new AssemblyGenerator(interopAssembly);
+            Console.WriteLine("interopAssemblyPath: " + assemblyPath);
             
+            var assemblyGenerator = new AssemblyGenerator(assemblyPath);            
             assemblyGenerator.Generate();
         }
 
@@ -89,17 +93,25 @@ namespace Ten18
 
         private static void EmbedAssemblies()
         {
-            foreach (var dll in Directory.EnumerateFiles(Paths.WorkingDir, "*.dll", SearchOption.TopDirectoryOnly))
-            {                
-                var postPolicy = dll.Contains("AsyncCtpLibrary") ? ", processorarchitecture=msil" : ", processorarchitecture=x86";
-                var assemblyName = AssemblyName.GetAssemblyName(dll);
-                var contentName = assemblyName.FullName + postPolicy;
+            EmbedAssembly("Ten18.Interop");
+            EmbedAssembly("Ten18.Net");
+            EmbedAssembly("SlimMath");
+            EmbedAssembly("AsyncCtpLibrary");
+        }
 
-                Build.Index.Add(contentName, dll);
-            }
+        private static void EmbedAssembly(string name)
+        {
+            var path = Path.Combine(Paths.WorkingDir, name + ".dll");
+            var assemblyDef = AssemblyDefinition.ReadAssembly(path);
+            Debug.Assert(1 == assemblyDef.Modules.Count);
+            var postPolicy = (assemblyDef.MainModule.Attributes.HasFlag(ModuleAttributes.Required32Bit) && assemblyDef.MainModule.Architecture == TargetArchitecture.I386)
+                            ? ", processorarchitecture=x86"
+                            : ", processorarchitecture=msil";
+            var assemblyName = AssemblyName.GetAssemblyName(path);
+            var contentName = assemblyName.FullName + postPolicy;
 
-            Build.Index.Add("Ten18.Content.Images.Panorama", Path.Combine(Paths.SolutionDir, @"Ten18.Content\Images\Panorama.jpg"));
-            Build.Index.GenerateHeaders();
+            Console.WriteLine("Content: {0} at {1}", contentName, path);
+            Build.Index.Add(contentName, path);
         }
     }
 }
