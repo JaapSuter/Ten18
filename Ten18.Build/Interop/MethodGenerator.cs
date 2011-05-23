@@ -103,8 +103,6 @@ namespace Ten18.Interop
             var nativeCallSite = new CallSite(nativeReturnTypeDef)
             {
                 CallingConvention = MethodCallingConvention.ThisCall,
-                HasThis = true,
-                ExplicitThis = true,
             };
 
             nativeCallSite.Parameters.Add(new ParameterDefinition("thisPtr", Mono.Cecil.ParameterAttributes.In, InteropType.CppThisPtrTypeRef));

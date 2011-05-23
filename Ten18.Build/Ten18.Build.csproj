@@ -50,7 +50,6 @@
     <Compile Include="Build\Paths.cs" />
     <Compile Include="Interop\ClassGenerator.cs" />
     <Compile Include="Interop\InteropType.cs" />
-    <Compile Include="Interop\KeyedCollection.cs" />
     <Compile Include="Interop\TypeGenerator.cs" />
     <Compile Include="Interop\MethodGenerator.cs" />
     <Compile Include="Interop\CppHeaderTemplate.cs" />
