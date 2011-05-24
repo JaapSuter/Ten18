@@ -2,8 +2,8 @@
 
 namespace Ten18 {
 
-    namespace CLR { class Host; }
+    namespace Interop { class Host; }
 
-    int Program(HINSTANCE hInstance, int nCmdShow, CLR::Host* host);
+    int Program(HINSTANCE hInstance, int nCmdShow, Interop::Host* host);
     
 }

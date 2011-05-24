@@ -7,10 +7,10 @@
 #include "Ten18/Timer.h"
 #include "Ten18/Tracer.h"
 #include "Ten18/Sandbox.h"
-#include "Ten18/CLR/Host.h"
+#include "Ten18/Interop/Host.h"
 
 using namespace Ten18;
-using namespace Ten18::CLR;
+using namespace Ten18::Interop;
 
 static void InitializeCrtDebug()
 {
@@ -41,13 +41,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, LPWSTR, int nCmdShow)
     Sandbox();    
     
     Host host;    
-    host.RendezVous();
+    host.Rendezvous();
 
     InitializeCrtDebug();
 
     RunTests();
     
-    const auto procExitCode = Program(hInstance, nCmdShow, nullptr);
+    const auto procExitCode = Program(hInstance, nCmdShow, &host);
 
     CoUninitialize();
 

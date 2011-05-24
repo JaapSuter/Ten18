@@ -13,6 +13,8 @@ namespace Ten18.Async
     {
         public static void Test()
         {
+            mVal = 0;
+
             TestSingleTask();
             TestMultipleTasks();
             TestContinuation();

@@ -1,18 +1,5 @@
 ﻿<#@ template debug="true" language="C#" #>
-#pragma once
 
-<# foreach (var nameSpaceName in NameSpaceNames) { #>namespace <#= nameSpaceName #> { <#}#>
-
-	class Renderer;
-	class NativeServiceProvider;
-	
-    class <#= InteropType.TypeRef.Name #>
-    {
 <# foreach (var mg in MethodGenerators) { #>
-        virtual <#= mg.NativeReturnTypeRef.FullName #> __thiscall <#= mg.MethodDefinition.Name #>(<#= mg.NativeParameterListOf() #>);
+        virtual <#= InteropType.Get(mg.NativeReturnTypeRef).FullNameInCpp #> __thiscall <#= mg.MethodDefinition.Name #>(<#= mg.NativeParameterListOf() #>);
 <#}#>
-
-		virtual __stdcall ~<#= InteropType.TypeRef.Name #>() {};
-    };
-	
-<# foreach (var nameSpaceName in NameSpaceNames) { #>}<#}#>

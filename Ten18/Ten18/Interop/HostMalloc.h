@@ -2,7 +2,7 @@
 #include "Ten18/COM/ImplUnknown.h"
 #include "Ten18/Scoped.h"
 
-namespace Ten18 { namespace CLR {
+namespace Ten18 { namespace Interop {
 
     class HostMalloc : public IHostMalloc 
     {

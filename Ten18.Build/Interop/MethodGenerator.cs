@@ -39,8 +39,22 @@ namespace Ten18.Interop
         
         public string NativeParameterListOf()
         {
-            return String.Join(", ",
-                from pi in MethodDefinition.Parameters select String.Format("{0}* {1}", InteropType.Get(pi.ParameterType).FullNameInCpp, pi.Name));
+            Debug.Assert(mNativeCallSite != null);
+
+            return String.Join(", ", 
+                mNativeCallSite.Parameters.Skip(1).Select(pi =>
+                {
+                    if (pi.ParameterType.IsByReference)
+                        if (pi.IsOut)
+                            return InteropType.Get(pi.ParameterType).FullNameInCpp + "& " + pi.Name;
+                        else
+                            return "const " + InteropType.Get(pi.ParameterType).FullNameInCpp + "& " + pi.Name;
+                    else
+                        if (pi.ParameterType.IsPrimitive)
+                            return InteropType.Get(pi.ParameterType).FullNameInCpp + " " + pi.Name;
+                        else
+                            return InteropType.Get(pi.ParameterType).FullNameInCpp + "* " + pi.Name;
+                }));
         }
 
         public MethodGenerator(MethodDefinition methodDefinition, int vTableSlotIndex)
@@ -52,15 +66,10 @@ namespace Ten18.Interop
             Debug.Assert(!methodDefinition.IsStatic);
         }
 
-        public void GenerateCpp()
-        {
-            
-        }
-
         public void GenerateCli(FieldDefinition cppThisPtrDef)
         {
             MethodDefinition.IsAbstract = false;
-            MethodDefinition.IsVirtual = false;
+            MethodDefinition.IsVirtual = true;
             MethodDefinition.IsNewSlot = false;
             MethodDefinition.IsHideBySig = true;
 
@@ -95,35 +104,38 @@ namespace Ten18.Interop
 
             ilp.Emit(OpCodes.Ldarg_0);
             ilp.Emit(OpCodes.Ldfld, cppThisPtrDef);
-            ilp.Emit(OpCodes.Ldind_U4);
+            ilp.Emit(OpCodes.Ldind_I4);
             ilp.Emit(OpCodes.Ldc_I4, VTableSlotIndex * InteropType.VTableSlotSize);
             ilp.Emit(OpCodes.Add);
-            ilp.Emit(OpCodes.Ldind_U4);
+            ilp.Emit(OpCodes.Ldind_I4);
 
-            var nativeCallSite = new CallSite(nativeReturnTypeDef)
+            Debug.Assert(mNativeCallSite == null);
+            mNativeCallSite = new CallSite(nativeReturnTypeDef)
             {
                 CallingConvention = MethodCallingConvention.ThisCall,
             };
 
-            nativeCallSite.Parameters.Add(new ParameterDefinition("thisPtr", Mono.Cecil.ParameterAttributes.In, InteropType.CppThisPtrTypeRef));
+            mNativeCallSite.Parameters.Add(new ParameterDefinition("cppThisPtr", Mono.Cecil.ParameterAttributes.In, InteropType.CppThisPtrTypeRef));
             if (returnTypeIsLarge)
-                nativeCallSite.Parameters.Add(new ParameterDefinition("ret", Mono.Cecil.ParameterAttributes.Out, returnTypeRef.MakeByReferenceType()));
+                mNativeCallSite.Parameters.Add(new ParameterDefinition("ret", Mono.Cecil.ParameterAttributes.Out, returnTypeRef.MakeByReferenceType()));
             foreach (var parameterDef in MethodDefinition.Parameters)
             {
                 var nativeParameterDef = DoesNotFitInRegister(parameterDef.ParameterType.Resolve())
                                        ? new ParameterDefinition(parameterDef.Name, parameterDef.Attributes, parameterDef.ParameterType.MakeByReferenceType())
                                        : new ParameterDefinition(parameterDef.Name, parameterDef.Attributes, parameterDef.ParameterType);                
-                nativeCallSite.Parameters.Add(nativeParameterDef);
+                mNativeCallSite.Parameters.Add(nativeParameterDef);
             }
 
-            ilp.Emit(OpCodes.Calli, nativeCallSite);
+            ilp.Emit(OpCodes.Calli, mNativeCallSite);
 
             if (returnTypeIsLarge)
                 ilp.Emit(OpCodes.Ldloc_S, (byte)returnLocal.Index);
 
             ilp.Emit(OpCodes.Ret);
         }
+
+        private CallSite mNativeCallSite;
         
-        public static readonly int SizeOfRegisterReturn = sizeof(UInt32);
+        public static readonly int SizeOfRegisterReturn = sizeof(Int32);
     }
 }

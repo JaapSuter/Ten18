@@ -7,7 +7,7 @@
 #include "Ten18/Capture/MediaFoundationCapture.h"
 #include "Ten18/Resources/Resources.h"
 #include "Ten18/COM/COMPtr.h"
-#include "Ten18/CLR/Host.h"
+#include "Ten18/Interop/Host.h"
 #include "Ten18/Windows/Window.h"
 #include "Ten18/Graphics/Device.h"
 #include "Ten18/Graphics/Display.h"
@@ -21,7 +21,7 @@ using namespace Ten18::Windows;
 using namespace Ten18::Graphics;
 using namespace Ten18::Capture;
 
-int Ten18::Program(HINSTANCE, int nCmdShow, Ten18::CLR::Host*)
+int Ten18::Program(HINSTANCE, int nCmdShow, Ten18::Interop::Host* host)
 {   
     Window first(L"Ten18 Calibration");
     Window second(L"Ten18 Camera");
@@ -72,6 +72,9 @@ int Ten18::Program(HINSTANCE, int nCmdShow, Ten18::CLR::Host*)
         }
         else
         {
+            if (host != nullptr)
+                host->Tick();
+    
             device.Tick();
         }
     }

@@ -8,7 +8,9 @@ namespace Ten18.Input
 {
     public abstract class Input : IObservable<InputEvent>
     {
-        // public abstract Vector2 MousePosition { get; }
+        public Input() { }
+
+        public abstract Vector2 MousePosition { get; }
 
         public IDisposable Subscribe(IObserver<InputEvent> observer)
         {

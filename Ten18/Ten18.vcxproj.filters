@@ -7,12 +7,6 @@
     <ClCompile Include="Ten18\PCH.cpp">
       <Filter>Ten18</Filter>
     </ClCompile>
-    <ClCompile Include="Ten18\CLR\Host.cpp">
-      <Filter>Ten18\CLR</Filter>
-    </ClCompile>
-    <ClCompile Include="Ten18\CLR\HostControl.cpp">
-      <Filter>Ten18\CLR</Filter>
-    </ClCompile>
     <ClCompile Include="Ten18\WinMain.cpp">
       <Filter>Ten18</Filter>
     </ClCompile>
@@ -70,43 +64,49 @@
     <ClCompile Include="Ten18\Graphics\Display.cpp">
       <Filter>Ten18\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Ten18\CLR\HostMalloc.cpp">
-      <Filter>Ten18\CLR</Filter>
-    </ClCompile>
     <ClCompile Include="Ten18\Timer.cpp">
       <Filter>Ten18</Filter>
     </ClCompile>
     <ClCompile Include="Ten18\Assert.cpp">
       <Filter>Ten18</Filter>
     </ClCompile>
-    <ClCompile Include="Ten18\Windows\Window.cpp">
-      <Filter>Ten18\Windows</Filter>
-    </ClCompile>
     <ClCompile Include="Ten18\Program.cpp">
       <Filter>Ten18</Filter>
     </ClCompile>
-    <ClCompile Include="Ten18\CLR\HostMemoryManager.cpp">
-      <Filter>Ten18\CLR</Filter>
-    </ClCompile>
-    <ClCompile Include="Ten18\CLR\HostAssemblyStore.cpp">
-      <Filter>Ten18\CLR</Filter>
-    </ClCompile>
-    <ClCompile Include="Ten18\CLR\HostAssemblyManager.cpp">
-      <Filter>Ten18\CLR</Filter>
-    </ClCompile>
     <ClCompile Include="Ten18\Content\Index.cpp">
       <Filter>Ten18\Content</Filter>
+    </ClCompile>
+    <ClCompile Include="Ten18\Interop\HostMalloc.cpp">
+      <Filter>Ten18\Interop</Filter>
+    </ClCompile>
+    <ClCompile Include="Ten18\Interop\HostMemoryManager.cpp">
+      <Filter>Ten18\Interop</Filter>
+    </ClCompile>
+    <ClCompile Include="Ten18\Interop\Host.cpp">
+      <Filter>Ten18\Interop</Filter>
+    </ClCompile>
+    <ClCompile Include="Ten18\Interop\HostAssemblyManager.cpp">
+      <Filter>Ten18\Interop</Filter>
+    </ClCompile>
+    <ClCompile Include="Ten18\Interop\HostAssemblyStore.cpp">
+      <Filter>Ten18\Interop</Filter>
+    </ClCompile>
+    <ClCompile Include="Ten18\Interop\HostControl.cpp">
+      <Filter>Ten18\Interop</Filter>
+    </ClCompile>
+    <ClCompile Include="Ten18\Interop\NativeTypeFactory.cpp">
+      <Filter>Ten18\Interop</Filter>
+    </ClCompile>
+    <ClCompile Include="Ten18\Window.cpp">
+      <Filter>Ten18</Filter>
+    </ClCompile>
+    <ClCompile Include="Ten18\Windows\WindowNativeEx.cpp">
+      <Filter>Ten18\Windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ten18\PCH.h">
       <Filter>Ten18</Filter>
-    </ClInclude>
-    <ClInclude Include="Ten18\CLR\HostControl.h">
-      <Filter>Ten18\CLR</Filter>
-    </ClInclude>
-    <ClInclude Include="Ten18\CLR\Host.h">
-      <Filter>Ten18\CLR</Filter>
     </ClInclude>
     <ClInclude Include="Ten18\Assert.h">
       <Filter>Ten18</Filter>
@@ -186,26 +186,38 @@
     <ClInclude Include="Ten18\Graphics\Display.h">
       <Filter>Ten18\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Ten18\CLR\HostMalloc.h">
-      <Filter>Ten18\CLR</Filter>
-    </ClInclude>
     <ClInclude Include="Ten18\Program.h">
       <Filter>Ten18</Filter>
     </ClInclude>
-    <ClInclude Include="Ten18\CLR\IAppDomainManagerEx.h">
-      <Filter>Ten18\CLR</Filter>
-    </ClInclude>
-    <ClInclude Include="Ten18\CLR\HostMemoryManager.h">
-      <Filter>Ten18\CLR</Filter>
-    </ClInclude>
-    <ClInclude Include="Ten18\CLR\HostAssemblyStore.h">
-      <Filter>Ten18\CLR</Filter>
-    </ClInclude>
-    <ClInclude Include="Ten18\CLR\HostAssemblyManager.h">
-      <Filter>Ten18\CLR</Filter>
-    </ClInclude>
     <ClInclude Include="Ten18\Content\Index.h">
       <Filter>Ten18\Content</Filter>
+    </ClInclude>
+    <ClInclude Include="Ten18\Interop\HostMalloc.h">
+      <Filter>Ten18\Interop</Filter>
+    </ClInclude>
+    <ClInclude Include="Ten18\Interop\HostMemoryManager.h">
+      <Filter>Ten18\Interop</Filter>
+    </ClInclude>
+    <ClInclude Include="Ten18\Interop\IAppDomainManagerEx.h">
+      <Filter>Ten18\Interop</Filter>
+    </ClInclude>
+    <ClInclude Include="Ten18\Interop\Host.h">
+      <Filter>Ten18\Interop</Filter>
+    </ClInclude>
+    <ClInclude Include="Ten18\Interop\HostAssemblyManager.h">
+      <Filter>Ten18\Interop</Filter>
+    </ClInclude>
+    <ClInclude Include="Ten18\Interop\HostAssemblyStore.h">
+      <Filter>Ten18\Interop</Filter>
+    </ClInclude>
+    <ClInclude Include="Ten18\Interop\HostControl.h">
+      <Filter>Ten18\Interop</Filter>
+    </ClInclude>
+    <ClInclude Include="Ten18\Interop\NativeTypeFactory.h">
+      <Filter>Ten18\Interop</Filter>
+    </ClInclude>
+    <ClInclude Include="Ten18\Window.h">
+      <Filter>Ten18</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -214,9 +226,6 @@
     </Filter>
     <Filter Include="Ten18\Graphics">
       <UniqueIdentifier>{1f3e45cb-ac74-4db0-bd78-cbb449834145}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Ten18\CLR">
-      <UniqueIdentifier>{46af2f65-3b92-4d9c-95ca-af9237c59518}</UniqueIdentifier>
     </Filter>
     <Filter Include="Ten18\Windows">
       <UniqueIdentifier>{0f5ac33a-d82e-46e8-866b-be920106707b}</UniqueIdentifier>
@@ -229,6 +238,9 @@
     </Filter>
     <Filter Include="Ten18\Content">
       <UniqueIdentifier>{b5d0d301-f47f-44e4-96c4-47921ed4614e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ten18\Interop">
+      <UniqueIdentifier>{46af2f65-3b92-4d9c-95ca-af9237c59518}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

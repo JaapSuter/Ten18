@@ -18,7 +18,7 @@ namespace Ten18.Interop
     public interface IAppDomainManagerEx
     {
         [PreserveSig]
-        void Rendezvous(IntPtr nativeTypeFactory);
+        void Rendezvous(int nativeTypeFactory);
 
         [PreserveSig]
         void Tick();

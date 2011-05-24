@@ -33,9 +33,9 @@ namespace Ten18.Interop
         {
             VoidTypeRef = moduleDef.TypeSystem.Void;
             ObjectTypeRef = moduleDef.TypeSystem.Object;
-            CppThisPtrTypeRef = moduleDef.TypeSystem.UInt32;
-            VTableSlotSize = sizeof(UInt32);
-            SizeOfRegisterReturn = sizeof(UInt32);
+            CppThisPtrTypeRef = moduleDef.TypeSystem.Int32;
+            VTableSlotSize = sizeof(Int32);
+            SizeOfRegisterReturn = sizeof(Int32);
 
             DefineNativeTypeFactory(moduleDef);
 
@@ -54,6 +54,13 @@ namespace Ten18.Interop
             new InteropType(moduleDef.TypeSystem.UInt16, "std::uint16_t");
             new InteropType(moduleDef.TypeSystem.UInt32, "std::uint32_t");
             new InteropType(moduleDef.TypeSystem.UInt64, "std::uint64_t");
+
+            var slimMathModule = AssemblyDefinition.ReadAssembly("SlimMath.dll").MainModule;
+
+            new InteropType(slimMathModule.GetType("SlimMath", "Vector2"), "XMFLOAT2");
+            new InteropType(slimMathModule.GetType("SlimMath", "Vector3"), "XMFLOAT3");
+            new InteropType(slimMathModule.GetType("SlimMath", "Vector4"), "XMFLOAT4");
+            new InteropType(slimMathModule.GetType("SlimMath", "Matrix"), "XMFLOAT4X4");
         }
 
         public TypeReference TypeRef { get; private set; }
@@ -63,24 +70,20 @@ namespace Ten18.Interop
 
         public static InteropType Get(TypeReference typeRef)
         {
-            if (sCache.Contains(typeRef))
-                return sCache[typeRef];
+            typeRef = typeRef.GetElementType() ?? typeRef;
+            if (sCache.Contains(typeRef.FullName))
+                return sCache[typeRef.FullName];
             else
                 return new InteropType(typeRef);
         }
 
-        public static string GetFullNameInCpp(TypeReference typeRef)
-        {
-            return Get(typeRef).FullNameInCpp;
-        }
-
         private InteropType(TypeReference typeRef)
-            : this(typeRef, String.Concat("::", typeRef.FullName.Replace(".", "::")))
+            : this(typeRef, String.Concat("::", (typeRef.GetElementType() ?? typeRef).FullName.Replace(".", "::")))
         { }
 
         private InteropType(TypeReference typeRef, string fullNameInCpp)
         {
-            Debug.Assert(!sCache.Contains(typeRef));
+            Debug.Assert(!sCache.Contains(typeRef.FullName));
             TypeRef = typeRef;
             FullNameInCSharp = typeRef.FullName;
             FullNameInCpp = fullNameInCpp;
@@ -101,11 +104,11 @@ namespace Ten18.Interop
             moduleDef.Types.Add(NativeTypeFactoryDef);
         }
 
-        private class Cache : KeyedCollection<TypeReference, InteropType>
-        {
-            protected override TypeReference GetKeyForItem(InteropType item)
+        private class Cache : KeyedCollection<string, InteropType>
+        {   
+            protected override string GetKeyForItem(InteropType item)
             {
-                return item.TypeRef;
+                return item.TypeRef.FullName;
             }
         }
 

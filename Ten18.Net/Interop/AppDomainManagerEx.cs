@@ -20,9 +20,9 @@ namespace Ten18.Interop
             InitializationFlags = AppDomainManagerInitializationOptions.RegisterWithHost;
         }
 
-        void IAppDomainManagerEx.Rendezvous(IntPtr nativeTypeFactory)
+        void IAppDomainManagerEx.Rendezvous(int nativeTypeFactory)
         {
-            NativeTypeFactory.Instance = new NativeTypeFactory((uint)nativeTypeFactory.ToInt32());
+            NativeTypeFactory.Instance = new NativeTypeFactory(nativeTypeFactory);
         }
 
         void IAppDomainManagerEx.Tick()

@@ -20,7 +20,6 @@ namespace Ten18.Interop
 {
     partial class CppHeaderTemplate
     {
-        internal IEnumerable<string> NameSpaceNames;
         internal InteropType InteropType;
         internal MethodGenerator[] MethodGenerators;
     }

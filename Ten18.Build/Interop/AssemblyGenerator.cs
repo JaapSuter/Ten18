@@ -40,17 +40,15 @@ namespace Ten18.Interop
             InteropType.CompleteNativeTypeFactory(mAssemblyDef.MainModule);
             
             mAssemblyDef.MainModule.Architecture = TargetArchitecture.I386;
+            mAssemblyDef.Name.Name = mAssemblyDef.Name.Name + ".Generated";
 
-            var backupAssemblyPath = Path.ChangeExtension(mAssemblyPath, ".Backup.dll");
-            if (File.Exists(backupAssemblyPath))
-                File.Delete(backupAssemblyPath);
-            File.Move(mAssemblyPath, backupAssemblyPath);
+            var generatedAssemblyPath = Path.ChangeExtension(mAssemblyPath, ".Generated.dll");
 
-            mAssemblyDef.Write(mAssemblyPath, new WriterParameters { WriteSymbols = true, StrongNameKeyPair = new StrongNameKeyPair(File.ReadAllBytes(Paths.KeyFile)) });
+            mAssemblyDef.Write(generatedAssemblyPath, new WriterParameters { WriteSymbols = true, StrongNameKeyPair = new StrongNameKeyPair(File.ReadAllBytes(Paths.KeyFile)) });
 
-            PostProcess(mAssemblyPath);
+            PostProcess(generatedAssemblyPath);
 
-            Console.WriteLine("Updated: {0}", mAssemblyPath);
+            Console.WriteLine("Updated: {0}", generatedAssemblyPath);
         }
 
         private static void PostProcess(string assemblyFullPath)

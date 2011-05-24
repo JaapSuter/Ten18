@@ -42,9 +42,9 @@
     <Reference Include="System.Reactive.ClientProfile, Version=1.0.2856.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Reactive.ExtendedProfile, Version=1.0.2856.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Reactive.Testing, Version=1.0.2856.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="Ten18.Interop, Version=1.0.1.8, Culture=neutral, PublicKeyToken=39a56a431d4ba826, processorArchitecture=x86">
+    <Reference Include="Ten18.Interop.Generated, Version=1.0.1.8, Culture=neutral, PublicKeyToken=39a56a431d4ba826, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\obj\x86\Debug\Ten18.Interop.dll</HintPath>
+      <HintPath>..\obj\x86\Debug\Ten18.Interop.Generated.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -66,7 +66,6 @@
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PreBuildEvent>$(OutputPath)\Ten18.Build.exe -ImplementInteropAssembly $(TargetDir)Ten18.Interop.dll -WorkingDir $(SolutionIntermediateDir)</PreBuildEvent>
   </PropertyGroup>
 </Project>

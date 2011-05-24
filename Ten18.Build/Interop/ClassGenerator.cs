@@ -26,7 +26,6 @@ namespace Ten18.Interop
         {
             var cppHeaderTemplate = new CppHeaderTemplate()
             {
-                NameSpaceNames = InteropType.FullNameInCSharp.Split('.'),
                 InteropType = InteropType,
                 MethodGenerators = mMethodGenerators,
             };

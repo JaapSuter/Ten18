@@ -1,14 +1,14 @@
 #include "Ten18/PCH.h"
-#include "Ten18/CLR/HostControl.h"
-#include "Ten18/CLR/Host.h"
-#include "Ten18/CLR/HostMalloc.h"
+#include "Ten18/Interop/HostControl.h"
+#include "Ten18/Interop/Host.h"
+#include "Ten18/Interop/HostMalloc.h"
 #include "Ten18/Resources/Resources.h"
 #include "Ten18/Expect.h"
 #include "Ten18/COM/StackBasedSafeArray.h"
 #include "Ten18/COM/EmbeddedResourceStream.h"
 
 using namespace Ten18;
-using namespace Ten18::CLR;
+using namespace Ten18::Interop;
 using namespace Ten18::COM;
 
 HostControl::HostControl(Host& host)

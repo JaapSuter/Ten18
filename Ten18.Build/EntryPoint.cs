@@ -93,7 +93,7 @@ namespace Ten18
 
         private static void EmbedAssemblies()
         {
-            EmbedAssembly("Ten18.Interop");
+            EmbedAssembly("Ten18.Interop.Generated");
             EmbedAssembly("Ten18.Net");
             EmbedAssembly("SlimMath");
             EmbedAssembly("AsyncCtpLibrary");

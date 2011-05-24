@@ -1,11 +1,12 @@
 #pragma once
 
-#include "Ten18/CLR/HostControl.h"
-#include "Ten18/CLR/HostAssemblyManager.h"
-#include "Ten18/CLR/HostAssemblyStore.h"
-#include "Ten18/CLR/HostMemoryManager.h"
+#include "Ten18/Interop/HostControl.h"
+#include "Ten18/Interop/HostAssemblyManager.h"
+#include "Ten18/Interop/HostAssemblyStore.h"
+#include "Ten18/Interop/HostMemoryManager.h"
+#include "Ten18/Interop/NativeTypeFactory.h"
 
-namespace Ten18 { namespace CLR {
+namespace Ten18 { namespace Interop {
 
     static_assert(sizeof(bool) == sizeof(char), "Native C++ bool type must be one byte, as in the CLR, so that booleans can interop.");
 
@@ -15,7 +16,8 @@ namespace Ten18 { namespace CLR {
         
         Host();
 
-        void RendezVous();
+        void Rendezvous();
+        void Tick();
 
     private:
         
@@ -31,6 +33,7 @@ namespace Ten18 { namespace CLR {
         HostAssemblyManager mAssemblyManager;
         HostAssemblyStore   mAssemblyStore;
         HostMemoryManager   mMemoryManager;
+        NativeTypeFactory   mNativeTypeFactory;
 
         IAppDomainManagerEx* mAppDomainManagerEx;
         

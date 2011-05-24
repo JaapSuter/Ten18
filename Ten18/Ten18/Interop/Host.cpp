@@ -1,6 +1,6 @@
 #include "Ten18/PCH.h"
-#include "Ten18/CLR/Host.h"
-#include "Ten18/CLR/HostControl.h"
+#include "Ten18/Interop/Host.h"
+#include "Ten18/Interop/HostControl.h"
 #include "Ten18/COM/COMPtr.h"
 #include "Ten18/Resources/Resources.h"
 #include "Ten18/COM/StackBasedSafeArray.h"
@@ -8,11 +8,9 @@
 #include "Ten18/Tracer.h"
 #include "Ten18/Expect.h"
 #include "Ten18/Util.h"
-
-using namespace Ten18::CLR;
+    
+using namespace Ten18::Interop;
 using namespace Ten18::COM;
-
-extern "C" std::intptr_t gNativeTypeFactory;
 
 namespace Ten18 {
     
@@ -60,12 +58,15 @@ Host::Host() :
     Ten18_ASSERT(mAppDomainManagerEx == nullptr);
     Expect.HR = mRuntimeHost->Start();
     Ten18_ASSERT(mAppDomainManagerEx != nullptr);
-
-    mAppDomainManagerEx->Rendezvous(gNativeTypeFactory);
 }
 
-void Host::RendezVous()
-{   
+void Host::Rendezvous()
+{
+    mAppDomainManagerEx->Rendezvous(reinterpret_cast<std::intptr_t>(&mNativeTypeFactory));
+}
+
+void Host::Tick()
+{
     mAppDomainManagerEx->Tick();
 }
 

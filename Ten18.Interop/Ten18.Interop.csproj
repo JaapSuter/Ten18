@@ -47,6 +47,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>$(OutputPath)\Ten18.Build.exe -ImplementInteropAssembly $(TargetPath) -WorkingDir $(SolutionIntermediateDir)</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

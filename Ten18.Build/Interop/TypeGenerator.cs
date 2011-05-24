@@ -42,7 +42,7 @@ namespace Ten18.Interop
             Debug.Assert(!typeDef.IsNested);
             InteropType = InteropType.Get(typeDef);
             TypeDef = typeDef;
-            CppHeaderFile = Path.Combine(Args.Get<string>("WorkingDir"), InteropType.FullNameInCSharp.Replace(".", "\\") + ".Generated.h");
+            CppHeaderFile = Path.Combine(Args.Get<string>("WorkingDir"), InteropType.FullNameInCSharp.Replace(".", "\\") + ".Interop.Generated.h");
             if (!Directory.Exists(Path.GetDirectoryName(CppHeaderFile)))
                 Directory.CreateDirectory(Path.GetDirectoryName(CppHeaderFile));
         }

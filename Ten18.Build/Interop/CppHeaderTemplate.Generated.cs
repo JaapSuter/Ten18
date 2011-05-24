@@ -18,86 +18,37 @@ namespace Ten18.Interop
     {
         public virtual string TransformText()
         {
-            this.Write("#pragma once\r\n\r\n");
+            this.Write("\r\n");
             
-            #line 4 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
- foreach (var nameSpaceName in NameSpaceNames) { 
-            
-            #line default
-            #line hidden
-            this.Write("namespace ");
-            
-            #line 4 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(nameSpaceName));
-            
-            #line default
-            #line hidden
-            this.Write(" { ");
-            
-            #line 4 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
-}
-            
-            #line default
-            #line hidden
-            this.Write("\r\n\tclass Renderer;\r\n\tclass NativeServiceProvider;\r\n\t\r\n    class ");
-            
-            #line 9 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(InteropType.TypeRef.Name));
-            
-            #line default
-            #line hidden
-            this.Write("\r\n    {\r\n");
-            
-            #line 11 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
+            #line 3 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
  foreach (var mg in MethodGenerators) { 
             
             #line default
             #line hidden
             this.Write("        virtual ");
             
-            #line 12 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(mg.NativeReturnTypeRef.FullName));
+            #line 4 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(InteropType.Get(mg.NativeReturnTypeRef).FullNameInCpp));
             
             #line default
             #line hidden
             this.Write(" __thiscall ");
             
-            #line 12 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
+            #line 4 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(mg.MethodDefinition.Name));
             
             #line default
             #line hidden
             this.Write("(");
             
-            #line 12 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
+            #line 4 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(mg.NativeParameterListOf()));
             
             #line default
             #line hidden
             this.Write(");\r\n");
             
-            #line 13 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
-}
-            
-            #line default
-            #line hidden
-            this.Write("\r\n\t\tvirtual __stdcall ~");
-            
-            #line 15 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(InteropType.TypeRef.Name));
-            
-            #line default
-            #line hidden
-            this.Write("() {};\r\n    };\r\n\t\r\n");
-            
-            #line 18 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
- foreach (var nameSpaceName in NameSpaceNames) { 
-            
-            #line default
-            #line hidden
-            this.Write("}");
-            
-            #line 18 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
+            #line 5 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
 }
             
             #line default

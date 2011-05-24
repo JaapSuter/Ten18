@@ -48,6 +48,7 @@ namespace Ten18.Build
                     CreateNoWindow = true,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
+                    WorkingDirectory = Paths.WorkingDir,                    
                 },
             };
             
