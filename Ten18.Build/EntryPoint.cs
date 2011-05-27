@@ -63,8 +63,7 @@ namespace Ten18
         {
             Console.WriteLine("interopAssemblyPath: " + assemblyPath);
             
-            var assemblyGenerator = new AssemblyGenerator(assemblyPath);            
-            assemblyGenerator.Generate();
+            AssemblyGenerator.Generate(assemblyPath);
         }
 
         private static void CompileShaders()
@@ -83,8 +82,8 @@ namespace Ten18
                 var vso = Path.Combine(dir, name + ".vso");
                 var pso = Path.Combine(dir, name + ".pso");
 
-                Paths.RunExe(Paths.FxcExe, "{0} /Tvs_4_0 /EVS /Fo{1} {2}", flags, vso, shader);
-                Paths.RunExe(Paths.FxcExe, "{0} /Tps_4_0 /EPS /Fo{1} {2}", flags, pso, shader);
+                Tool.Run(Paths.FxcExe, "{0} /Tvs_4_0 /EVS /Fo{1} {2}", flags, vso, shader);
+                Tool.Run(Paths.FxcExe, "{0} /Tps_4_0 /EPS /Fo{1} {2}", flags, pso, shader);
 
                 Build.Index.Add("Ten18.Content.Shaders." + name + ".VS", vso);
                 Build.Index.Add("Ten18.Content.Shaders." + name + ".PS", pso);

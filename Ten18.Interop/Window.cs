@@ -12,10 +12,9 @@ using System.Runtime.CompilerServices;
 
 namespace Ten18
 {
-    [SuppressUnmanagedCodeSecurity]
     public abstract class Window : IDisposable
     {
-        public Window() { }
+        public Window(int i, bool b) { }
 
         public abstract Vector2 Size { get; set; }
         public abstract Vector2 Position { get; set; }

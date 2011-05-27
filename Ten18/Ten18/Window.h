@@ -5,9 +5,9 @@ namespace Ten18 {
 class Window
 {
 public:
-    Window();
+    Window(std::int32_t i, bool b);
 
-    #include "Ten18/Window.Interop.Generated.h"
+    #include "Ten18/Window.Generated.h"
 
 private:
 

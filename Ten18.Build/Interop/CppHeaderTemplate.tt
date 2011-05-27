@@ -1,5 +1,7 @@
 ﻿<#@ template debug="true" language="C#" #>
 
-<# foreach (var mg in MethodGenerators) { #>
-        virtual <#= InteropType.Get(mg.NativeReturnTypeRef).FullNameInCpp #> __thiscall <#= mg.MethodDefinition.Name #>(<#= mg.NativeParameterListOf() #>);
+<# foreach (var nativeSignature in mNativeSignatures) { #>
+        virtual <#= nativeSignature.ReturnType.FullNameInCpp() #> __thiscall <#= nativeSignature.Name #>(<#= nativeSignature.NativeParameterListOf() #>);
 <#}#>
+
+    

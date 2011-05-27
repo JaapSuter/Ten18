@@ -18,7 +18,7 @@ namespace Ten18
             
             Debug.Assert(AppDomain.CurrentDomain.IsDefaultAppDomain());
             
-            using (var window = new Window())
+            using (var window = new Window(4, true))
             {
                 var v1 = new Vector4(3, 5, 6, 5);
                 var v2 = window.Position;
@@ -29,8 +29,8 @@ namespace Ten18
                 Console.WriteLine("({0}, {1})", v2.X, v2.Y);
 
                 var position = window.Position;
-                var size = window.Size;
-            
+                var size = window.Size;    
+
                 Console.WriteLine("EntryPoint.HostedMain Says: {0}, ({1}, {2})", arg, position, size);
 
                 window.MakeFullScreen();

@@ -135,7 +135,7 @@
     <ClCompile Include="Ten18\Interop\HostControl.cpp" />
     <ClCompile Include="Ten18\Interop\HostMalloc.cpp" />
     <ClCompile Include="Ten18\Interop\HostMemoryManager.cpp" />
-    <ClCompile Include="Ten18\Interop\NativeTypeFactory.cpp" />
+    <ClCompile Include="Ten18\Interop\NativeFactory.cpp" />
     <ClCompile Include="Ten18\Libraries.cpp" />
     <ClCompile Include="Ten18\Program.cpp" />
     <ClCompile Include="Ten18\Sandbox.cpp" />
@@ -172,7 +172,7 @@
     <ClInclude Include="Ten18\Interop\HostMalloc.h" />
     <ClInclude Include="Ten18\Interop\HostMemoryManager.h" />
     <ClInclude Include="Ten18\Interop\IAppDomainManagerEx.h" />
-    <ClInclude Include="Ten18\Interop\NativeTypeFactory.h" />
+    <ClInclude Include="Ten18\Interop\NativeFactory.h" />
     <ClInclude Include="Ten18\OnExit.h" />
     <ClInclude Include="Ten18\Program.h" />
     <ClInclude Include="Ten18\PCH.h" />

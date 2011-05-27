@@ -5,12 +5,12 @@
 
 namespace Ten18 { namespace Interop {
 
-class NativeTypeFactory
+class NativeFactory
 {
 public:
-    #include "Ten18/Interop/NativeTypeFactory.Interop.Generated.h"
+    #include "Ten18/Interop/NativeFactory.Generated.h"
 
-    ~NativeTypeFactory() {};        
+    ~NativeFactory() {};        
 };
 
 }}

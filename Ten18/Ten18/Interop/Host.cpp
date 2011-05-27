@@ -62,7 +62,7 @@ Host::Host() :
 
 void Host::Rendezvous()
 {
-    mAppDomainManagerEx->Rendezvous(reinterpret_cast<std::intptr_t>(&mNativeTypeFactory));
+    mAppDomainManagerEx->Rendezvous(reinterpret_cast<std::intptr_t>(&mNativeFactory));
 }
 
 void Host::Tick()

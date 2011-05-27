@@ -14,15 +14,14 @@ namespace Ten18.Interop
 {    
     public sealed class AppDomainManagerEx : AppDomainManager, IAppDomainManagerEx
     {
-        public AppDomainManagerEx()
-            : base()
+        public AppDomainManagerEx() : base()
         {
             InitializationFlags = AppDomainManagerInitializationOptions.RegisterWithHost;
         }
 
-        void IAppDomainManagerEx.Rendezvous(int nativeTypeFactory)
+        void IAppDomainManagerEx.Rendezvous(IntPtr nativeFactory)
         {
-            NativeTypeFactory.Instance = new NativeTypeFactory(nativeTypeFactory);
+            NativeFactory.Instance = new NativeFactory(nativeFactory);
         }
 
         void IAppDomainManagerEx.Tick()

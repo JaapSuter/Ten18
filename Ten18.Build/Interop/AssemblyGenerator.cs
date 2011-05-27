@@ -12,58 +12,50 @@ using System.Diagnostics;
 
 namespace Ten18.Interop
 {
-    class AssemblyGenerator
+    static class AssemblyGenerator
     {
-        public AssemblyGenerator(string assemblyPath)
+        public static void Generate(string assemblyPath)
         {
-            mAssemblyPath = assemblyPath;
-            mAssemblyDef = AssemblyDefinition.ReadAssembly(mAssemblyPath, new ReaderParameters(ReadingMode.Immediate));
-            mAssemblyDir = Path.GetDirectoryName(assemblyPath);
+            var generatedPath = Path.ChangeExtension(assemblyPath, ".Generated.dll");
+            var assemblyDef = AssemblyDefinition.ReadAssembly(assemblyPath, new ReaderParameters(ReadingMode.Immediate));
+            var moduleDef = assemblyDef.MainModule;
 
-            InteropType.Initialize(mAssemblyDef.MainModule);
+            var requiredModuleAttributes = ModuleAttributes.ILOnly | ModuleAttributes.StrongNameSigned | ModuleAttributes.Required32Bit;
+            var requiredModuleArchitecture = TargetArchitecture.I386;
+            Debug.Assert(moduleDef.Attributes == requiredModuleAttributes);
+            Debug.Assert(moduleDef.Architecture == requiredModuleArchitecture);
+            Debug.Assert(assemblyDef.Modules.Count == 1);
 
-            foreach (var md in mAssemblyDef.Modules)
-            {
-                var requiredModuleAttributes = ModuleAttributes.ILOnly | ModuleAttributes.StrongNameSigned | ModuleAttributes.Required32Bit;
-                Debug.Assert(md.Attributes == requiredModuleAttributes);
-                mTypeGenerators.AddRange(from td in md.Types
-                                         let tg = TypeGenerator.Create(td)
-                                         where tg != null
-                                         select tg);
-            }
-        }
+            TypeRefs.Initialize(moduleDef);
 
-        public void Generate()
-        {
-            mTypeGenerators.Run(tg => tg.Generate());
+            foreach (var typeDef in moduleDef.Types)
+                if (typeDef == TypeRefs.NativeFactory) {} else
+                if (typeDef.IsEnum) {} else
+                if (typeDef.IsValueType) {} else
+                if (typeDef.IsClass && typeDef.IsAbstract) ClassGenerator.Generate(typeDef);
 
-            InteropType.CompleteNativeTypeFactory(mAssemblyDef.MainModule);
-            
-            mAssemblyDef.MainModule.Architecture = TargetArchitecture.I386;
-            mAssemblyDef.Name.Name = mAssemblyDef.Name.Name + ".Generated";
+            ClassGenerator.Generate(TypeRefs.NativeFactory);
 
-            var generatedAssemblyPath = Path.ChangeExtension(mAssemblyPath, ".Generated.dll");
+            assemblyDef.Name.Name = assemblyDef.Name.Name + ".Generated";
+            assemblyDef.Write(generatedPath, new WriterParameters { 
+                WriteSymbols = true,
+                StrongNameKeyPair = new StrongNameKeyPair(File.ReadAllBytes(Paths.KeyFile)),
+            });
 
-            mAssemblyDef.Write(generatedAssemblyPath, new WriterParameters { WriteSymbols = true, StrongNameKeyPair = new StrongNameKeyPair(File.ReadAllBytes(Paths.KeyFile)) });
+            PostProcess(generatedPath);
 
-            PostProcess(generatedAssemblyPath);
-
-            Console.WriteLine("Updated: {0}", generatedAssemblyPath);
+            Console.WriteLine("Updated: {0}", generatedPath);
         }
 
         private static void PostProcess(string assemblyFullPath)
         {
-            Paths.RunExe(Paths.ILDasmExe, "/SOURCE /OUT={0}.il {0}", assemblyFullPath);
-            Paths.RunExe(Paths.ILAsmExe, "{0}.il /OUTPUT={0} /DLL /DEBUG /KEY={1}", assemblyFullPath, Paths.KeyFile);
+            Tool.Run(Paths.ILDasmExe, "/SOURCE /OUT={0}.il {0}", assemblyFullPath);
+            Tool.Run(Paths.ILAsmExe, "{0}.il /OUTPUT={0} /DLL /DEBUG /KEY={1}", assemblyFullPath, Paths.KeyFile);
             
             // Verify the MSIL, but ignore...
-            //      * [found Int32] Expected ByRef on the stack.(Error: 0x80131860)
-            Paths.RunExe(Paths.PEVerifyExe, "{0} /VERBOSE /NOLOGO /HRESULT /IGNORE=0x80131860", assemblyFullPath);
+            //      * [IL]: Error: [found unmanaged pointer][expected unmanaged pointer] Unexpected type on the stack.(Error: 0x80131854)
+            //      * [IL]: Error: [found unmanaged pointer] Expected ByRef on the stack.(Error: 0x80131860)
+            Tool.Run(Paths.PEVerifyExe, "{0} /VERBOSE /NOLOGO /HRESULT /IGNORE=0x80131854,0x80131860", assemblyFullPath);
         }
-
-        private readonly string mAssemblyDir;
-        private readonly string mAssemblyPath;
-        private readonly AssemblyDefinition mAssemblyDef;
-        private readonly List<TypeGenerator> mTypeGenerators = new List<TypeGenerator>();
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Ten18 {
 
-Window::Window()
+Window::Window(std::int32_t, bool)
     : mPosition(), mSize()
 {}
 

@@ -94,14 +94,14 @@
     <ClCompile Include="Ten18\Interop\HostControl.cpp">
       <Filter>Ten18\Interop</Filter>
     </ClCompile>
-    <ClCompile Include="Ten18\Interop\NativeTypeFactory.cpp">
-      <Filter>Ten18\Interop</Filter>
-    </ClCompile>
     <ClCompile Include="Ten18\Window.cpp">
       <Filter>Ten18</Filter>
     </ClCompile>
     <ClCompile Include="Ten18\Windows\WindowNativeEx.cpp">
       <Filter>Ten18\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Ten18\Interop\NativeFactory.cpp">
+      <Filter>Ten18\Interop</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -213,11 +213,11 @@
     <ClInclude Include="Ten18\Interop\HostControl.h">
       <Filter>Ten18\Interop</Filter>
     </ClInclude>
-    <ClInclude Include="Ten18\Interop\NativeTypeFactory.h">
-      <Filter>Ten18\Interop</Filter>
-    </ClInclude>
     <ClInclude Include="Ten18\Window.h">
       <Filter>Ten18</Filter>
+    </ClInclude>
+    <ClInclude Include="Ten18\Interop\NativeFactory.h">
+      <Filter>Ten18\Interop</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

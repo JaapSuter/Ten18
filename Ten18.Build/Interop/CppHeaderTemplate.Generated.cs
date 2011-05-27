@@ -21,28 +21,28 @@ namespace Ten18.Interop
             this.Write("\r\n");
             
             #line 3 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
- foreach (var mg in MethodGenerators) { 
+ foreach (var nativeSignature in mNativeSignatures) { 
             
             #line default
             #line hidden
             this.Write("        virtual ");
             
             #line 4 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(InteropType.Get(mg.NativeReturnTypeRef).FullNameInCpp));
+            this.Write(this.ToStringHelper.ToStringWithCulture(nativeSignature.ReturnType.FullNameInCpp()));
             
             #line default
             #line hidden
             this.Write(" __thiscall ");
             
             #line 4 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(mg.MethodDefinition.Name));
+            this.Write(this.ToStringHelper.ToStringWithCulture(nativeSignature.Name));
             
             #line default
             #line hidden
             this.Write("(");
             
             #line 4 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(mg.NativeParameterListOf()));
+            this.Write(this.ToStringHelper.ToStringWithCulture(nativeSignature.NativeParameterListOf()));
             
             #line default
             #line hidden
@@ -53,6 +53,7 @@ namespace Ten18.Interop
             
             #line default
             #line hidden
+            this.Write("\r\n    \r\n");
             return this.GenerationEnvironment.ToString();
         }
     }
