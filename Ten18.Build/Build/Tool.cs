@@ -26,7 +26,7 @@ namespace Ten18.Build
             // my battles... sigh. Stringbuilder...Schwingbuilder, at least it's mildly interesting and 2:07 AM.
             var stderr = "";
             var stdout = "";
-            var maxTimeOutMs = 5000;
+            var maxTimeOutMs = 12000;
             var proc = new Process()
             {            
                 StartInfo = new ProcessStartInfo(exe, String.Format(argsFmt, fmtArgs))

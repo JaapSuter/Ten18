@@ -17,16 +17,26 @@ namespace Ten18.Interop
 {
     class NativeSignature
     {
+        public static readonly MethodCallingConvention NativeCallingConvention = MethodCallingConvention.ThisCall;
+        public const string CppCallingConvention = "__thiscall";
+
         public bool HasLargeReturn { get { return LargeReturnLocal != null; } }
         public VariableDefinition LargeReturnLocal { get; private set; }
         public TypeReference ReturnType { get; private set; }
+        public TypeReference DeclaringType { get; private set; }
         public CallSite CallSite { get; private set; }
         public string Name { get; private set; }
 
+        private const ulong CookiePrefix = 0xBA5E101800000000;
+        private static ulong sCookieCounter = CookiePrefix;
+        public ulong Cookie { get; private set; }
+
         public NativeSignature(MethodDefinition methodDef)
         {
+            Cookie = sCookieCounter++;
             Name = methodDef.Name;
             ReturnType = methodDef.ReturnType;
+            DeclaringType = methodDef.DeclaringType;
             
             if (!ReturnType.CanBePassedAroundInRegister())
             {
@@ -37,16 +47,20 @@ namespace Ten18.Interop
                 methodDef.Body.InitLocals = true;
             }
 
-            CallSite = new CallSite(ReturnType) { CallingConvention = MethodCallingConvention.ThisCall, };
+            CallSite = new CallSite(ReturnType) { CallingConvention = NativeCallingConvention, };
             CallSite.Parameters.Add(new ParameterDefinition("cppThisPtr", ParameterAttributes.In, TypeRefs.VoidStar));
             if (HasLargeReturn)
                 CallSite.Parameters.Add(new ParameterDefinition("ret", ParameterAttributes.Out, LargeReturnLocal.VariableType.MakeByReferenceType()));
 
             foreach (var parameterDef in methodDef.Parameters)
-                if (parameterDef.ParameterType.CanBePassedAroundInRegister())
+                if (parameterDef.ParameterType.Resolve() == TypeRefs.String)
+                    CallSite.Parameters.Add(new ParameterDefinition(parameterDef.Name, parameterDef.Attributes | ParameterAttributes.In, TypeRefs.Char.MakePointerType()));
+                else if (parameterDef.ParameterType.CanBePassedAroundInRegister())
                     CallSite.Parameters.Add(new ParameterDefinition(parameterDef.Name, parameterDef.Attributes | ParameterAttributes.In, parameterDef.ParameterType));
                 else
-                    CallSite.Parameters.Add(new ParameterDefinition(parameterDef.Name, parameterDef.Attributes | ParameterAttributes.In, parameterDef.ParameterType.MakeByReferenceType()));            
+                    CallSite.Parameters.Add(new ParameterDefinition(parameterDef.Name, parameterDef.Attributes | ParameterAttributes.In, parameterDef.ParameterType.MakeByReferenceType()));
+
+            TypeRefs.PatchTable.Add(this);
         }
 
         public string NativeParameterListOf()
@@ -59,11 +73,18 @@ namespace Ten18.Interop
                             return pd.ParameterType.GetElementType().FullNameInCpp() + "& " + pd.Name;
                         else
                             return "const " + pd.ParameterType.GetElementType().FullNameInCpp() + "& " + pd.Name;
+                    else if (pd.ParameterType.IsPointer)
+                    {
+                        if (pd.Attributes.HasFlag(ParameterAttributes.Out))
+                            return pd.ParameterType.GetElementType().FullNameInCpp() + "* " + pd.Name;
+                        else
+                            return "const " + pd.ParameterType.GetElementType().FullNameInCpp() + "* " + pd.Name;
+                    }
                     else
                         if (pd.ParameterType.IsPrimitive)
                             return pd.ParameterType.FullNameInCpp() + " " + pd.Name;
                         else
-                            return pd.ParameterType.FullNameInCpp() + "* " + pd.Name;
+                            return pd.ParameterType.GetElementType().FullNameInCpp() + "* " + pd.Name;
                 }));
         }
     }

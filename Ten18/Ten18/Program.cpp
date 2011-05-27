@@ -23,6 +23,12 @@ using namespace Ten18::Capture;
 
 int Ten18::Program(HINSTANCE, int nCmdShow, Ten18::Interop::Host* host)
 {   
+    if (host)
+    {
+        host->Tick();
+        return 0;
+    }
+
     Window first(L"Ten18 Calibration");
     Window second(L"Ten18 Camera");
 

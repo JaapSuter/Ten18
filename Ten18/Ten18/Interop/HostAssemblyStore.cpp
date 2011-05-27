@@ -1,11 +1,16 @@
 #include "Ten18/PCH.h"
 #include "Ten18/Interop/HostAssemblyStore.h"
 #include "Ten18/Interop/HostMalloc.h"
+#include "Ten18/Interop/PatchTable.h"
 #include "Ten18/Resources/Resources.h"
 #include "Ten18/Expect.h"
 #include "Ten18/COM/StackBasedSafeArray.h"
 #include "Ten18/COM/EmbeddedResourceStream.h"
 #include "Ten18/Content/Index.h"
+
+#include "Ten18/Input/Input.h"
+#include "Ten18/Window.h"
+#include "Ten18/Interop/NativeFactory.h"
 
 using namespace Ten18;
 using namespace Ten18::Interop;
@@ -37,6 +42,9 @@ HRESULT STDMETHODCALLTYPE HostAssemblyStore::ProvideAssembly(
     if (nullptr == entry)
         return COR_E_FILENOTFOUND;
     
+    if (entry->NeedsInteropPatch)
+        PatchTable::Update(const_cast<char*>(entry->Data), entry->Size);
+    
     const auto securityCookie = 0xBA5E1018;
     *pContext = securityCookie;
     *ppStmAssemblyImage = new EmbeddedResourceStream(entry->Data, entry->Size);
@@ -44,10 +52,10 @@ HRESULT STDMETHODCALLTYPE HostAssemblyStore::ProvideAssembly(
 
     std::wstring postPolicyIdentity(pBindInfo->lpPostPolicyIdentity);
     const auto idx = postPolicyIdentity.find_first_of(L',');
-    if (idx >= 0 && idx < postPolicyIdentity.length())
+    if (idx != std::wstring::npos)
     {
         const auto requestedAssemblyName = postPolicyIdentity.substr(0, idx);
-        const std::wstring dir(L"D://Projects//Code//Ten18//Code//obj//x86//Debug//");
+        const std::wstring dir(L"..\\..\\..\\obj\\x86\\Debug\\");
         auto pdb = dir + requestedAssemblyName + L".pdb";
         if (FileExists(pdb.c_str()))
         {
@@ -58,7 +66,7 @@ HRESULT STDMETHODCALLTYPE HostAssemblyStore::ProvideAssembly(
     return S_OK;
 }
         
-HRESULT STDMETHODCALLTYPE HostAssemblyStore::ProvideModule( 
+HRESULT STDMETHODCALLTYPE HostAssemblyStore::ProvideModule(
     ModuleBindInfo *pBindInfo,
     DWORD *pdwModuleId,
     IStream **ppStmModuleImage,

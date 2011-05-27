@@ -1,0 +1,34 @@
+﻿<#@ template debug="true" language="C#" #>
+
+<# foreach (var includeFile in mIncludeFiles) { #>
+#include "<#= includeFile #>"
+<#}#>
+
+namespace Ten18 { namespace Interop {
+
+template <class MemFun>
+union MemFunCaster
+{
+public:
+    std::intptr_t   PtrAsRaw;
+    MemFun          PtrToFun;
+
+    static_assert(sizeof(MemFun) == sizeof(std::intptr_t), "sizeof(Member Function) != sizeof(intptr_t)");
+};
+
+template <class MemFun>
+static std::intptr_t MemFunCast(MemFun memFun)
+{
+    MemFunCaster<MemFun> mfc;
+    mfc.PtrToFun = memFun;
+    return mfc.PtrAsRaw;
+}
+
+static std::intptr_t sPatchTable[] = 
+{
+<# foreach (var nativeSignature in mNativeSignatures) { #>
+	MemFunCast(&<#= nativeSignature.DeclaringType.FullNameInCpp() #>::<#= nativeSignature.Name #>),
+<#}#>
+};
+
+}}

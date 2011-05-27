@@ -129,6 +129,7 @@
     <ClCompile Include="Ten18\Graphics\Vertex.cpp" />
     <ClCompile Include="Ten18\Graphics\Writer.cpp" />
     <ClCompile Include="Ten18\Image.cpp" />
+    <ClCompile Include="Ten18\Input\Input.cpp" />
     <ClCompile Include="Ten18\Interop\Host.cpp" />
     <ClCompile Include="Ten18\Interop\HostAssemblyManager.cpp" />
     <ClCompile Include="Ten18\Interop\HostAssemblyStore.cpp" />
@@ -136,6 +137,7 @@
     <ClCompile Include="Ten18\Interop\HostMalloc.cpp" />
     <ClCompile Include="Ten18\Interop\HostMemoryManager.cpp" />
     <ClCompile Include="Ten18\Interop\NativeFactory.cpp" />
+    <ClCompile Include="Ten18\Interop\PatchTable.cpp" />
     <ClCompile Include="Ten18\Libraries.cpp" />
     <ClCompile Include="Ten18\Program.cpp" />
     <ClCompile Include="Ten18\Sandbox.cpp" />
@@ -165,6 +167,7 @@
     <ClInclude Include="Ten18\Graphics\SwapChain.h" />
     <ClInclude Include="Ten18\Graphics\Writer.h" />
     <ClInclude Include="Ten18\Image.h" />
+    <ClInclude Include="Ten18\Input\Input.h" />
     <ClInclude Include="Ten18\Interop\Host.h" />
     <ClInclude Include="Ten18\Interop\HostAssemblyManager.h" />
     <ClInclude Include="Ten18\Interop\HostAssemblyStore.h" />
@@ -173,6 +176,7 @@
     <ClInclude Include="Ten18\Interop\HostMemoryManager.h" />
     <ClInclude Include="Ten18\Interop\IAppDomainManagerEx.h" />
     <ClInclude Include="Ten18\Interop\NativeFactory.h" />
+    <ClInclude Include="Ten18\Interop\PatchTable.h" />
     <ClInclude Include="Ten18\OnExit.h" />
     <ClInclude Include="Ten18\Program.h" />
     <ClInclude Include="Ten18\PCH.h" />

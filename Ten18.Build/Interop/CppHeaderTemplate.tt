@@ -1,7 +1,8 @@
 ﻿<#@ template debug="true" language="C#" #>
 
 <# foreach (var nativeSignature in mNativeSignatures) { #>
-        virtual <#= nativeSignature.ReturnType.FullNameInCpp() #> __thiscall <#= nativeSignature.Name #>(<#= nativeSignature.NativeParameterListOf() #>);
+		// 0x<#= nativeSignature.Cookie.ToString("X") #>
+        <#= nativeSignature.ReturnType.FullNameInCpp() #> <#= NativeSignature.CppCallingConvention #> <#= nativeSignature.Name #>(<#= nativeSignature.NativeParameterListOf() #>);
 <#}#>
 
     

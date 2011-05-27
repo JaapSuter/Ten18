@@ -61,8 +61,6 @@ namespace Ten18
 
         private static void ImplementInteropAssembly(string assemblyPath)
         {
-            Console.WriteLine("interopAssemblyPath: " + assemblyPath);
-            
             AssemblyGenerator.Generate(assemblyPath);
         }
 
@@ -109,7 +107,6 @@ namespace Ten18
             var assemblyName = AssemblyName.GetAssemblyName(path);
             var contentName = assemblyName.FullName + postPolicy;
 
-            Console.WriteLine("Content: {0} at {1}", contentName, path);
             Build.Index.Add(contentName, path);
         }
     }

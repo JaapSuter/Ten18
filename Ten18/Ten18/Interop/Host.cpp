@@ -27,7 +27,7 @@ Host::Host() :
     mGCManager()
 {
     Ten18_TRACER();
-
+    
     const auto dotNetRuntimeVersion = L"v4.0.30319";   
 
     Expect.HR = CLRCreateInstance(CLSID_CLRMetaHost, IID_ICLRMetaHost, reinterpret_cast<void**>(&mMetaHost));

@@ -14,7 +14,7 @@ namespace Ten18
 {
     public abstract class Window : IDisposable
     {
-        public Window(int i, bool b) { }
+        public Window(string title, int width, int height) { }
 
         public abstract Vector2 Size { get; set; }
         public abstract Vector2 Position { get; set; }

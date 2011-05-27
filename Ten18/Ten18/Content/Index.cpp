@@ -18,10 +18,9 @@ static char Normalize(char c)
 
 static bool CompareName(const Index::Entry& entry, const wchar_t* name)
 {
-    for (const char* en = entry.Name; Normalize(*en) == Normalize(static_cast<char>(*name)); std::printf("%c", Normalize(*en)), ++en, ++name)
+    for (const char* en = entry.Name; Normalize(*en) == Normalize(static_cast<char>(*name)); ++en, ++name)
         if (*en == 0 || *name == 0)
             return *en == *name;
-    DebugOut("");
     return false;
 }
 

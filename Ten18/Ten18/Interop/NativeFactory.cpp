@@ -8,9 +8,9 @@ void* NativeFactory::NewInput()
     return nullptr;
 }
 
-void* NativeFactory::NewWindow(std::int32_t i, bool b)
+void* NativeFactory::NewWindow(const char16_t* title, int w, int h)
 {
-    return new Ten18::Window(i, b);
+    return new Ten18::Window(title, w, h);
 }
 
 }}

@@ -103,6 +103,12 @@
     <ClCompile Include="Ten18\Interop\NativeFactory.cpp">
       <Filter>Ten18\Interop</Filter>
     </ClCompile>
+    <ClCompile Include="Ten18\Input\Input.cpp">
+      <Filter>Ten18\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Ten18\Interop\PatchTable.cpp">
+      <Filter>Ten18\Interop</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ten18\PCH.h">
@@ -219,6 +225,12 @@
     <ClInclude Include="Ten18\Interop\NativeFactory.h">
       <Filter>Ten18\Interop</Filter>
     </ClInclude>
+    <ClInclude Include="Ten18\Input\Input.h">
+      <Filter>Ten18\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Ten18\Interop\PatchTable.h">
+      <Filter>Ten18\Interop</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Ten18">
@@ -241,6 +253,9 @@
     </Filter>
     <Filter Include="Ten18\Interop">
       <UniqueIdentifier>{46af2f65-3b92-4d9c-95ca-af9237c59518}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ten18\Input">
+      <UniqueIdentifier>{eec45148-3c38-4013-b2eb-df7803672a63}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

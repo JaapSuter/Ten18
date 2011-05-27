@@ -38,9 +38,11 @@ namespace Ten18.Interop
 
             assemblyDef.Name.Name = assemblyDef.Name.Name + ".Generated";
             assemblyDef.Write(generatedPath, new WriterParameters { 
-                WriteSymbols = true,
+                WriteSymbols = false,
                 StrongNameKeyPair = new StrongNameKeyPair(File.ReadAllBytes(Paths.KeyFile)),
             });
+
+            TypeRefs.PatchTable.Generate();
 
             PostProcess(generatedPath);
 
@@ -49,13 +51,18 @@ namespace Ten18.Interop
 
         private static void PostProcess(string assemblyFullPath)
         {
-            Tool.Run(Paths.ILDasmExe, "/SOURCE /OUT={0}.il {0}", assemblyFullPath);
-            Tool.Run(Paths.ILAsmExe, "{0}.il /OUTPUT={0} /DLL /DEBUG /KEY={1}", assemblyFullPath, Paths.KeyFile);
+            if (assemblyFullPath.Contains("Debug"))
+            {
+                Tool.Run(Paths.ILDasmExe, "/SOURCE /OUT={0}.il {0}", assemblyFullPath);
+                Tool.Run(Paths.ILAsmExe, "{0}.il /OUTPUT={0} /DLL /DEBUG /KEY={1}", assemblyFullPath, Paths.KeyFile);
+            }
             
             // Verify the MSIL, but ignore...
             //      * [IL]: Error: [found unmanaged pointer][expected unmanaged pointer] Unexpected type on the stack.(Error: 0x80131854)
             //      * [IL]: Error: [found unmanaged pointer] Expected ByRef on the stack.(Error: 0x80131860)
-            Tool.Run(Paths.PEVerifyExe, "{0} /VERBOSE /NOLOGO /HRESULT /IGNORE=0x80131854,0x80131860", assemblyFullPath);
+            //      * [IL]: Error: [found ref 'System.String'] Expected numeric type on the stack.(Error: 0x8013185D)
+            //      * [IL]: Error: Instruction cannot be verified.(Error: 0x8013186E)
+            Tool.Run(Paths.PEVerifyExe, "{0} /VERBOSE /NOLOGO /HRESULT /IGNORE=0x80131854,0x80131860,0x8013185D,0x8013186E", assemblyFullPath);
         }
     }
 }

@@ -12,20 +12,22 @@
 using namespace Ten18;
 using namespace Ten18::Interop;
 
-static void InitializeCrtDebug()
+static void InitializeCrt()
 {
-    Expect.NotEqualTo(-1) = _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE | _CRTDBG_MODE_DEBUG);
-    Expect.NotEqualTo(-1) = _CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE | _CRTDBG_MODE_DEBUG);
-    Expect.NotEqualTo(-1) = _CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE | _CRTDBG_MODE_DEBUG);
+    #ifdef DEBUG        
+        Expect.NotEqualTo(-1) = _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE | _CRTDBG_MODE_DEBUG);
+        Expect.NotEqualTo(-1) = _CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE | _CRTDBG_MODE_DEBUG);
+        Expect.NotEqualTo(-1) = _CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE | _CRTDBG_MODE_DEBUG);
 
-    Expect.NotEqualTo(_CRTDBG_HFILE_ERROR) = _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
-    Expect.NotEqualTo(_CRTDBG_HFILE_ERROR) = _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
-    Expect.NotEqualTo(_CRTDBG_HFILE_ERROR) = _CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDERR);
+        Expect.NotEqualTo(_CRTDBG_HFILE_ERROR) = _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
+        Expect.NotEqualTo(_CRTDBG_HFILE_ERROR) = _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
+        Expect.NotEqualTo(_CRTDBG_HFILE_ERROR) = _CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDERR);
 
-    const auto crtDbgFlags = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
-    const auto addDbgFlags = _CRTDBG_CHECK_EVERY_128_DF | _CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF;
-    Expect.EqualTo(crtDbgFlags) = _CrtSetDbgFlag(crtDbgFlags | addDbgFlags);
-    (void)addDbgFlags;
+        const auto crtDbgFlags = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
+        const auto addDbgFlags = _CRTDBG_CHECK_EVERY_128_DF | _CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF;
+        Expect.EqualTo(crtDbgFlags) = _CrtSetDbgFlag(crtDbgFlags | addDbgFlags);
+        (void)addDbgFlags;
+    #endif
 }
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, LPWSTR, int nCmdShow)
@@ -43,17 +45,20 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, LPWSTR, int nCmdShow)
     Host host;    
     host.Rendezvous();
 
-    InitializeCrtDebug();
+    InitializeCrt();
 
     RunTests();
     
     const auto procExitCode = Program(hInstance, nCmdShow, &host);
 
-    CoUninitialize();
-
     // Todo, Jaap Suter, April 2011
     // Expect.Zero = 
-    _CrtDumpMemoryLeaks();
+    // _CrtDumpMemoryLeaks();
+
+    // Todo, Jaap Suter, May 2011, we don't call CoUninitialize because the CLR host is running past main, and while
+    // multiple matching CoInit and CoUninit calls should balance out, I'm just gonnna 
+    // throw this cargo cult voodoo out the window and hope for the best...
+    
 
     return procExitCode;
 }

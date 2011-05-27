@@ -16,6 +16,7 @@ using Mono.Cecil;
 using Mono.Cecil.Rocks;
 using Mono.Cecil.Cil;
 using Mono.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Ten18.Interop
 {
@@ -51,13 +52,8 @@ namespace Ten18.Interop
             Debug.Assert(!methodDef.IsStatic);
             Debug.Assert(methodDef.IsAbstract);
 
-            var baseMethodDefs = typeDef.Interfaces.SelectMany(id => id.Resolve().Methods)
-                                        .Concat((typeDef.BaseType ?? TypeRefs.Object).Resolve().Methods.Where(md => md.IsVirtual));
-
-
-            var baseMethod = GetPossibleBaseMethod(baseMethodDefs, methodDef);
-
-            methodDef.IsVirtual = baseMethod != null && baseMethod.Resolve().IsVirtual;
+            methodDef.IsVirtual = ImplementsBaseOrInterface(typeDef, methodDef);
+            methodDef.IsFinal = methodDef.IsVirtual;
             methodDef.IsHideBySig = true;
             methodDef.IsAbstract = false;
             methodDef.IsNewSlot = false;
@@ -73,18 +69,62 @@ namespace Ten18.Interop
                 ilp.Emit(OpCodes.Ldloca, nativeSignature.LargeReturnLocal);
 
             for (int j = 0; j < methodDef.Parameters.Count; ++j)
-                if (methodDef.Parameters[j].ParameterType.CanBePassedAroundInRegister())
-                    ilp.Emit(OpCodes.Ldarg, j + 1);
-                else
-                    ilp.Emit(OpCodes.Ldarga, j + 1);
+            {
+                if (methodDef.Parameters[j].ParameterType.Resolve() == TypeRefs.String)
+                {
+                    var pinnedLocalDef = new VariableDefinition(TypeRefs.String.MakePinnedType());
+                    methodDef.Body.Variables.Add(pinnedLocalDef);
+                    methodDef.Body.InitLocals = true;
 
-            ilp.Emit(OpCodes.Ldarg_0);
-            ilp.Emit(OpCodes.Ldfld, cppThisPtr);
-            ilp.Emit(OpCodes.Ldind_I);
-            ilp.Emit(OpCodes.Ldc_I4, vTableSlotIdx * TypeRefs.SizeOfVTableSlot);
-            ilp.Emit(OpCodes.Conv_I);
-            ilp.Emit(OpCodes.Add);
-            ilp.Emit(OpCodes.Ldind_I);
+                    ilp.Emit(OpCodes.Ldarg, j + 1);
+                    ilp.Emit(OpCodes.Stloc, pinnedLocalDef);
+                    ilp.Emit(OpCodes.Ldloc, pinnedLocalDef);
+                    ilp.Emit(OpCodes.Conv_I);
+                    ilp.Emit(OpCodes.Ldc_I4, RuntimeHelpers.OffsetToStringData);
+                    ilp.Emit(OpCodes.Add);
+                }
+                else if (methodDef.Parameters[j].ParameterType.CanBePassedAroundInRegister())
+                {
+                    ilp.Emit(OpCodes.Ldarg, j + 1);
+                }
+                else
+                {
+                    ilp.Emit(OpCodes.Ldarga, j + 1);
+                }
+            }
+
+            var useVeeTable = false;
+            if (useVeeTable)
+            {
+                ilp.Emit(OpCodes.Ldarg_0);
+                ilp.Emit(OpCodes.Ldfld, cppThisPtr);
+                ilp.Emit(OpCodes.Ldind_I);
+                ilp.Emit(OpCodes.Ldc_I4, vTableSlotIdx * TypeRefs.SizeOfVTableSlot);
+                ilp.Emit(OpCodes.Conv_I);
+                ilp.Emit(OpCodes.Add);
+                ilp.Emit(OpCodes.Ldind_I);
+            }
+            else
+            {
+                //     IL_0006:  /* 21   | 0700000018101810 */ ldc.i8     0x1018101800000007
+                //     IL_000f:  /* 29   | 05000011         */ calli      
+                ilp.Emit(OpCodes.Ldc_I8, unchecked((long)nativeSignature.Cookie)); // 9 bytes
+
+                //     IL_0006:  /* 00   |                  */ nop
+                //     IL_0007:  /* 00   |                  */ nop
+                //     IL_0008:  /* 00   |                  */ nop
+                //     IL_0009:  /* 00   |                  */ nop
+                //     IL_000a:  /* 20   | EEEEEEEE         */ ldc.i4     0xeeeeeeee
+                //     IL_000f: calli
+                // ilp.Emit(OpCodes.Nop);
+                // ilp.Emit(OpCodes.Nop);
+                // ilp.Emit(OpCodes.Nop);
+                // ilp.Emit(OpCodes.Nop);
+                // ilp.Emit(OpCodes.Ldc_I4, (int)(0x12345678)); // 5 bytes
+            }
+
+            if (!nativeSignature.HasLargeReturn)
+                ilp.Emit(OpCodes.Tail);
 
             ilp.Emit(OpCodes.Calli, nativeSignature.CallSite);
             
@@ -94,6 +134,14 @@ namespace Ten18.Interop
             ilp.Emit(OpCodes.Ret);
 
             methodDef.Body.OptimizeMacros();
+        }
+
+        private static bool ImplementsBaseOrInterface(TypeDefinition typeDef, MethodDefinition methodDef)
+        {
+            var baseMethodDefs = typeDef.Interfaces.SelectMany(id => id.Resolve().Methods.Where(md => md.IsVirtual))
+                                        .Concat((typeDef.BaseType ?? TypeRefs.Object).Resolve().Methods.Where(md => md.IsVirtual));
+
+            return null != GetPossibleBaseMethod(baseMethodDefs, methodDef);
         }
 
         private static MethodReference GetPossibleBaseMethod(IEnumerable<MethodReference> candidateRefs, MethodReference overrideRef)

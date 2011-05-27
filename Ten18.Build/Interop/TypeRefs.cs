@@ -20,12 +20,15 @@ namespace Ten18.Interop
     static class TypeRefs
     {
         public static TypeReference Object { get; private set; }
-        public static TypeReference String { get; private set; }
         public static TypeReference IntPtr { get; private set; }
         public static TypeReference Void { get; private set; }
         public static TypeReference VoidStar { get; private set; }
+        public static TypeReference Char { get; private set; }
         
+        public static TypeDefinition String { get; private set; }
         public static TypeDefinition NativeFactory { get; private set; }
+
+        public static PatchTableTemplate PatchTable { get; private set; }
         
         public static int SizeOfVTableSlot { get; private set; }
         public static int SizeOfRegister { get; private set; }
@@ -34,21 +37,21 @@ namespace Ten18.Interop
         {
             SizeOfRegister = System.IntPtr.Size;
             SizeOfVTableSlot = System.IntPtr.Size;
-
-            NativeFactory = Register(moduleDef, "Ten18.Interop.NativeFactory").Resolve();
-
+            
             var typeSystem = moduleDef.TypeSystem;
-
+            
+            NativeFactory = Register(moduleDef, "Ten18.Interop.NativeFactory").Resolve();
+            String = Register(moduleDef, typeSystem.String, "const char16_t*").Resolve();
             Void = Register(moduleDef, typeSystem.Void, "void");
             VoidStar = Register(moduleDef, typeSystem.Void.MakePointerType(), "void*");
             Object = Register(moduleDef, typeSystem.Object, "object");
             IntPtr = Register(moduleDef, typeSystem.IntPtr, "std::intptr_t");
+            Char = Register(moduleDef, typeSystem.Char, "char16_t");
 
             Register(moduleDef, typeSystem.Boolean, "bool");
             Register(moduleDef, typeSystem.Single, "float");
             Register(moduleDef, typeSystem.Double, "double");            
-            Register(moduleDef, typeSystem.UIntPtr, "std::uintptr_t");
-            Register(moduleDef, typeSystem.Char, "std::char16_t");
+            Register(moduleDef, typeSystem.UIntPtr, "std::uintptr_t");            
             Register(moduleDef, typeSystem.SByte, "std::int8_t");
             Register(moduleDef, typeSystem.Int16, "std::int16_t");
             Register(moduleDef, typeSystem.Int32, "std::int32_t");
@@ -62,6 +65,8 @@ namespace Ten18.Interop
             var vector3 = Register(moduleDef, typeof(SlimMath.Vector3), "XMFLOAT3");
             var vector4 = Register(moduleDef, typeof(SlimMath.Vector4), "XMFLOAT4");
             var matrix =  Register(moduleDef, typeof(SlimMath.Matrix), "XMFLOAT4X4");
+
+            PatchTable = new PatchTableTemplate();
         }
 
         public static bool CanBePassedAroundInRegister(this TypeReference typeRef)

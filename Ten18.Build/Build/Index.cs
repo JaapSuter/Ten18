@@ -42,9 +42,11 @@ namespace Ten18.Build
                 sEntries.Values.Select((path, idx) =>
                 {
                     var bytes = File.ReadAllBytes(path);
+
+                    var isConst = NeedsInteropPatch(path) ? " " : "const ";
                     var code = new StringBuilder();
                     bytes.Run(b => code.Append((sbyte)b).Append(", "));
-                    tw.WriteLine("static __declspec(align(16)) const char DataForEntry{0:000}[{1:000}] = {{ {2} }};", idx, bytes.Length, code);
+                    tw.WriteLine("static __declspec(align(16)) {0}char DataForEntry{1:000}[{2:000}] = {{ {3} }};", isConst, idx, bytes.Length, code);
                     return default(Unit);
 
                 }).Run();
@@ -54,7 +56,7 @@ namespace Ten18.Build
                 
                 sEntries.Keys.Select((name, idx) =>
                 {
-                    tw.WriteLine("    {{ \"{0}\", sizeof(DataForEntry{1:000}), DataForEntry{1:000} }},", name, idx);
+                    tw.WriteLine("    {{ \"{0}\", sizeof(DataForEntry{1:000}), DataForEntry{1:000}, {2} }},", name, idx, NeedsInteropPatch(name) ? "true" : "false");
                     return default(Unit);
                 }).Run();
 
@@ -69,6 +71,11 @@ namespace Ten18.Build
         {
             byte[] ascii = Encoding.Convert(Encoding.Unicode, Encoding.ASCII, Encoding.Unicode.GetBytes(str));
             return new string(Encoding.ASCII.GetChars(ascii));
+        }
+
+        private static bool NeedsInteropPatch(string str)
+        {
+            return str.ToUpperInvariant().Contains("Ten18.Interop.Generated".ToUpperInvariant());
         }
 
         private static Dictionary<string, string> sEntries = new Dictionary<string, string>();

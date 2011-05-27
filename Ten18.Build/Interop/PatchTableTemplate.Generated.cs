@@ -12,62 +12,85 @@ namespace Ten18.Interop
     using System;
     
     
-    #line 1 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
+    #line 1 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\PatchTableTemplate.tt"
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "10.0.0.0")]
-    public partial class CppHeaderTemplate : CppHeaderTemplateBase
+    public partial class PatchTableTemplate : PatchTableTemplateBase
     {
         public virtual string TransformText()
         {
             this.Write("\r\n");
             
-            #line 3 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
- foreach (var nativeSignature in mNativeSignatures) { 
+            #line 3 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\PatchTableTemplate.tt"
+ foreach (var includeFile in mIncludeFiles) { 
             
             #line default
             #line hidden
-            this.Write("\t\t// 0x");
+            this.Write("#include \"");
             
-            #line 4 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(nativeSignature.Cookie.ToString("X")));
-            
-            #line default
-            #line hidden
-            this.Write("\r\n        ");
-            
-            #line 5 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(nativeSignature.ReturnType.FullNameInCpp()));
+            #line 4 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\PatchTableTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(includeFile));
             
             #line default
             #line hidden
-            this.Write(" ");
+            this.Write("\"\r\n");
             
-            #line 5 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(NativeSignature.CppCallingConvention));
-            
-            #line default
-            #line hidden
-            this.Write(" ");
-            
-            #line 5 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(nativeSignature.Name));
-            
-            #line default
-            #line hidden
-            this.Write("(");
-            
-            #line 5 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(nativeSignature.NativeParameterListOf()));
-            
-            #line default
-            #line hidden
-            this.Write(");\r\n");
-            
-            #line 6 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
+            #line 5 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\PatchTableTemplate.tt"
 }
             
             #line default
             #line hidden
-            this.Write("\r\n    \r\n");
+            this.Write(@"
+namespace Ten18 { namespace Interop {
+
+template <class MemFun>
+union MemFunCaster
+{
+public:
+    std::intptr_t   PtrAsRaw;
+    MemFun          PtrToFun;
+
+    static_assert(sizeof(MemFun) == sizeof(std::intptr_t), ""sizeof(Member Function) != sizeof(intptr_t)"");
+};
+
+template <class MemFun>
+static std::intptr_t MemFunCast(MemFun memFun)
+{
+    MemFunCaster<MemFun> mfc;
+    mfc.PtrToFun = memFun;
+    return mfc.PtrAsRaw;
+}
+
+static std::intptr_t sPatchTable[] = 
+{
+");
+            
+            #line 29 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\PatchTableTemplate.tt"
+ foreach (var nativeSignature in mNativeSignatures) { 
+            
+            #line default
+            #line hidden
+            this.Write("\tMemFunCast(&");
+            
+            #line 30 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\PatchTableTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(nativeSignature.DeclaringType.FullNameInCpp()));
+            
+            #line default
+            #line hidden
+            this.Write("::");
+            
+            #line 30 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\PatchTableTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(nativeSignature.Name));
+            
+            #line default
+            #line hidden
+            this.Write("),\r\n");
+            
+            #line 31 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\PatchTableTemplate.tt"
+}
+            
+            #line default
+            #line hidden
+            this.Write("};\r\n\r\n}}\r\n");
             return this.GenerationEnvironment.ToString();
         }
     }
@@ -79,7 +102,7 @@ namespace Ten18.Interop
     /// Base class for this transformation
     /// </summary>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "10.0.0.0")]
-    public class CppHeaderTemplateBase
+    public class PatchTableTemplateBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;

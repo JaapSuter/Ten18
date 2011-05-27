@@ -11,6 +11,7 @@ namespace Ten18 { namespace Content
             const char* Name;
             std::size_t Size;
             const char* Data;
+            bool NeedsInteropPatch;
         };
         
         static const Entry* TryGet(const wchar_t* name);
