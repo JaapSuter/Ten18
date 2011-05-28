@@ -61,7 +61,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Interop\NativeSignature.cs" />
     <Compile Include="Interop\MethodGenerator.cs" />
     <Compile Include="Interop\TypeRefs.cs" />
     <Compile Include="Interop\CppHeaderTemplate.cs" />
@@ -73,7 +72,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>CppHeaderTemplate.tt</DependentUpon>
     </Compile>
-    <Compile Include="Interop\PatchTableTemplate.cs"/>
+    <Compile Include="Interop\PatchTableTemplate.cs" />
     <None Include="Interop\PatchTableTemplate.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>PatchTableTemplate.Generated.cs</LastGenOutput>

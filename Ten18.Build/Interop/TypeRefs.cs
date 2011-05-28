@@ -29,8 +29,8 @@ namespace Ten18.Interop
         public static TypeDefinition String { get; private set; }
         public static TypeDefinition NativeFactory { get; private set; }
 
-        public static PatchTableTemplate PatchTable { get; private set; }
-        
+        public static ModuleReference PInvokeModuleRef { get; private set; }
+
         public static int SizeOfVTableSlot { get; private set; }
         public static int SizeOfRegister { get; private set; }
         
@@ -38,7 +38,7 @@ namespace Ten18.Interop
         {
             SizeOfRegister = System.IntPtr.Size;
             SizeOfVTableSlot = System.IntPtr.Size;
-            
+
             var typeSystem = moduleDef.TypeSystem;
             
             NativeFactory = Register(moduleDef, "Ten18.Interop.NativeFactory").Resolve();
@@ -48,8 +48,11 @@ namespace Ten18.Interop
             Object = Register(moduleDef, typeSystem.Object, "object");
             IntPtr = Register(moduleDef, typeSystem.IntPtr, "std::intptr_t");
             Char = Register(moduleDef, typeSystem.Char, "wchar_t");
-            Boolean = Register(moduleDef, typeSystem.Boolean, "::Ten18::Interop::Boolean").Resolve();
-
+            Boolean = Register(moduleDef, typeSystem.Boolean, "bool").Resolve();
+            PInvokeModuleRef = new ModuleReference("Ten18.exe");
+            
+            moduleDef.ModuleReferences.Add(PInvokeModuleRef);
+            
             Register(moduleDef, typeSystem.Single, "float");
             Register(moduleDef, typeSystem.Double, "double");            
             Register(moduleDef, typeSystem.UIntPtr, "std::uintptr_t");            
@@ -66,8 +69,6 @@ namespace Ten18.Interop
             var vector3 = Register(moduleDef, typeof(SlimMath.Vector3), "XMFLOAT3");
             var vector4 = Register(moduleDef, typeof(SlimMath.Vector4), "XMFLOAT4");
             var matrix =  Register(moduleDef, typeof(SlimMath.Matrix), "XMFLOAT4X4");
-
-            PatchTable = new PatchTableTemplate();
         }
 
         public static bool CanBePassedAroundInRegister(this TypeReference typeRef)

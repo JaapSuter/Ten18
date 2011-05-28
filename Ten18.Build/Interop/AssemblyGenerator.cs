@@ -28,21 +28,23 @@ namespace Ten18.Interop
 
             TypeRefs.Initialize(moduleDef);
 
+            var patchTableTemplate = new PatchTableTemplate();
+
             foreach (var typeDef in moduleDef.Types)
                 if (typeDef == TypeRefs.NativeFactory) {} else
                 if (typeDef.IsEnum) {} else
                 if (typeDef.IsValueType) {} else
-                if (typeDef.IsClass && typeDef.IsAbstract) ClassGenerator.Generate(typeDef);
+                if (typeDef.IsClass && typeDef.IsAbstract) ClassGenerator.Generate(typeDef, patchTableTemplate);
 
-            ClassGenerator.Generate(TypeRefs.NativeFactory);
+            ClassGenerator.Generate(TypeRefs.NativeFactory, patchTableTemplate);
+
+            patchTableTemplate.Generate();
 
             assemblyDef.Name.Name = assemblyDef.Name.Name + ".Generated";
             assemblyDef.Write(generatedPath, new WriterParameters { 
                 WriteSymbols = false,
                 StrongNameKeyPair = new StrongNameKeyPair(File.ReadAllBytes(Paths.KeyFile)),
             });
-
-            TypeRefs.PatchTable.Generate();
 
             PostProcess(generatedPath);
 

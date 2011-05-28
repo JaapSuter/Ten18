@@ -29,7 +29,7 @@ namespace Ten18.Interop
                 Directory.CreateDirectory(Path.GetDirectoryName(mCppHeaderFile));
         }
 
-        internal void Add(NativeSignature nativeSignature) { mNativeSignatures.Add(nativeSignature); }
+        internal void Add(MethodGenerator methodGenerator) { mMethodGenerators.Add(methodGenerator); }
 
         public void Generate()
         {
@@ -40,6 +40,6 @@ namespace Ten18.Interop
         }
 
         private string mCppHeaderFile;
-        private IList<NativeSignature> mNativeSignatures = new List<NativeSignature>();
+        private IList<MethodGenerator> mMethodGenerators = new List<MethodGenerator>();
     }
 }

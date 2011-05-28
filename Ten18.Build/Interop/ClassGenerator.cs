@@ -11,7 +11,7 @@ namespace Ten18.Interop
 {
     static class ClassGenerator
     {
-        public static void Generate(TypeDefinition typeDef)
+        public static void Generate(TypeDefinition typeDef, PatchTableTemplate patchTableTemplate)
         {
             Debug.Assert(typeDef.IsClass);
             Debug.Assert(typeDef.IsAbstract);
@@ -29,7 +29,7 @@ namespace Ten18.Interop
                 PatchConstructors(typeDef, cppThisPtr);
 
             var cppHeaderTemplate = new CppHeaderTemplate(typeDef);
-            GenerateMethods(typeDef, cppThisPtr, cppHeaderTemplate);
+            GenerateMethods(typeDef, cppThisPtr, cppHeaderTemplate, patchTableTemplate);
 
             cppHeaderTemplate.Generate();
         }
@@ -83,12 +83,14 @@ namespace Ten18.Interop
             ctorDef.Body.OptimizeMacros();
         }
 
-        private static void GenerateMethods(TypeDefinition typeDef, FieldDefinition cppThisPtr, CppHeaderTemplate cppHeaderTemplate)
+        private static void GenerateMethods(TypeDefinition typeDef, FieldDefinition cppThisPtr, CppHeaderTemplate cppHeaderTemplate, PatchTableTemplate patchTableTemplate)
         {
-            int vTableSlotIdx = 0;            
-            foreach (var methodDef in typeDef.Methods)
-                if (methodDef.IsAbstract)
-                    MethodGenerator.Generate(typeDef, methodDef, cppThisPtr, vTableSlotIdx++, cppHeaderTemplate);
+            var methodDefs = from methodDef in typeDef.Methods
+                             where methodDef.IsAbstract
+                             select methodDef;
+            
+            foreach (var methodDef in methodDefs.ToArray())
+                new MethodGenerator(methodDef, patchTableTemplate).Generate(cppThisPtr, cppHeaderTemplate);
         }
     }
 }

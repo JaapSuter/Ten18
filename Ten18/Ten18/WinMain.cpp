@@ -9,7 +9,7 @@
 using namespace Ten18;
 using namespace Ten18::Interop;
 
-int WINAPI wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
+int __stdcall wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
 {
     Expect.True = HeapSetInformation(nullptr, HeapEnableTerminationOnCorruption, nullptr, 0);
     Expect.True = SetDllDirectory(L"");

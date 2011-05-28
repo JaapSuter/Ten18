@@ -76,23 +76,18 @@ void Window::set_Position(const XMFLOAT2& value)
     UNREFERENCED_PARAMETER(value);
 }
 
-Interop::Boolean Window::get_HasClosed()
+bool Window::get_HasClosed()
 {
     return mHwnd == nullptr;
 }
 
-Interop::Boolean Window::get_IsFullScreen()
+bool Window::get_IsFullScreen()
 {
     return false;
 }
 
 void Window::MakeFullScreen()
 {
-}
-
-bool Window::ExportedFunc()
-{
-    return true;
 }
 
 void Window::Dispose() { delete this; }

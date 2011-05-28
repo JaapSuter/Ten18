@@ -1,8 +1,5 @@
 ﻿<#@ template debug="true" language="C#" #>
 
-<# foreach (var nativeSignature in mNativeSignatures) { #>
-		// 0x<#= nativeSignature.Cookie.ToString("X") #>
-        <#= nativeSignature.ReturnType.FullNameInCpp() #> <#= NativeSignature.CppCallingConvention #> <#= nativeSignature.Name #>(<#= nativeSignature.NativeParameterListOf() #>);
+<# foreach (var methodGenerator in mMethodGenerators) { #>
+     <#= methodGenerator.NativeSignature #>
 <#}#>
-
-    

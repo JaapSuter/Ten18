@@ -9,6 +9,7 @@
 // ------------------------------------------------------------------------------
 namespace Ten18.Interop
 {
+    using System.Linq;
     using System;
     
     
@@ -18,79 +19,34 @@ namespace Ten18.Interop
     {
         public virtual string TransformText()
         {
-            this.Write("\r\n");
-            
-            #line 3 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\PatchTableTemplate.tt"
- foreach (var includeFile in mIncludeFiles) { 
-            
-            #line default
-            #line hidden
-            this.Write("#include \"");
-            
-            #line 4 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\PatchTableTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(includeFile));
-            
-            #line default
-            #line hidden
-            this.Write("\"\r\n");
+            this.Write("\r\nEXPORTS\r\n");
             
             #line 5 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\PatchTableTemplate.tt"
-}
+ foreach (var methodGenerator in mMethodGenerators) { 
             
             #line default
             #line hidden
-            this.Write(@"
-namespace Ten18 { namespace Interop {
-
-template <class MemFun>
-union MemFunCaster
-{
-public:
-    std::intptr_t   PtrAsRaw;
-    MemFun          PtrToFun;
-
-    static_assert(sizeof(MemFun) == sizeof(std::intptr_t), ""sizeof(Member Function) != sizeof(intptr_t)"");
-};
-
-template <class MemFun>
-static std::intptr_t MemFunCast(MemFun memFun)
-{
-    MemFunCaster<MemFun> mfc;
-    mfc.PtrToFun = memFun;
-    return mfc.PtrAsRaw;
-}
-
-static std::intptr_t sPatchTable[] = 
-{
-");
+            this.Write("     ");
             
-            #line 29 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\PatchTableTemplate.tt"
- foreach (var nativeSignature in mNativeSignatures) { 
+            #line 6 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\PatchTableTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(methodGenerator.ExportName));
             
             #line default
             #line hidden
-            this.Write("\tMemFunCast(&");
+            this.Write(" @");
             
-            #line 30 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\PatchTableTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(nativeSignature.DeclaringType.FullNameInCpp()));
-            
-            #line default
-            #line hidden
-            this.Write("::");
-            
-            #line 30 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\PatchTableTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(nativeSignature.Name));
+            #line 6 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\PatchTableTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(methodGenerator.Ordinal));
             
             #line default
             #line hidden
-            this.Write("),\r\n");
+            this.Write("  NONAME PRIVATE\r\n");
             
-            #line 31 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\PatchTableTemplate.tt"
-}
+            #line 7 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\PatchTableTemplate.tt"
+ } 
             
             #line default
             #line hidden
-            this.Write("};\r\n\r\n}}\r\n");
             return this.GenerationEnvironment.ToString();
         }
     }

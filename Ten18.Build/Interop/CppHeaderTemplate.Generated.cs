@@ -21,53 +21,24 @@ namespace Ten18.Interop
             this.Write("\r\n");
             
             #line 3 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
- foreach (var nativeSignature in mNativeSignatures) { 
+ foreach (var methodGenerator in mMethodGenerators) { 
             
             #line default
             #line hidden
-            this.Write("\t\t// 0x");
+            this.Write("     ");
             
             #line 4 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(nativeSignature.Cookie.ToString("X")));
+            this.Write(this.ToStringHelper.ToStringWithCulture(methodGenerator.NativeSignature));
             
             #line default
             #line hidden
-            this.Write("\r\n        ");
+            this.Write("\r\n");
             
             #line 5 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(nativeSignature.ReturnType.FullNameInCpp()));
-            
-            #line default
-            #line hidden
-            this.Write(" ");
-            
-            #line 5 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(NativeSignature.CppCallingConvention));
-            
-            #line default
-            #line hidden
-            this.Write(" ");
-            
-            #line 5 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(nativeSignature.Name));
-            
-            #line default
-            #line hidden
-            this.Write("(");
-            
-            #line 5 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(nativeSignature.NativeParameterListOf()));
-            
-            #line default
-            #line hidden
-            this.Write(");\r\n");
-            
-            #line 6 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
 }
             
             #line default
             #line hidden
-            this.Write("\r\n    \r\n");
             return this.GenerationEnvironment.ToString();
         }
     }
