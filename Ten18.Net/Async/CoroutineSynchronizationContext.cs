@@ -25,32 +25,27 @@ namespace Ten18
 
         public override void Post(SendOrPostCallback d, object state)
         {
-            Console.WriteLine("Post");
             mFactory.StartNew(() => d(state));            
         }
         
         public override void Send(SendOrPostCallback d, object state)
         {
-            Console.WriteLine("Send");
             d(state);
         }
         
         public override int Wait(IntPtr[] waitHandles, bool waitAll, int millisecondsTimeout)
         {
-            Console.WriteLine("Wait");
             return base.Wait(waitHandles, waitAll, millisecondsTimeout);
         }
         
         public override void OperationStarted()
         {
-            Console.WriteLine("OperationStarted");
             base.OperationStarted();
         }
 
         public override void  OperationCompleted()
         {
-            Console.WriteLine("OperationCompleted");
- 	        base.OperationCompleted();
+            base.OperationCompleted();
         }
 
         private CoroutineScheduler mScheduler;

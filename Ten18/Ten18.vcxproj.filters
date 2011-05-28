@@ -13,9 +13,6 @@
     <ClCompile Include="Ten18\Expect.cpp">
       <Filter>Ten18</Filter>
     </ClCompile>
-    <ClCompile Include="Ten18\Windows\RawInput.cpp">
-      <Filter>Ten18\Windows</Filter>
-    </ClCompile>
     <ClCompile Include="Ten18\Graphics\Device.cpp">
       <Filter>Ten18\Graphics</Filter>
     </ClCompile>
@@ -27,9 +24,6 @@
     </ClCompile>
     <ClCompile Include="Ten18\COM\COMPtr.cpp">
       <Filter>Ten18\COM</Filter>
-    </ClCompile>
-    <ClCompile Include="Ten18\Sandbox.cpp">
-      <Filter>Ten18</Filter>
     </ClCompile>
     <ClCompile Include="Ten18\Capture\CLEyeCapture.cpp">
       <Filter>Ten18\Capture</Filter>
@@ -44,9 +38,6 @@
       <Filter>Ten18</Filter>
     </ClCompile>
     <ClCompile Include="Ten18\Util.cpp">
-      <Filter>Ten18</Filter>
-    </ClCompile>
-    <ClCompile Include="Ten18\Tests.cpp">
       <Filter>Ten18</Filter>
     </ClCompile>
     <ClCompile Include="Ten18\Graphics\Writer.cpp">
@@ -97,9 +88,6 @@
     <ClCompile Include="Ten18\Window.cpp">
       <Filter>Ten18</Filter>
     </ClCompile>
-    <ClCompile Include="Ten18\Windows\WindowNativeEx.cpp">
-      <Filter>Ten18\Windows</Filter>
-    </ClCompile>
     <ClCompile Include="Ten18\Interop\NativeFactory.cpp">
       <Filter>Ten18\Interop</Filter>
     </ClCompile>
@@ -108,6 +96,15 @@
     </ClCompile>
     <ClCompile Include="Ten18\Interop\PatchTable.cpp">
       <Filter>Ten18\Interop</Filter>
+    </ClCompile>
+    <ClCompile Include="Ten18\Interop\HostGCManager.cpp">
+      <Filter>Ten18\Interop</Filter>
+    </ClCompile>
+    <ClCompile Include="Ten18\Interop\HostTaskManager.cpp">
+      <Filter>Ten18\Interop</Filter>
+    </ClCompile>
+    <ClCompile Include="Ten18\Input\RawInput.cpp">
+      <Filter>Ten18\Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -119,12 +116,6 @@
     </ClInclude>
     <ClInclude Include="Ten18\Expect.h">
       <Filter>Ten18</Filter>
-    </ClInclude>
-    <ClInclude Include="Ten18\Windows\RawInput.h">
-      <Filter>Ten18\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="Ten18\Windows\Window.h">
-      <Filter>Ten18\Windows</Filter>
     </ClInclude>
     <ClInclude Include="Ten18\Graphics\Device.h">
       <Filter>Ten18\Graphics</Filter>
@@ -143,9 +134,6 @@
     </ClInclude>
     <ClInclude Include="Ten18\COM\EmbeddedResourceStream.h">
       <Filter>Ten18\COM</Filter>
-    </ClInclude>
-    <ClInclude Include="Ten18\Sandbox.h">
-      <Filter>Ten18</Filter>
     </ClInclude>
     <ClInclude Include="Ten18\Capture\CLEyeCapture.h">
       <Filter>Ten18\Capture</Filter>
@@ -169,9 +157,6 @@
       <Filter>Ten18</Filter>
     </ClInclude>
     <ClInclude Include="Ten18\Util.h">
-      <Filter>Ten18</Filter>
-    </ClInclude>
-    <ClInclude Include="Ten18\Tests.h">
       <Filter>Ten18</Filter>
     </ClInclude>
     <ClInclude Include="Ten18\OnExit.h">
@@ -204,9 +189,6 @@
     <ClInclude Include="Ten18\Interop\HostMemoryManager.h">
       <Filter>Ten18\Interop</Filter>
     </ClInclude>
-    <ClInclude Include="Ten18\Interop\IAppDomainManagerEx.h">
-      <Filter>Ten18\Interop</Filter>
-    </ClInclude>
     <ClInclude Include="Ten18\Interop\Host.h">
       <Filter>Ten18\Interop</Filter>
     </ClInclude>
@@ -231,6 +213,18 @@
     <ClInclude Include="Ten18\Interop\PatchTable.h">
       <Filter>Ten18\Interop</Filter>
     </ClInclude>
+    <ClInclude Include="Ten18\Interop\HostGCManager.h">
+      <Filter>Ten18\Interop</Filter>
+    </ClInclude>
+    <ClInclude Include="Ten18\Interop\HostTaskManager.h">
+      <Filter>Ten18\Interop</Filter>
+    </ClInclude>
+    <ClInclude Include="Ten18\Input\RawInput.h">
+      <Filter>Ten18\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Ten18\Interop\IAppDomainManagerEx.h">
+      <Filter>Ten18\Interop</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Ten18">
@@ -238,9 +232,6 @@
     </Filter>
     <Filter Include="Ten18\Graphics">
       <UniqueIdentifier>{1f3e45cb-ac74-4db0-bd78-cbb449834145}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Ten18\Windows">
-      <UniqueIdentifier>{0f5ac33a-d82e-46e8-866b-be920106707b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Ten18\Capture">
       <UniqueIdentifier>{6c8fdf2f-525d-4578-ac20-9839106d5bbd}</UniqueIdentifier>

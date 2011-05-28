@@ -1,7 +1,7 @@
 #include "Ten18/PCH.h"
+#include "Ten18/Window.h"
 #include "Ten18/Graphics/SwapChain.h"
 #include "Ten18/Graphics/Device.h"
-#include "Ten18/Windows/Window.h"
 #include "Ten18/COM/EmbeddedResourceStream.h"
 #include "Ten18/Resources/Resources.h"
 #include "Ten18/Expect.h"
@@ -9,7 +9,6 @@
 using namespace Ten18;
 using namespace Ten18::COM;
 using namespace Ten18::Graphics;
-using namespace Ten18::Windows;
 
 SwapChain::SwapChain(const std::function<void ()>& tick, Device& device, Window& window)
     :
@@ -38,10 +37,9 @@ mClientPos()
     Expect.HR = device.mDXGIFactory1->CreateSwapChain(device.mD3D11Device.Raw(), &desc, mSwapChain.AsTypedDoubleStar());
     Expect.HR = device.mDXGIFactory1->MakeWindowAssociation(window.Handle(), DXGI_MWA_NO_WINDOW_CHANGES);
     
-    window.OnRenderDo([&] (const Window&) { Tick(); });
+    // window.OnRenderDo([&] (const Window&) { Tick(); });
 
-    device.mSwapChains.push_back(this);
-    
+    device.mSwapChains.push_back(this);    
 }
 
 void SwapChain::Repose()

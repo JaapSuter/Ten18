@@ -11,12 +11,16 @@ namespace Ten18.Async
 {
     class CoroutineScheduler : TaskScheduler
     {
+        public TaskFactory TaskFactory { get; private set; }
+
         public CoroutineScheduler()
         {
             if (SynchronizationContext.Current != null)
                 throw new InvalidProgramException("SynchronizationContext.Current should not be set already.");            
             mSynchronizationContext = new CoroutineSynchronizationContext(this);
             SynchronizationContext.SetSynchronizationContext(mSynchronizationContext);
+
+            TaskFactory = new TaskFactory(this);
         }
 
         public override int MaximumConcurrencyLevel { get { Verify(); return 1; } }
@@ -31,11 +35,22 @@ namespace Ten18.Async
             mQueued.Enqueue(task);
         }
 
+        public Task Yield()
+        {
+            mYieldComplete = new TaskCompletionSource<Unit>(this);
+            return mYieldComplete.Task;
+            // return new CoroutineAwaiter<Unit>(this, mYieldComplete);
+        }
+
         public void Tick()
         {
             Verify();
             Debug.Assert(mTryAgain.IsEmpty());
-            
+
+            var yieldComplete = Interlocked.Exchange(ref mYieldComplete, null);
+            if (yieldComplete != null)
+                yieldComplete.TrySetResult(default(Unit));
+
             using (Disposable.Create(() => mIsExecutingTasks = false))
             {
                 mIsExecutingTasks = true;
@@ -55,6 +70,9 @@ namespace Ten18.Async
                     }
 
                     Util.Swap(ref mTryAgain, ref mQueued);
+
+                    // Todo, 
+                    didSomeWork = false;
                 }
             }
         }
@@ -97,5 +115,6 @@ namespace Ten18.Async
         private Queue<Task> mTryAgain = new Queue<Task>();
         private readonly SingleThreadedConstraint mSingleThreadedConstraint = SingleThreadedConstraint.Create();
         private readonly CoroutineSynchronizationContext mSynchronizationContext;
+        private TaskCompletionSource<Unit> mYieldComplete;
     }
 }

@@ -3,7 +3,7 @@
 #include "Ten18/COM/COMPtr.h"
 
 namespace Ten18 { 
-    namespace Windows { class Window; }
+    class Window;
     
     namespace Graphics {
 
@@ -13,10 +13,10 @@ namespace Ten18 {
     {
     public:
         
-        explicit SwapChain(const std::function<void ()>& tick, Device& device, Windows::Window& window);
+        explicit SwapChain(const std::function<void ()>& tick, Device& device, Window& window);
         void Tick();
 
-        Windows::Window& GetWindow() const { return mWindow; }
+        Window& GetWindow() const { return mWindow; }
         
     private:
         
@@ -25,8 +25,8 @@ namespace Ten18 {
         SwapChain(const SwapChain&);
         SwapChain& operator = (const SwapChain&);
 
-        Windows::Window&            mWindow;
-        Device&                     mDevice;
+        Window&             mWindow;
+        Device&             mDevice;
 
         std::function<void ()>      mTick;
 

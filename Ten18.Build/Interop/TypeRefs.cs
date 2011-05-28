@@ -25,6 +25,7 @@ namespace Ten18.Interop
         public static TypeReference VoidStar { get; private set; }
         public static TypeReference Char { get; private set; }
         
+        public static TypeDefinition Boolean { get; private set; }
         public static TypeDefinition String { get; private set; }
         public static TypeDefinition NativeFactory { get; private set; }
 
@@ -41,14 +42,14 @@ namespace Ten18.Interop
             var typeSystem = moduleDef.TypeSystem;
             
             NativeFactory = Register(moduleDef, "Ten18.Interop.NativeFactory").Resolve();
-            String = Register(moduleDef, typeSystem.String, "const char16_t*").Resolve();
+            String = Register(moduleDef, typeSystem.String, "const wchar_t*").Resolve();
             Void = Register(moduleDef, typeSystem.Void, "void");
             VoidStar = Register(moduleDef, typeSystem.Void.MakePointerType(), "void*");
             Object = Register(moduleDef, typeSystem.Object, "object");
             IntPtr = Register(moduleDef, typeSystem.IntPtr, "std::intptr_t");
-            Char = Register(moduleDef, typeSystem.Char, "char16_t");
+            Char = Register(moduleDef, typeSystem.Char, "wchar_t");
+            Boolean = Register(moduleDef, typeSystem.Boolean, "::Ten18::Interop::Boolean").Resolve();
 
-            Register(moduleDef, typeSystem.Boolean, "bool");
             Register(moduleDef, typeSystem.Single, "float");
             Register(moduleDef, typeSystem.Double, "double");            
             Register(moduleDef, typeSystem.UIntPtr, "std::uintptr_t");            

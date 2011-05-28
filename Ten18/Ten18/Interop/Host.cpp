@@ -19,6 +19,7 @@ Host::Host() :
     mAssemblyManager(*this),
     mAssemblyStore(*this),
     mMemoryManager(*this),
+    mHostGCManager(*this),
     mAppDomainManagerEx(),
     mMetaHost(),
     mRuntimeInfo(),
@@ -41,14 +42,14 @@ Host::Host() :
                             | STARTUP_LOADER_OPTIMIZATION_SINGLE_DOMAIN
                             | STARTUP_LOADER_SAFEMODE
                             | STARTUP_SERVER_GC
-                            | STARTUP_ARM;
-
+                            | 0; // STARTUP_ARM;
+                            
     Expect.HR = mRuntimeInfo->SetDefaultStartupFlags(startupFlags, nullptr);
             
     Expect.HR = mClrControl->GetCLRManager(IID_ICLRGCManager, reinterpret_cast<void**>(&mGCManager));
     
-    const DWORD segmentSize = 8 * 1024 * 1024;
-    const DWORD maxGen0Size = 128 * 1024;
+    const DWORD segmentSize = 16 * 1024 * 1024;
+    const DWORD maxGen0Size = 2 * 1024 * 1024;
     Expect.HR = mGCManager->SetGCStartupLimits(segmentSize, maxGen0Size);
 
     const auto assemblyName = L"Ten18.Net, Version=1.0.1.8, PublicKeyToken=39a56a431d4ba826, culture=neutral";
@@ -58,11 +59,14 @@ Host::Host() :
     Ten18_ASSERT(mAppDomainManagerEx == nullptr);
     Expect.HR = mRuntimeHost->Start();
     Ten18_ASSERT(mAppDomainManagerEx != nullptr);
+    
+    mAppDomainManagerEx->Rendezvous(reinterpret_cast<std::intptr_t>(&mNativeFactory));
 }
 
-void Host::Rendezvous()
+Host::~Host()
 {
-    mAppDomainManagerEx->Rendezvous(reinterpret_cast<std::intptr_t>(&mNativeFactory));
+    mAppDomainManagerEx->Farewell();
+    Expect.HR = mRuntimeHost->Stop();
 }
 
 void Host::Tick()

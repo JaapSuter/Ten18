@@ -4,19 +4,18 @@
 #include "Ten18/Interop/HostAssemblyManager.h"
 #include "Ten18/Interop/HostAssemblyStore.h"
 #include "Ten18/Interop/HostMemoryManager.h"
+#include "Ten18/Interop/HostGCManager.h"
 #include "Ten18/Interop/NativeFactory.h"
 
 namespace Ten18 { namespace Interop {
-
-    static_assert(sizeof(bool) == sizeof(char), "Native C++ bool type must be one byte, as in the CLR, so that booleans can interop.");
 
     class Host
     {
     public:
         
         Host();
+        ~Host();
 
-        void Rendezvous();
         void Tick();
 
     private:
@@ -33,6 +32,7 @@ namespace Ten18 { namespace Interop {
         HostAssemblyManager mAssemblyManager;
         HostAssemblyStore   mAssemblyStore;
         HostMemoryManager   mMemoryManager;
+        HostGCManager       mHostGCManager;
         NativeFactory       mNativeFactory;
 
         // Because a process that hosts the CLR can't actually stop, unload, or otherwise deinitialize
@@ -44,7 +44,7 @@ namespace Ten18 { namespace Interop {
         ICLRMetaHost*           mMetaHost;
         ICLRRuntimeInfo*        mRuntimeInfo;
         ICLRControl*            mClrControl;
-        ICLRGCManager*          mGCManager;     
+        ICLRGCManager*          mGCManager;
         ICLRRuntimeHost*        mRuntimeHost;
     };
 }}

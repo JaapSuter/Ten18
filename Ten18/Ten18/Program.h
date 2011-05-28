@@ -4,6 +4,12 @@ namespace Ten18 {
 
     namespace Interop { class Host; }
 
-    int Program(HINSTANCE hInstance, int nCmdShow, Interop::Host* host);
+    class Program
+    {
+    public:
+        static int Run(Interop::Host& host);
     
+    private:
+        Program();
+    };
 }

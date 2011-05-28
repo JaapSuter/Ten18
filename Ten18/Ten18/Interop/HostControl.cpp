@@ -19,6 +19,8 @@ HRESULT STDMETHODCALLTYPE HostControl::GetHostManager(REFIID riid, void** ppObje
 {
     if (riid == IID_IHostAssemblyManager)
         *ppObject = static_cast<IHostAssemblyManager*>(&mHost->mAssemblyManager);
+    else if (riid == IID_IHostGCManager)
+        *ppObject = static_cast<IHostGCManager*>(&mHost->mHostGCManager);
     else if (riid == IID_IHostMemoryManager)
         *ppObject = static_cast<IHostMemoryManager*>(&mHost->mMemoryManager);
     else if (riid == IID_IHostAssemblyStore)

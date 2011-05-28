@@ -35,7 +35,7 @@ namespace Ten18
 
         public static void Run(string name, Action action)
         {
-            Console.WriteLine(new Benchmark(name, action));
+            Debug.WriteLine(new Benchmark(name, action));
         }
     }
 }

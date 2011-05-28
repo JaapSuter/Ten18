@@ -130,24 +130,23 @@
     <ClCompile Include="Ten18\Graphics\Writer.cpp" />
     <ClCompile Include="Ten18\Image.cpp" />
     <ClCompile Include="Ten18\Input\Input.cpp" />
+    <ClCompile Include="Ten18\Input\RawInput.cpp" />
     <ClCompile Include="Ten18\Interop\Host.cpp" />
     <ClCompile Include="Ten18\Interop\HostAssemblyManager.cpp" />
     <ClCompile Include="Ten18\Interop\HostAssemblyStore.cpp" />
     <ClCompile Include="Ten18\Interop\HostControl.cpp" />
+    <ClCompile Include="Ten18\Interop\HostGCManager.cpp" />
     <ClCompile Include="Ten18\Interop\HostMalloc.cpp" />
     <ClCompile Include="Ten18\Interop\HostMemoryManager.cpp" />
+    <ClCompile Include="Ten18\Interop\HostTaskManager.cpp" />
     <ClCompile Include="Ten18\Interop\NativeFactory.cpp" />
     <ClCompile Include="Ten18\Interop\PatchTable.cpp" />
     <ClCompile Include="Ten18\Libraries.cpp" />
     <ClCompile Include="Ten18\Program.cpp" />
-    <ClCompile Include="Ten18\Sandbox.cpp" />
-    <ClCompile Include="Ten18\Tests.cpp" />
     <ClCompile Include="Ten18\Timer.cpp" />
     <ClCompile Include="Ten18\Tracer.cpp" />
     <ClCompile Include="Ten18\Util.cpp" />
     <ClCompile Include="Ten18\Window.cpp" />
-    <ClCompile Include="Ten18\Windows\RawInput.cpp" />
-    <ClCompile Include="Ten18\Windows\WindowNativeEx.cpp" />
     <ClCompile Include="Ten18\WinMain.cpp" />
     <ClInclude Include="Ten18\Assert.h" />
     <ClInclude Include="Ten18\Capture\CaptureSource.h" />
@@ -168,12 +167,15 @@
     <ClInclude Include="Ten18\Graphics\Writer.h" />
     <ClInclude Include="Ten18\Image.h" />
     <ClInclude Include="Ten18\Input\Input.h" />
+    <ClInclude Include="Ten18\Input\RawInput.h" />
     <ClInclude Include="Ten18\Interop\Host.h" />
     <ClInclude Include="Ten18\Interop\HostAssemblyManager.h" />
     <ClInclude Include="Ten18\Interop\HostAssemblyStore.h" />
     <ClInclude Include="Ten18\Interop\HostControl.h" />
+    <ClInclude Include="Ten18\Interop\HostGCManager.h" />
     <ClInclude Include="Ten18\Interop\HostMalloc.h" />
     <ClInclude Include="Ten18\Interop\HostMemoryManager.h" />
+    <ClInclude Include="Ten18\Interop\HostTaskManager.h" />
     <ClInclude Include="Ten18\Interop\IAppDomainManagerEx.h" />
     <ClInclude Include="Ten18\Interop\NativeFactory.h" />
     <ClInclude Include="Ten18\Interop\PatchTable.h" />
@@ -183,15 +185,11 @@
     <ClCompile Include="Ten18\PCH.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
-    <ClInclude Include="Ten18\Sandbox.h" />
     <ClInclude Include="Ten18\Scoped.h" />
-    <ClInclude Include="Ten18\Tests.h" />
     <ClInclude Include="Ten18\Timer.h" />
     <ClInclude Include="Ten18\Tracer.h" />
     <ClInclude Include="Ten18\Util.h" />
     <ClInclude Include="Ten18\Window.h" />
-    <ClInclude Include="Ten18\Windows\RawInput.h" />
-    <ClInclude Include="Ten18\Windows\Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

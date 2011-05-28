@@ -1,10 +1,10 @@
 #include "Ten18/PCH.h"
-#include "Ten18/Windows/RawInput.h"
+#include "Ten18/Input/RawInput.h"
 #include "Ten18/Expect.h"
 #include "Ten18/Assert.h"
 
 using namespace Ten18;
-using namespace Ten18::Windows;
+using namespace Ten18::Input;
 
 LRESULT RawInput::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {

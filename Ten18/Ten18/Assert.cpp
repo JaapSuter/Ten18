@@ -1,7 +1,6 @@
 #include "Ten18/PCH.h"
 #include "Ten18/Assert.h"
 #include "Ten18/Util.h"
-#include "Ten18/Console.h"
 #include "Ten18/Expect.h"
 
 #ifdef _DEBUG
@@ -30,7 +29,6 @@ void Ten18::DebugOut(const char *fmt, ...)
     *p++ = '\n';
     *p   = '\0';
 
-    std::printf(buf);
     OutputDebugStringA(buf);
 }
 
@@ -64,9 +62,7 @@ bool Ten18::Assert::ReportFailure(HRESULT hr, DWORD lastErr, const char* express
         DebugOut("%s(%d): %s Failed With %S(0x%08x): '%S' %s\n", file, line, expression, dxe, hr, ce.ErrorMessage(), buf);
     }
 
-    Console::Flush();
-	
-	return true;
+    return true;
 }
 
 bool Ten18::Assert::ReportFailure(const char* condition, const char* file, int line, const char* fmt, ...)
@@ -84,8 +80,6 @@ bool Ten18::Assert::ReportFailure(const char* condition, const char* file, int l
     
     DebugOut("%s(%d): Assert Failure: '%s' %s\n", file, line, condition, buf);
 
-    Console::Flush();
-	
 	return true;
 }
 

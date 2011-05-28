@@ -24,6 +24,7 @@ namespace Ten18.Interop
         public VariableDefinition LargeReturnLocal { get; private set; }
         public TypeReference ReturnType { get; private set; }
         public TypeReference DeclaringType { get; private set; }
+        public MethodDefinition PInvokeDef { get; private set; }
         public CallSite CallSite { get; private set; }
         public string Name { get; private set; }
 
@@ -49,6 +50,7 @@ namespace Ten18.Interop
 
             CallSite = new CallSite(ReturnType) { CallingConvention = NativeCallingConvention, };
             CallSite.Parameters.Add(new ParameterDefinition("cppThisPtr", ParameterAttributes.In, TypeRefs.VoidStar));
+            
             if (HasLargeReturn)
                 CallSite.Parameters.Add(new ParameterDefinition("ret", ParameterAttributes.Out, LargeReturnLocal.VariableType.MakeByReferenceType()));
 

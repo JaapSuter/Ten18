@@ -1,14 +1,13 @@
 #include "Ten18/PCH.h"
 #include "Ten18/Program.h"
 #include "Ten18/Expect.h"
-#include "Ten18/Sandbox.h"
 #include "Ten18/COM/EmbeddedResourceStream.h"
 #include "Ten18/Capture/CLEyeCapture.h"
 #include "Ten18/Capture/MediaFoundationCapture.h"
 #include "Ten18/Resources/Resources.h"
 #include "Ten18/COM/COMPtr.h"
 #include "Ten18/Interop/Host.h"
-#include "Ten18/Windows/Window.h"
+#include "Ten18/Window.h"
 #include "Ten18/Graphics/Device.h"
 #include "Ten18/Graphics/Display.h"
 #include "Ten18/Graphics/SwapChain.h"
@@ -17,18 +16,32 @@
 
 using namespace Ten18;
 using namespace Ten18::COM;
-using namespace Ten18::Windows;
 using namespace Ten18::Graphics;
+using namespace Ten18::Interop;
 using namespace Ten18::Capture;
 
-int Ten18::Program(HINSTANCE, int nCmdShow, Ten18::Interop::Host* host)
+int Ten18::Program::Run(Host& host)
 {   
-    if (host)
+    MSG msg = {};
+    while (WM_QUIT != msg.message)
     {
-        host->Tick();
-        return 0;
+        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+        {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+        else
+        {
+            host.Tick();
+        }
     }
 
+    PostQuitMessage(static_cast<int>(msg.wParam));
+
+    return static_cast<int>(msg.wParam);
+}
+
+/*
     Window first(L"Ten18 Calibration");
     Window second(L"Ten18 Camera");
 
@@ -67,24 +80,4 @@ int Ten18::Program(HINSTANCE, int nCmdShow, Ten18::Interop::Host* host)
     second.Show(nCmdShow);
     const RECT mon = { -900, 100, 800, 600 };
     second.Repose(mon, 800, 600);
-
-    MSG msg = {};
-    while (WM_QUIT != msg.message)
-    {
-        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-        {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }
-        else
-        {
-            if (host != nullptr)
-                host->Tick();
-    
-            device.Tick();
-        }
-    }
-
-    PostQuitMessage(static_cast<int>(msg.wParam));
-    return static_cast<int>(msg.wParam);
-}
+*/

@@ -1,7 +1,7 @@
 #pragma once
 #include "Ten18/PCH.h"
 
-namespace Ten18 { namespace Windows {
+namespace Ten18 { namespace Input {
     
     class RawInput
     {

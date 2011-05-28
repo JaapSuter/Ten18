@@ -252,7 +252,7 @@ namespace Ten18.Async
 
         static CoroutineTest()
         {
-            sCoroFactory = new TaskFactory(sCoroScheduler);            
+            sCoroFactory = new TaskFactory(sCoroScheduler);
         }
 
         private static int mVal = 0;

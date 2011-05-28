@@ -18,20 +18,22 @@ namespace Ten18.Async
     {
         public CoroutineAwaiter(CoroutineScheduler scheduler, TaskCompletionSource<T> tcs)
         {
-            mScheduler = scheduler;
-            mTcs = tcs;
+            mTaskScheduler = scheduler;
+            mTcs = tcs;            
         }
 
-        public bool IsCompleted { get { return mTcs.Task.IsCompleted; } }
+        public bool IsCompleted { get { return mTcs.Task.GetAwaiter().IsCompleted; } }
 
         public void OnCompleted(Action continuation)
         {
-            mTcs.Task.ContinueWith(tcs => continuation(), mScheduler);
+            mTcs.Task.GetAwaiter().OnCompleted(continuation);
         }
+
+        public CoroutineAwaiter<T> GetAwaiter() { return this; }
 
         public T GetResult() { return mTcs.Task.Result; }
 
-        private CoroutineScheduler mScheduler;
+        private CoroutineScheduler mTaskScheduler;
         private TaskCompletionSource<T> mTcs;
     }
 }

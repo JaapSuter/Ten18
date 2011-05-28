@@ -22,5 +22,12 @@ namespace Ten18
         {
             return null != es.GroupBy(g => g).Where(w => w.Count() > 1).FirstOrDefault();
         }
+
+        public static void Dispose<T>(ref T t) where T : IDisposable
+        {
+            if (t != null)
+                t.Dispose();
+            t = default(T);
+        }
     }
 }
