@@ -43,7 +43,7 @@ namespace Ten18
 
         public void Dispose()
         {
-            mDebugTextWriter.Dispose();
+            mDebugTextWriter.Dispose();            
         }
 
         private DebugTextWriter mDebugTextWriter = new DebugTextWriter();

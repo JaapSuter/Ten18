@@ -9,15 +9,19 @@
 namespace Ten18 { namespace Interop {
 
     class Host
-    {
-        static_assert(sizeof(bool) == sizeof(char), "");
-        static_assert(sizeof(wchar_t) == sizeof(char16_t), "");
-        static_assert(sizeof(std::int16_t) == sizeof(short), "");
-        static_assert(sizeof(std::int32_t) == sizeof(int), "");
-        static_assert(sizeof(std::int64_t) == sizeof(__int64), "");
-        static_assert(sizeof(std::uint16_t) == sizeof(unsigned short), "");
-        static_assert(sizeof(std::uint32_t) == sizeof(unsigned int), "");
-        static_assert(sizeof(std::uint64_t) == sizeof(unsigned __int64), "");
+    {   
+        static_assert(sizeof(bool) == sizeof(char), "sizeof(bool) must be a single byte");        
+        static_assert(sizeof(wchar_t) == sizeof(char16_t), "sizeof(wchar_t) must be two bytes");
+        static_assert(sizeof(std::int16_t) == sizeof(short), "interop sizeof mismatch");
+        static_assert(sizeof(std::int32_t) == sizeof(int), "interop sizeof mismatch");
+        static_assert(sizeof(std::int64_t) == sizeof(__int64), "interop sizeof mismatch");
+        static_assert(sizeof(std::uint16_t) == sizeof(unsigned short), "interop sizeof mismatch");
+        static_assert(sizeof(std::uint32_t) == sizeof(unsigned int), "interop sizeof mismatch");
+        static_assert(sizeof(std::uint64_t) == sizeof(unsigned __int64), "interop sizeof mismatch");
+
+        static_assert(int(char(-1)) == -1, "char type must be signed");
+        static_assert(int(signed char(-1)) == -1, "signed char is not behaving as expected");
+        static_assert(int(unsigned char(-1)) == 255, "unsigned char is not behaving as expected");
 
     public:
         
