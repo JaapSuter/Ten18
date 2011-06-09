@@ -88,23 +88,17 @@
     <ClCompile Include="Ten18\Window.cpp">
       <Filter>Ten18</Filter>
     </ClCompile>
-    <ClCompile Include="Ten18\Interop\NativeFactory.cpp">
-      <Filter>Ten18\Interop</Filter>
-    </ClCompile>
-    <ClCompile Include="Ten18\Input\Input.cpp">
-      <Filter>Ten18\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="Ten18\Interop\PatchTable.cpp">
-      <Filter>Ten18\Interop</Filter>
-    </ClCompile>
     <ClCompile Include="Ten18\Interop\HostGCManager.cpp">
       <Filter>Ten18\Interop</Filter>
     </ClCompile>
     <ClCompile Include="Ten18\Interop\HostTaskManager.cpp">
       <Filter>Ten18\Interop</Filter>
     </ClCompile>
-    <ClCompile Include="Ten18\Input\RawInput.cpp">
-      <Filter>Ten18\Input</Filter>
+    <ClCompile Include="Ten18\RawInput.cpp">
+      <Filter>Ten18</Filter>
+    </ClCompile>
+    <ClCompile Include="Ten18\Input.cpp">
+      <Filter>Ten18</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -204,26 +198,20 @@
     <ClInclude Include="Ten18\Window.h">
       <Filter>Ten18</Filter>
     </ClInclude>
-    <ClInclude Include="Ten18\Interop\NativeFactory.h">
-      <Filter>Ten18\Interop</Filter>
-    </ClInclude>
-    <ClInclude Include="Ten18\Input\Input.h">
-      <Filter>Ten18\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="Ten18\Interop\PatchTable.h">
-      <Filter>Ten18\Interop</Filter>
-    </ClInclude>
     <ClInclude Include="Ten18\Interop\HostGCManager.h">
       <Filter>Ten18\Interop</Filter>
     </ClInclude>
     <ClInclude Include="Ten18\Interop\HostTaskManager.h">
       <Filter>Ten18\Interop</Filter>
     </ClInclude>
-    <ClInclude Include="Ten18\Input\RawInput.h">
-      <Filter>Ten18\Input</Filter>
-    </ClInclude>
     <ClInclude Include="Ten18\Interop\IAppDomainManagerEx.h">
       <Filter>Ten18\Interop</Filter>
+    </ClInclude>
+    <ClInclude Include="Ten18\Input.h">
+      <Filter>Ten18</Filter>
+    </ClInclude>
+    <ClInclude Include="Ten18\RawInput.h">
+      <Filter>Ten18</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -244,9 +232,6 @@
     </Filter>
     <Filter Include="Ten18\Interop">
       <UniqueIdentifier>{46af2f65-3b92-4d9c-95ca-af9237c59518}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Ten18\Input">
-      <UniqueIdentifier>{eec45148-3c38-4013-b2eb-df7803672a63}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

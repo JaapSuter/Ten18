@@ -25,10 +25,10 @@ namespace Ten18.Interop
             
             #line default
             #line hidden
-            this.Write("     ");
+            this.Write("\t __declspec(dllexport) ");
             
             #line 4 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(methodGenerator.NativeSignature));
+            this.Write(this.ToStringHelper.ToStringWithCulture(methodGenerator.FullNameAsCpp()));
             
             #line default
             #line hidden

@@ -4,7 +4,7 @@ using System.Drawing.Design;
 using System.Runtime.InteropServices;
 using Ten18.Interop;
 
-namespace Ten18.Input
+namespace Ten18
 {	
     [Flags]
     public enum InputEvent : int

@@ -12,11 +12,19 @@ namespace Ten18.Interop
 {
     public sealed class AppDomainManagerEx : AppDomainManager, IAppDomainManagerEx
     {
-        public AppDomainManagerEx() { InitializationFlags = AppDomainManagerInitializationOptions.RegisterWithHost; }
+        public AppDomainManagerEx()
+        {
+            Debug.Assert(AppDomain.CurrentDomain.IsDefaultAppDomain());
+            InitializationFlags = AppDomainManagerInitializationOptions.RegisterWithHost;
+        }
 
-        void IAppDomainManagerEx.Rendezvous(IntPtr nativeFactory) { mProgram = new Program(nativeFactory); }
+        void IAppDomainManagerEx.Rendezvous() { mProgram = new Program(); }
         void IAppDomainManagerEx.Tick() { mProgram.Tick(); }
-        void IAppDomainManagerEx.Farewell() { Util.Dispose(ref mProgram); }
+        void IAppDomainManagerEx.Farewell()
+        {
+            mProgram.Drain();
+            Util.Dispose(ref mProgram);
+        }
 
         private Program mProgram;
     }

@@ -18,12 +18,14 @@ int __stdcall wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
     
     Timer::Initialize();
     
-    Host host;    
-    
-    return Program::Run(host);
+    int ret = 0;
 
-    // Todo, Jaap Suter, May 2011, we don't call CoUninitialize because the CLR host is running past main, and while
+    Host host;    
+    ret = Program::Run(host);    
+    
+    host.Exit(ret);
+    // We don't call CoUninitialize because the CLR host is running past main, and while
     // multiple matching CoInit and CoUninit calls should balance out, I'm just gonnna throw this cargo cult 
-    // voodoo out the window and hope for the best...
+    // voodoo out the window, sacrifice a chicken, and focus on things that I care more about....
 }
 

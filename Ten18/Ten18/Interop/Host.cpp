@@ -28,6 +28,8 @@ Host::Host() :
     mGCManager()
 {
     Ten18_TRACER();
+
+    Util::EnumerateNativeThreads(true, Ten18_FILE_AND_LINE);
     
     const auto dotNetRuntimeVersion = L"v4.0.30319";   
 
@@ -42,7 +44,7 @@ Host::Host() :
                             | STARTUP_LOADER_OPTIMIZATION_SINGLE_DOMAIN
                             | STARTUP_LOADER_SAFEMODE
                             | STARTUP_SERVER_GC
-                            | 0; // STARTUP_ARM;
+                            | STARTUP_ARM;
                             
     Expect.HR = mRuntimeInfo->SetDefaultStartupFlags(startupFlags, nullptr);
             
@@ -55,18 +57,32 @@ Host::Host() :
     const auto assemblyName = L"Ten18.Net, Version=1.0.1.8, PublicKeyToken=39a56a431d4ba826, culture=neutral";
     const auto domainManager = L"Ten18.Interop.AppDomainManagerEx";
     Expect.HR = mClrControl->SetAppDomainManagerType(assemblyName, domainManager);
+
+    Util::EnumerateNativeThreads(true, Ten18_FILE_AND_LINE);
         
     Ten18_ASSERT(mAppDomainManagerEx == nullptr);
     Expect.HR = mRuntimeHost->Start();
     Ten18_ASSERT(mAppDomainManagerEx != nullptr);
     
-    mAppDomainManagerEx->Rendezvous(reinterpret_cast<std::intptr_t>(&mNativeFactory));
+    mAppDomainManagerEx->Rendezvous();
+
+    Util::EnumerateNativeThreads(true, Ten18_FILE_AND_LINE);
+}
+
+void Host::Exit(int exitCode)
+{
+    Ten18_ASSERT(mAppDomainManagerEx != nullptr);
+    mAppDomainManagerEx->Farewell();
+    mAppDomainManagerEx->Release();
+    mAppDomainManagerEx = nullptr;
+    
+    Expect.HR = mRuntimeHost->Stop();    
+    Expect.HR = mMetaHost->ExitProcess(exitCode);
 }
 
 Host::~Host()
 {
-    mAppDomainManagerEx->Farewell();
-    Expect.HR = mRuntimeHost->Stop();
+    Ten18_ASSERT_MSG(mAppDomainManagerEx == nullptr, "You must call Host::Exit to shut down...");
 }
 
 void Host::Tick()

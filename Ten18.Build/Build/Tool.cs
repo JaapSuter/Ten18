@@ -19,7 +19,7 @@ namespace Ten18.Build
 {
     static class Tool
     {
-        public static void Run(string exe, string argsFmt, params string[] fmtArgs)
+        public static string Run(string exe, string workingDir, string argsFmt, params string[] fmtArgs)        
         {
             // You should ask Jaap Suter why he wrote this the way it is... (think buffer full deadlock and
             // don't care about stderr completion on error). Wasteful? Sue me, gotta pick
@@ -35,7 +35,7 @@ namespace Ten18.Build
                     CreateNoWindow = true,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
-                    WorkingDirectory = Paths.WorkingDir,
+                    WorkingDirectory = workingDir,
                 },
             };
             
@@ -55,6 +55,8 @@ namespace Ten18.Build
                 throw exited ? new TimeoutException(String.Format("Child process failed (exit code = {0}: {1} {2})", proc.ExitCode, proc.StartInfo.FileName, proc.StartInfo.Arguments))
                              : new TimeoutException(String.Format("Child process timed out: {0} {1}", proc.StartInfo.FileName, proc.StartInfo.Arguments));
             }
+
+            return stdout + Environment.NewLine + stderr;
         }        
     }
 }

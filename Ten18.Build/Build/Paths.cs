@@ -27,6 +27,10 @@ namespace Ten18.Build
         public static string NetFxToolsDir { get; private set; }
         public static string DxSdkDir { get; private set; }
 
+        public static string MsPdbDllDir { get; private set; }
+
+        public static string DumpBin { get; private set; }
+        public static string UndName { get; private set; }
         public static string ILAsmExe { get; private set; }
         public static string ILDasmExe { get; private set; }
         public static string PEVerifyExe { get; private set; }
@@ -43,6 +47,11 @@ namespace Ten18.Build
 
             KeyFile = Path.Combine(slnDir, "Ten18.snk");
             Debug.Assert(File.Exists(KeyFile));
+
+            // Todo, Jaap Suter, May 2011, fix hardcoded paths
+            DumpBin = @"C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\dumpbin.exe";
+            UndName = @"C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\undname.exe";
+            MsPdbDllDir = @"C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE";
 
             WindowsSdkDir = Args.Get("WindowsSdkDir", Directory.Exists, () =>
                             new []

@@ -12,9 +12,8 @@ namespace Ten18
 {
     public sealed class Program : IDisposable
     {
-        public Program(IntPtr nativeFactory)
+        public Program()
         {
-            NativeFactory.Instance = new NativeFactory(nativeFactory);
             mTask = Flow();
         }
 
@@ -22,6 +21,11 @@ namespace Ten18
         {
             mSingleThreadedConstraint.Verify();
             mTaskScheduler.Tick();
+        }
+
+        public void Drain()
+        {
+            Tick();
         }
 
         private async Task Flow()
@@ -39,7 +43,6 @@ namespace Ten18
 
         public void Dispose()
         {
-            Debug.Assert(mTask.IsCompleted);
             mDebugTextWriter.Dispose();
         }
 

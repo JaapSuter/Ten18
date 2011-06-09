@@ -1,5 +1,5 @@
 ﻿<#@ template debug="true" language="C#" #>
 
 <# foreach (var methodGenerator in mMethodGenerators) { #>
-     <#= methodGenerator.NativeSignature #>
+	 __declspec(dllexport) <#= methodGenerator.FullNameAsCpp() #>
 <#}#>

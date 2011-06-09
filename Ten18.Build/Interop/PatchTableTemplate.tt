@@ -1,7 +1,0 @@
-﻿<#@ template debug="true" language="C#" #>
-<#@ import namespace="System.Linq" #>
-
-EXPORTS
-<# foreach (var methodGenerator in mMethodGenerators) { #>
-     <#= methodGenerator.ExportName #> @<#= methodGenerator.Ordinal #>  NONAME PRIVATE
-<# } #>

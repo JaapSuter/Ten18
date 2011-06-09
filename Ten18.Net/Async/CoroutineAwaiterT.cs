@@ -4,36 +4,53 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Ten18.Async
 {
-    class CoroutineAwaiter : CoroutineAwaiter<Unit>
-    {
-        public CoroutineAwaiter(CoroutineScheduler scheduler, TaskCompletionSource<Unit> tcs)
-            : base(scheduler, tcs)
-        { }
-    }
-
     class CoroutineAwaiter<T>
     {
-        public CoroutineAwaiter(CoroutineScheduler scheduler, TaskCompletionSource<T> tcs)
+        public CoroutineAwaiter(CoroutineScheduler scheduler)
         {
             mTaskScheduler = scheduler;
-            mTcs = tcs;            
         }
 
-        public bool IsCompleted { get { return mTcs.Task.GetAwaiter().IsCompleted; } }
+        public bool IsCompleted { get { return false; } }
 
-        public void OnCompleted(Action continuation)
+        public void OnCompleted(Func<T> continuation)
         {
-            mTcs.Task.GetAwaiter().OnCompleted(continuation);
+            mTask = new Task<T>(continuation);
+            mTaskScheduler.AfterNextTickStart(mTask);
         }
 
         public CoroutineAwaiter<T> GetAwaiter() { return this; }
 
-        public T GetResult() { return mTcs.Task.Result; }
+        public T GetResult() { Debug.Assert(mTask.IsCompleted); return mTask.Result; }
 
         private CoroutineScheduler mTaskScheduler;
-        private TaskCompletionSource<T> mTcs;
+        private Task<T> mTask;
     }
+
+    class CoroutineAwaiter
+    {
+        public CoroutineAwaiter(CoroutineScheduler scheduler)
+        {
+            mTaskScheduler = scheduler;
+        }
+
+        public bool IsCompleted { get { return false; } }
+
+        public void OnCompleted(Action continuation)
+        {
+            mTask = new Task(continuation);
+            mTaskScheduler.AfterNextTickStart(mTask);
+        }
+
+        public CoroutineAwaiter GetAwaiter() { return this; }
+
+        public void GetResult() {}
+
+        private CoroutineScheduler mTaskScheduler;
+        private Task mTask;
+    }    
 }

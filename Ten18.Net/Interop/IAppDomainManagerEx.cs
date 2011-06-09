@@ -15,7 +15,7 @@ namespace Ten18.Interop
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     public interface IAppDomainManagerEx
     {
-        [PreserveSig] void Rendezvous(IntPtr nativeTypeFactory);
+        [PreserveSig] void Rendezvous();
         [PreserveSig] void Tick();
         [PreserveSig] void Farewell();
     }

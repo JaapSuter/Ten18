@@ -26,19 +26,12 @@ namespace Ten18.Interop
             Debug.Assert(moduleDef.Architecture == requiredModuleArchitecture);
             Debug.Assert(assemblyDef.Modules.Count == 1);
 
-            TypeRefs.Initialize(moduleDef);
-
-            var patchTableTemplate = new PatchTableTemplate();
-
+            Globals.Initialize(moduleDef);
+            
             foreach (var typeDef in moduleDef.Types)
-                if (typeDef == TypeRefs.NativeFactory) {} else
                 if (typeDef.IsEnum) {} else
                 if (typeDef.IsValueType) {} else
-                if (typeDef.IsClass && typeDef.IsAbstract) ClassGenerator.Generate(typeDef, patchTableTemplate);
-
-            ClassGenerator.Generate(TypeRefs.NativeFactory, patchTableTemplate);
-
-            patchTableTemplate.Generate();
+                if (typeDef.IsClass && typeDef.IsAbstract) ClassGenerator.Generate(typeDef);
 
             assemblyDef.Name.Name = assemblyDef.Name.Name + ".Generated";
             assemblyDef.Write(generatedPath, new WriterParameters { 
@@ -48,6 +41,8 @@ namespace Ten18.Interop
 
             PostProcess(generatedPath);
 
+            ExportTable.Verify();
+
             Console.WriteLine("Updated: {0}", generatedPath);
         }
 
@@ -55,8 +50,8 @@ namespace Ten18.Interop
         {
             if (assemblyFullPath.Contains("Debug"))
             {
-                Tool.Run(Paths.ILDasmExe, "/SOURCE /OUT={0}.il {0}", assemblyFullPath);
-                Tool.Run(Paths.ILAsmExe, "{0}.il /OUTPUT={0} /DLL /DEBUG /KEY={1}", assemblyFullPath, Paths.KeyFile);
+                Tool.Run(Paths.ILDasmExe, Paths.WorkingDir, "/SOURCE /OUT={0}.il {0}", assemblyFullPath);
+                Tool.Run(Paths.ILAsmExe, Paths.WorkingDir, "{0}.il /OUTPUT={0} /DLL /DEBUG /KEY={1}", assemblyFullPath, Paths.KeyFile);
             }
             
             // Verify the MSIL, but ignore...
@@ -64,7 +59,7 @@ namespace Ten18.Interop
             //      * [IL]: Error: [found unmanaged pointer] Expected ByRef on the stack.(Error: 0x80131860)
             //      * [IL]: Error: [found ref 'System.String'] Expected numeric type on the stack.(Error: 0x8013185D)
             //      * [IL]: Error: Instruction cannot be verified.(Error: 0x8013186E)
-            Tool.Run(Paths.PEVerifyExe, "{0} /VERBOSE /NOLOGO /HRESULT /IGNORE=0x80131854,0x80131860,0x8013185D,0x8013186E", assemblyFullPath);
+            Tool.Run(Paths.PEVerifyExe, Paths.WorkingDir, "{0} /VERBOSE /NOLOGO /HRESULT /IGNORE=0x80131854,0x80131860,0x8013185D,0x8013186E", assemblyFullPath);
         }
     }
 }

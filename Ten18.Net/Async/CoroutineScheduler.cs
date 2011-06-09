@@ -35,11 +35,15 @@ namespace Ten18.Async
             mQueued.Enqueue(task);
         }
 
-        public Task Yield()
+        public void AfterNextTickStart(Task task)
         {
-            mYieldComplete = new TaskCompletionSource<Unit>(this);
-            return mYieldComplete.Task;
-            // return new CoroutineAwaiter<Unit>(this, mYieldComplete);
+            Debug.Assert(task.Status == TaskStatus.Created);
+            mAfterNextTick.Enqueue(task);
+        }
+
+        public CoroutineAwaiter Yield()
+        {
+            return new CoroutineAwaiter(this);
         }
 
         public void Tick()
@@ -47,9 +51,8 @@ namespace Ten18.Async
             Verify();
             Debug.Assert(mTryAgain.IsEmpty());
 
-            var yieldComplete = Interlocked.Exchange(ref mYieldComplete, null);
-            if (yieldComplete != null)
-                yieldComplete.TrySetResult(default(Unit));
+            while (!mAfterNextTick.IsEmpty())
+                mAfterNextTick.Dequeue().Start(this);
 
             using (Disposable.Create(() => mIsExecutingTasks = false))
             {
@@ -70,9 +73,6 @@ namespace Ten18.Async
                     }
 
                     Util.Swap(ref mTryAgain, ref mQueued);
-
-                    // Todo, 
-                    didSomeWork = false;
                 }
             }
         }
@@ -113,8 +113,8 @@ namespace Ten18.Async
         private bool mIsExecutingTasks;
         private Queue<Task> mQueued = new Queue<Task>();
         private Queue<Task> mTryAgain = new Queue<Task>();
+        private Queue<Task> mAfterNextTick = new Queue<Task>();
         private readonly SingleThreadedConstraint mSingleThreadedConstraint = SingleThreadedConstraint.Create();
         private readonly CoroutineSynchronizationContext mSynchronizationContext;
-        private TaskCompletionSource<Unit> mYieldComplete;
     }
 }

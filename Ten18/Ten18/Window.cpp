@@ -1,5 +1,5 @@
 #include "Ten18/Window.h"
-#include "Ten18/Input/RawInput.h"
+#include "Ten18/RawInput.h"
 #include "Ten18/Assert.h"
 #include "Ten18/Expect.h"
 #include "Ten18/Util.h"
@@ -11,6 +11,11 @@ namespace Ten18 {
 static ATOM sWndClass = 0;
 static volatile unsigned int sWndCount = 0;    
 static int sWndProcReentrancyCount = 0;
+
+void* Window::New(const wchar_t* title)
+{
+    return new Window(title);
+}
 
 Window::Window(const wchar_t* title)
     : mHwnd()  
@@ -41,7 +46,7 @@ Window::Window(const wchar_t* title)
     Expect.Zero = ShowWindow(mHwnd, SW_SHOWDEFAULT);
     Expect.NotZero = UpdateWindow(mHwnd);
 
-    InterlockedDecrement(&sWndCount);
+    InterlockedIncrement(&sWndCount);
 }
 
 Window::~Window()

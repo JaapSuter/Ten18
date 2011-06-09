@@ -5,7 +5,6 @@
 #include "Ten18/Interop/HostAssemblyStore.h"
 #include "Ten18/Interop/HostMemoryManager.h"
 #include "Ten18/Interop/HostGCManager.h"
-#include "Ten18/Interop/NativeFactory.h"
 
 namespace Ten18 { namespace Interop {
 
@@ -17,6 +16,8 @@ namespace Ten18 { namespace Interop {
         ~Host();
 
         void Tick();
+        
+        __declspec(noreturn) void Exit(int exitCode);
 
     private:
         
@@ -33,7 +34,6 @@ namespace Ten18 { namespace Interop {
         HostAssemblyStore   mAssemblyStore;
         HostMemoryManager   mMemoryManager;
         HostGCManager       mHostGCManager;
-        NativeFactory       mNativeFactory;
 
         // Because a process that hosts the CLR can't actually stop, unload, or otherwise deinitialize
         // the CLR (or its default AppDomain) once loaded, we just let it die with the process (which appears

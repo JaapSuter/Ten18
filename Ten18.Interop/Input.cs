@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using Ten18.Interop;
 using SlimMath;
 
-namespace Ten18.Input
+namespace Ten18
 {
     public abstract class Input : IObservable<InputEvent>
     {

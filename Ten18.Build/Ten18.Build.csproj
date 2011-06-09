@@ -56,13 +56,11 @@
     <Compile Include="Build\Index.cs" />
     <Compile Include="Build\Paths.cs" />
     <Compile Include="Interop\ClassGenerator.cs" />
-    <Compile Include="Interop\PatchTableTemplate.Generated.cs">
-      <DependentUpon>PatchTableTemplate.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
+    <Compile Include="Interop\TypeReferenceEx.cs" />
+    <Compile Include="Interop\MethodDefinitionEx.cs" />
+    <Compile Include="Interop\ParameterDefinitionEx.cs" />
     <Compile Include="Interop\MethodGenerator.cs" />
-    <Compile Include="Interop\TypeRefs.cs" />
+    <Compile Include="Interop\Globals.cs" />
     <Compile Include="Interop\CppHeaderTemplate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EntryPoint.cs" />
@@ -72,12 +70,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>CppHeaderTemplate.tt</DependentUpon>
     </Compile>
-    <Compile Include="Interop\PatchTableTemplate.cs" />
-    <None Include="Interop\PatchTableTemplate.tt">
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>PatchTableTemplate.Generated.cs</LastGenOutput>
-      <CustomToolNamespace>Ten18.Interop</CustomToolNamespace>
-    </None>
+    <Compile Include="Interop\ExportTable.cs" />
     <None Include="Interop\CppHeaderTemplate.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>CppHeaderTemplate.Generated.cs</LastGenOutput>

@@ -1,6 +1,8 @@
 Nothing to see here, just some happy hobby hacking...
 
 * Unorthodox choices
+* Write your own interop (PInvoke/COM)
+* Git commit messages
 * Pragma once
 * Precompiled header setup
 * Static vs anonymous namespace debugger watch window

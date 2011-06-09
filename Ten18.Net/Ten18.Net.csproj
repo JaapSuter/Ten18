@@ -48,14 +48,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Async\CompletedTask.cs" />
     <Compile Include="Benchmark.cs" />
     <Compile Include="DebugTextWriter.cs" />
     <Compile Include="Interop\AppDomainManagerEx.cs" />
     <Compile Include="Interop\IAppDomainManagerEx.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Async\CoroutineAwaiterT.cs" />
-    <Compile Include="Async\CoroutineTest.cs" />
     <Compile Include="Async\CoroutineSynchronizationContext.cs" />
     <Compile Include="Async\SingleThreadedConstraint.cs" />
     <Compile Include="Async\CoroutineScheduler.cs" />

@@ -1,16 +1,14 @@
 #include "Ten18/PCH.h"
 #include "Ten18/Interop/HostAssemblyStore.h"
 #include "Ten18/Interop/HostMalloc.h"
-#include "Ten18/Interop/PatchTable.h"
 #include "Ten18/Resources/Resources.h"
 #include "Ten18/Expect.h"
 #include "Ten18/COM/StackBasedSafeArray.h"
 #include "Ten18/COM/EmbeddedResourceStream.h"
 #include "Ten18/Content/Index.h"
 
-#include "Ten18/Input/Input.h"
+#include "Ten18/Input.h"
 #include "Ten18/Window.h"
-#include "Ten18/Interop/NativeFactory.h"
 
 using namespace Ten18;
 using namespace Ten18::Interop;
@@ -41,9 +39,6 @@ HRESULT STDMETHODCALLTYPE HostAssemblyStore::ProvideAssembly(
     auto entry = Content::Index::TryGet(pBindInfo->lpPostPolicyIdentity);
     if (nullptr == entry)
         return COR_E_FILENOTFOUND;
-    
-    if (entry->NeedsInteropPatch)
-        PatchTable::Update(const_cast<char*>(entry->Data), entry->Size);
     
     const auto securityCookie = 0xBA5E1018;
     *pContext = securityCookie;
