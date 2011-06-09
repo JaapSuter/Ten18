@@ -10,7 +10,7 @@ namespace Ten18.Async
 {
     class CoroutineAwaiter<T>
     {
-        public CoroutineAwaiter(CoroutineScheduler scheduler)
+        public CoroutineAwaiter(Heart scheduler)
         {
             mTaskScheduler = scheduler;
         }
@@ -27,13 +27,13 @@ namespace Ten18.Async
 
         public T GetResult() { Debug.Assert(mTask.IsCompleted); return mTask.Result; }
 
-        private CoroutineScheduler mTaskScheduler;
+        private Heart mTaskScheduler;
         private Task<T> mTask;
     }
 
     class CoroutineAwaiter
     {
-        public CoroutineAwaiter(CoroutineScheduler scheduler)
+        public CoroutineAwaiter(Heart scheduler)
         {
             mTaskScheduler = scheduler;
         }
@@ -50,7 +50,7 @@ namespace Ten18.Async
 
         public void GetResult() {}
 
-        private CoroutineScheduler mTaskScheduler;
+        private Heart mTaskScheduler;
         private Task mTask;
     }    
 }

@@ -7,7 +7,7 @@ namespace Ten18 { namespace Capture {
     {
     public:
         static int Count();
-        static Ptr Get(int idx);
+        static CLEyeCapture* Get(int idx);
 
         explicit CLEyeCapture(const GUID& guid);
         virtual ~CLEyeCapture();

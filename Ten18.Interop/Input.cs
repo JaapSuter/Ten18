@@ -1,7 +1,4 @@
 using System;
-using System.Globalization;
-using System.Runtime.InteropServices;
-using Ten18.Interop;
 using SlimMath;
 
 namespace Ten18

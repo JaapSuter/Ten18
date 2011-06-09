@@ -29,8 +29,6 @@ Writer::~Writer()
 
 void Writer::Initialize(IDXGIAdapter1& dxgiAdapter1, ID3D11Device& d3D11Device)
 {
-    Ten18_TRACER();
-
     Ten18_ASSERT(mDXGIAdapter1 == nullptr && mD3D11Device == nullptr);
     
     mDXGIAdapter1 = &dxgiAdapter1;

@@ -20,17 +20,13 @@ Host::Host() :
     mAssemblyStore(*this),
     mMemoryManager(*this),
     mHostGCManager(*this),
-    mAppDomainManagerEx(),
     mMetaHost(),
     mRuntimeInfo(),
     mRuntimeHost(),
     mClrControl(),
-    mGCManager()
+    mGCManager(),
+    mHeart()    
 {
-    Ten18_TRACER();
-
-    Util::EnumerateNativeThreads(true, Ten18_FILE_AND_LINE);
-    
     const auto dotNetRuntimeVersion = L"v4.0.30319";   
 
     Expect.HR = CLRCreateInstance(CLSID_CLRMetaHost, IID_ICLRMetaHost, reinterpret_cast<void**>(&mMetaHost));
@@ -58,36 +54,44 @@ Host::Host() :
     const auto domainManager = L"Ten18.Interop.AppDomainManagerEx";
     Expect.HR = mClrControl->SetAppDomainManagerType(assemblyName, domainManager);
 
-    Util::EnumerateNativeThreads(true, Ten18_FILE_AND_LINE);
-        
-    Ten18_ASSERT(mAppDomainManagerEx == nullptr);
+    Ten18_ASSERT(mHeart == nullptr);
     Expect.HR = mRuntimeHost->Start();
-    Ten18_ASSERT(mAppDomainManagerEx != nullptr);
+    Ten18_ASSERT(mHeart != nullptr);
     
-    mAppDomainManagerEx->Rendezvous();
-
-    Util::EnumerateNativeThreads(true, Ten18_FILE_AND_LINE);
+    mHeart->Rendezvous();
 }
-
-void Host::Exit(int exitCode)
-{
-    Ten18_ASSERT(mAppDomainManagerEx != nullptr);
-    mAppDomainManagerEx->Farewell();
-    mAppDomainManagerEx->Release();
-    mAppDomainManagerEx = nullptr;
     
-    Expect.HR = mRuntimeHost->Stop();    
-    Expect.HR = mMetaHost->ExitProcess(exitCode);
-}
-
 Host::~Host()
 {
-    Ten18_ASSERT_MSG(mAppDomainManagerEx == nullptr, "You must call Host::Exit to shut down...");
+    Ten18_ASSERT_MSG(mHeart == nullptr, "Host destructor called while heart still beating, or alive anyway...");
 }
 
-void Host::Tick()
+void Host::Run()
 {
-    mAppDomainManagerEx->Tick();
+    MSG msg = {};
+    while (WM_QUIT != msg.message)
+    {
+        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+        {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+        else
+        {
+            mHeart->Beat();
+        }
+    }
+
+    const auto ec = static_cast<int>(msg.wParam);
+    PostQuitMessage(ec);
+
+    Ten18_ASSERT(mHeart != nullptr);
+    mHeart->Farewell();
+    mHeart->Release();
+    mHeart = nullptr;
+    
+    Expect.HR = mRuntimeHost->Stop();    
+    Expect.HR = mMetaHost->ExitProcess(ec);
 }
 
 }

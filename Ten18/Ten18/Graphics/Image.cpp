@@ -1,7 +1,7 @@
-#include "Ten18/Image.h"
+#include "Ten18/Graphics/Image.h"
 #include "Ten18/Expect.h"
 
-using namespace Ten18;
+namespace Ten18 { namespace Graphics {
 
 #pragma warning(disable: 4505) // Todo, Jaap Suter, April 2011
 static int BytesPerPixelFor(DXGI_FORMAT fmt)
@@ -46,16 +46,18 @@ static int BytesPerPixelFor(DXGI_FORMAT fmt)
     }
 }
 
-Image::Ptr Image::New(int width, int height, int bytesPerPixel)
+void* Image::New(const XMFLOAT2& size, int bpp)
 {
-    return MakeUniquePtr<Image>(width, height, bytesPerPixel);
+    return Ten18_NEW Image(size, bpp);
 }
 
-Image::Image(int width, int height, int bytesPerPixel)
-    : mWidth(width), mHeight(height), mBytesPerPixel(bytesPerPixel)
+Image::Image(const XMFLOAT2& size, int bytesPerPixel)
+    : mSize(size), mBytesPerPixel(bytesPerPixel)
 {
-    const auto size = width * height * bytesPerPixel;
-    mData = _aligned_malloc(size, XM_CACHE_LINE_SIZE);
+    mWidth = static_cast<int>(mSize.x);
+    mHeight = static_cast<int>(mSize.y);
+    const auto byteSize = mWidth * mHeight * mBytesPerPixel;
+    mData = _aligned_malloc(byteSize, XM_CACHE_LINE_SIZE);
 }
 
 Image::~Image()
@@ -64,4 +66,17 @@ Image::~Image()
     mData = nullptr;
     mWidth = mHeight = mBytesPerPixel = 0;
 }
+
+
+void Image::Dispose()
+{
+    delete this;
+}
+
+void Image::get_Size(_XMFLOAT2& ret)
+{
+    ret = mSize;
+}
+
+}}
 

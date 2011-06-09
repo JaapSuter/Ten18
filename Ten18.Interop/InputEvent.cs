@@ -1,8 +1,4 @@
 using System;
-using System.ComponentModel;
-using System.Drawing.Design;
-using System.Runtime.InteropServices;
-using Ten18.Interop;
 
 namespace Ten18
 {	

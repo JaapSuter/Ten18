@@ -2,7 +2,6 @@
 #include "Ten18/COM/ImplUnknown.h"
 #include "Ten18/COM/COMPtr.h"
 #include "Ten18/Interop/HostMalloc.h"
-#include "Ten18/Interop/IAppDomainManagerEx.h"
 
 namespace Ten18 {
     

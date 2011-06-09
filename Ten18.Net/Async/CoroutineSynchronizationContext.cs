@@ -16,7 +16,7 @@ namespace Ten18
 {
     class CoroutineSynchronizationContext : SynchronizationContext
     {
-        public CoroutineSynchronizationContext(CoroutineScheduler scheduler)
+        public CoroutineSynchronizationContext(Heart scheduler)
         {
             mScheduler = scheduler;
             mFactory = new TaskFactory(scheduler);
@@ -48,7 +48,7 @@ namespace Ten18
             base.OperationCompleted();
         }
 
-        private CoroutineScheduler mScheduler;
+        private Heart mScheduler;
         private TaskFactory mFactory;
     }
 }

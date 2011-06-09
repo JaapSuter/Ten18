@@ -31,9 +31,6 @@
     <ClCompile Include="Ten18\Capture\CaptureSource.cpp">
       <Filter>Ten18\Capture</Filter>
     </ClCompile>
-    <ClCompile Include="Ten18\Image.cpp">
-      <Filter>Ten18</Filter>
-    </ClCompile>
     <ClCompile Include="Ten18\Console.cpp">
       <Filter>Ten18</Filter>
     </ClCompile>
@@ -100,6 +97,9 @@
     <ClCompile Include="Ten18\Input.cpp">
       <Filter>Ten18</Filter>
     </ClCompile>
+    <ClCompile Include="Ten18\Graphics\Image.cpp">
+      <Filter>Ten18\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ten18\PCH.h">
@@ -135,9 +135,6 @@
     <ClInclude Include="Ten18\Capture\CaptureSource.h">
       <Filter>Ten18\Capture</Filter>
     </ClInclude>
-    <ClInclude Include="Ten18\Image.h">
-      <Filter>Ten18</Filter>
-    </ClInclude>
     <ClInclude Include="Ten18\Scoped.h">
       <Filter>Ten18</Filter>
     </ClInclude>
@@ -171,9 +168,6 @@
     <ClInclude Include="Ten18\Graphics\Display.h">
       <Filter>Ten18\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Ten18\Program.h">
-      <Filter>Ten18</Filter>
-    </ClInclude>
     <ClInclude Include="Ten18\Content\Index.h">
       <Filter>Ten18\Content</Filter>
     </ClInclude>
@@ -204,14 +198,17 @@
     <ClInclude Include="Ten18\Interop\HostTaskManager.h">
       <Filter>Ten18\Interop</Filter>
     </ClInclude>
-    <ClInclude Include="Ten18\Interop\IAppDomainManagerEx.h">
-      <Filter>Ten18\Interop</Filter>
-    </ClInclude>
     <ClInclude Include="Ten18\Input.h">
       <Filter>Ten18</Filter>
     </ClInclude>
     <ClInclude Include="Ten18\RawInput.h">
       <Filter>Ten18</Filter>
+    </ClInclude>
+    <ClInclude Include="Ten18\IHeart.h">
+      <Filter>Ten18</Filter>
+    </ClInclude>
+    <ClInclude Include="Ten18\Graphics\Image.h">
+      <Filter>Ten18\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

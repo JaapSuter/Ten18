@@ -1,7 +1,6 @@
 #include "Ten18/PCH.h"
 #include "Ten18/Expect.h"
 #include "Ten18/OnExit.h"
-#include "Ten18/Program.h"
 #include "Ten18/Timer.h"
 #include "Ten18/Tracer.h"
 #include "Ten18/Interop/Host.h"
@@ -17,14 +16,11 @@ int __stdcall wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
     Expect.HR = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE | COINIT_SPEED_OVER_MEMORY);
     
     Timer::Initialize();
-    
-    int ret = 0;
+    Host host;
 
-    Host host;    
-    ret = Program::Run(host);    
+    host.Run();
     
-    host.Exit(ret);
-    // We don't call CoUninitialize because the CLR host is running past main, and while
+    // We don't call CoUninitialize because the CLR host is never returning anyway, and while
     // multiple matching CoInit and CoUninit calls should balance out, I'm just gonnna throw this cargo cult 
     // voodoo out the window, sacrifice a chicken, and focus on things that I care more about....
 }

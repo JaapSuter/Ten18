@@ -7,7 +7,7 @@
 #include "Ten18/Timer.h"
 #include "Ten18/Tracer.h"
 #include "Ten18/Util.h"
-#include "Ten18/Image.h"
+#include "Ten18/Graphics/Image.h"
 
 using namespace Ten18;
 using namespace Ten18::Capture;
@@ -15,14 +15,12 @@ using namespace Ten18::Capture;
 const static auto sHardcodedSymbolicLink
     = L"\\\\?\\usb#vid_046d&pid_0990&mi_00#7&32f118e&0&0000#{65e8773d-8f56-11d0-a3b9-00a0c9223196}\\{bbefb6c7-2fc4-4139-bb8b-a58bba724083}";
 
-static void Release(IMFActivate*& act) { if (act) act->Release(); act = nullptr; }
+static void Release(IMFActivate*& act) { Util::Release(act); }
 static COM::COMArray<UINT32, IMFActivate*> sActivates(&Release);
 COM::COMPtr<IMFMediaSource> sHardcodedSource;
 
 COM::COMPtr<IMFMediaSource> TrySymbolicLink(const wchar_t* sl)
 {
-    Ten18_TRACER();
-
     COM::COMPtr<IMFMediaSource> src;
     
     COM::COMPtr<IMFAttributes> attributes;                
@@ -40,8 +38,6 @@ COM::COMPtr<IMFMediaSource> TrySymbolicLink(const wchar_t* sl)
 
 void MediaFoundationCapture::Initialize()
 {
-    Ten18_TRACER();
-
     Ten18_ASSERT(0 == sActivates.Count());
 
     Expect.HR = MFStartup(MF_VERSION, MFSTARTUP_LITE);
@@ -76,15 +72,13 @@ int MediaFoundationCapture::Count()
     return sActivates.Count();
 }
 
-CaptureSource::Ptr MediaFoundationCapture::Get(int idx)
+MediaFoundationCapture* MediaFoundationCapture::Get(int idx)
 {
-    Ten18_TRACER();
-
     Ten18_ASSERT(idx >= 0 && idx < Count());
 
     if (sHardcodedSource && idx == 0)
     {
-        return std::unique_ptr<MediaFoundationCapture>(Ten18_NEW MediaFoundationCapture(sHardcodedSymbolicLink, std::move(sHardcodedSource)));
+        return Ten18_NEW MediaFoundationCapture(sHardcodedSymbolicLink, std::move(sHardcodedSource));
     }
     else
     {
@@ -99,7 +93,7 @@ CaptureSource::Ptr MediaFoundationCapture::Get(int idx)
             return SUCCEEDED(hr);
         });
 
-        return std::unique_ptr<MediaFoundationCapture>(Ten18_NEW MediaFoundationCapture(symbolicLink.c_str(), std::move(mediaSource)));
+        return Ten18_NEW MediaFoundationCapture(symbolicLink.c_str(), std::move(mediaSource));
     }
 }
 
@@ -109,8 +103,6 @@ MediaFoundationCapture::MediaFoundationCapture(const wchar_t* symbolic, COM::COM
       mStopRequest(false),
       mSymbolicLink(symbolic)
 {
-    Ten18_TRACER();
-
     COM::COMPtr<IMFAttributes> attributes;
     Expect.HR = MFCreateAttributes(attributes.AsTypedDoubleStar(), 2);
     attributes->SetUINT32(MF_SOURCE_READER_ENABLE_VIDEO_PROCESSING, TRUE);
@@ -171,8 +163,7 @@ void MediaFoundationCapture::ChooseBestMode(int width, int height)
             const auto fps = static_cast<float>(frameRateNumer) / static_cast<float>(frameRateDenom);
             if (width == static_cast<int>(w) && height == static_cast<int>(h) && fps > fpsMax && subType == MFVideoFormat_RGB24)
             {
-                mWidth = static_cast<int>(width);
-                mHeight = static_cast<int>(height);
+                mSize = XMFLOAT2A(static_cast<float>(width), static_cast<float>(height));
                 mBytesPerPixel = 4;
                 mStreamIdx = streamIdx;
                 fpsMax = fps;
@@ -248,16 +239,19 @@ HRESULT MediaFoundationCapture::OnReadSample(HRESULT hr, DWORD, DWORD dwStreamFl
             const int srcBytesPerPixel = 3;
             const int dstBytesPerPixel = 4;
 
-            if (curLen >= static_cast<DWORD>(mWidth * mHeight * srcBytesPerPixel))
+            const int width = static_cast<int>(mSize.x);
+            const int height = static_cast<int>(mSize.y);
+            
+            if (curLen >= static_cast<DWORD>(width * height * srcBytesPerPixel))
             {
-                auto img = Image::New(mWidth, mHeight, dstBytesPerPixel);
-                auto srcRowPitch = mWidth * srcBytesPerPixel;
-                auto srcRow = src + (mHeight - 1) * srcRowPitch;
+                auto img = std::unique_ptr<Image>(static_cast<Image*>(Image::New(mSize, dstBytesPerPixel)));
+                auto srcRowPitch = width * srcBytesPerPixel;
+                auto srcRow = src + (height - 1) * srcRowPitch;
                 auto dstPix = img->DataAs<BYTE>();
-                for (int row = 0; row < mHeight; ++row)
+                for (int row = 0; row < width; ++row)
                 {
                     auto srcPix = srcRow;
-                    for (int pix = 0; pix < mWidth; ++pix)
+                    for (int pix = 0; pix < height; ++pix)
                     {   
                         const auto r = *srcPix++;
                         const auto g = *srcPix++;
@@ -282,82 +276,3 @@ void MediaFoundationCapture::Tick()
 {   
 }
 
-void MediaFoundationCapture::VideoFromDiskSandboxTick()    
-{
-    DWORD streamIndex = 0;
-    DWORD flags = 0;
-    LONGLONG llTimeStamp = 0;
-    COM::COMPtr<IMFSample> sample;
-    Expect.HR = mSourceReader->ReadSample(static_cast<DWORD>(MF_SOURCE_READER_FIRST_VIDEO_STREAM), 0, &streamIndex, &flags, &llTimeStamp, sample.AsTypedDoubleStar());
-    if (sample)
-    {
-        DWORD bufferCount = 0;
-        Expect.HR = sample->GetBufferCount(&bufferCount);
-        for (DWORD b = 0; b < bufferCount; ++b)
-        {
-            COM::COMPtr<IMFMediaBuffer> mb;
-            COM::COMPtr<IMF2DBuffer> mb2d;
-            sample->GetBufferByIndex(b, mb.AsTypedDoubleStar());
-            mb.TryQueryInto(mb2d);
-            if (mb2d)
-            {
-            }
-            else
-            {
-                BYTE* buffer = nullptr;
-                DWORD maxLen = 0;
-                DWORD curLen = 0;
-                        
-                Expect.HR = mb->Lock(&buffer, &maxLen, &curLen);
-                OnExit oe([&] { HopeFor.HR = mb->Unlock(); });
-
-                const int bytesPerPixel = 4;        
-                auto sImage = Image::New(mWidth, mHeight, bytesPerPixel);
-                std::memcpy(sImage->Data(), buffer, (std::min)(static_cast<int>(curLen), sImage->Size()));
-                sImage->ForEach<std::uint32_t>([&] (std::uint32_t p) -> std::uint32_t
-                { 
-                    auto r = p >> 24;
-                    auto b = (p >> 8) & 0xFF;
-                    return (0x00FF00FF & p) | (r << 8) | (b << 24);
-                });
-
-                mLatest = std::move(sImage);
-            }
-        }
-    }
-}
-
-
-void MediaFoundationCapture::VideoFromDiskSandboxInitialize()
-{
-    mSourceReader.Reset();
-    Expect.HR = MFCreateSourceReaderFromURL(L"G:/Media/Videos/Jaap/Misc/The Suitcase.wmv", nullptr, mSourceReader.AsTypedDoubleStar());
-
-    {
-        IMFMediaType *pNativeType = NULL;
-        IMFMediaType *pType = NULL;
-
-        Expect.HR = mSourceReader->GetNativeMediaType(static_cast<DWORD>(MF_SOURCE_READER_FIRST_VIDEO_STREAM), 0, &pNativeType);
-            
-        GUID majorType;
-        GUID subType;
-        Expect.HR = pNativeType->GetGUID(MF_MT_MAJOR_TYPE, &majorType);
-        Expect.HR = pNativeType->GetGUID(MF_MT_SUBTYPE, &subType);
-
-        UINT32 width = 0;
-        UINT32 height = 0;
-        Expect.HR = MFGetAttributeSize(pNativeType, MF_MT_FRAME_SIZE, &width, &height);
-        mWidth = static_cast<int>(width);
-        mHeight = static_cast<int>(height);
-            
-        Expect.HR = MFCreateMediaType(&pType);            
-        Expect.HR = pType->SetGUID(MF_MT_MAJOR_TYPE, majorType);
-            
-        if (majorType == MFMediaType_Video)
-        {                
-            subType = MFVideoFormat_RGB32;
-            Expect.HR = pType->SetGUID(MF_MT_SUBTYPE, subType);
-            Expect.HR = mSourceReader->SetCurrentMediaType(static_cast<DWORD>(MF_SOURCE_READER_FIRST_VIDEO_STREAM), NULL, pType);
-        }
-    }
-}

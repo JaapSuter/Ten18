@@ -1,19 +1,5 @@
-﻿using System;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Threading;
-using System.Diagnostics;
-using System.Security.Policy;
-using System.CodeDom;
-using System.CodeDom.Compiler;
-using System.Collections.ObjectModel;
-using System.Runtime.CompilerServices;
-using Microsoft.CSharp;
-using System.IO;
+﻿using System.Diagnostics;
 using Mono.Cecil;
-using Mono.Cecil.Rocks;
 
 namespace Ten18.Interop
 {

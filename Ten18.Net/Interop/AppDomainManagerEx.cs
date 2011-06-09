@@ -10,7 +10,7 @@ using SlimMath;
 
 namespace Ten18.Interop
 {
-    public sealed class AppDomainManagerEx : AppDomainManager, IAppDomainManagerEx
+    public sealed class AppDomainManagerEx : AppDomainManager, IHeart
     {
         public AppDomainManagerEx()
         {
@@ -18,14 +18,25 @@ namespace Ten18.Interop
             InitializationFlags = AppDomainManagerInitializationOptions.RegisterWithHost;
         }
 
-        void IAppDomainManagerEx.Rendezvous() { mProgram = new Program(); }
-        void IAppDomainManagerEx.Tick() { mProgram.Tick(); }
-        void IAppDomainManagerEx.Farewell()
+        void IHeart.Rendezvous()
         {
-            mProgram.Drain();
-            Util.Dispose(ref mProgram);
+            mTask = EntryPoint.Begin(mHeart);
         }
 
-        private Program mProgram;
+        void IHeart.Beat()
+        {
+            mHeart.Beat();
+        }
+
+        void IHeart.Farewell()
+        {
+            mHeart.Drain();
+
+            Util.Dispose(ref mDebugTextWriter);
+        }
+
+        private DebugTextWriter mDebugTextWriter = new DebugTextWriter();
+        private Heart mHeart = new Heart();
+        private Task mTask;
     }
 }

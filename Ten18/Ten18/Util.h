@@ -34,6 +34,9 @@ namespace Ten18
             Ten18_ASSERT(buffer[Max] == Elem());
             return std::wstring(buffer);
         }
+
+        template <class Unk>
+        void Release(Unk*& unknown) { if (unknown) unknown->Release(); unknown = nullptr; }
     }
 
     template <class To, class From>

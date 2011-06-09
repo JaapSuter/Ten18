@@ -5,6 +5,7 @@
 #include "Ten18/Interop/HostAssemblyStore.h"
 #include "Ten18/Interop/HostMemoryManager.h"
 #include "Ten18/Interop/HostGCManager.h"
+#include "Ten18/IHeart.h"
 
 namespace Ten18 { namespace Interop {
 
@@ -28,9 +29,7 @@ namespace Ten18 { namespace Interop {
         Host();
         ~Host();
 
-        void Tick();
-        
-        __declspec(noreturn) void Exit(int exitCode);
+        __declspec(noreturn) void Run();
 
     private:
         
@@ -53,11 +52,12 @@ namespace Ten18 { namespace Interop {
         // to by as designed by the CLR hosting API). Henceforth, we're not going to bother releasing any of
         // these pointers. And that's why we don't use reference counted smart pointers, and just resort to
         // plain old fashioned raw pointers.
-        IAppDomainManagerEx*    mAppDomainManagerEx;
         ICLRMetaHost*           mMetaHost;
         ICLRRuntimeInfo*        mRuntimeInfo;
         ICLRControl*            mClrControl;
         ICLRGCManager*          mGCManager;
         ICLRRuntimeHost*        mRuntimeHost;
+
+        IHeart*                 mHeart;
     };
 }}

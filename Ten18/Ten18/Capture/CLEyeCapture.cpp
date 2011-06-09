@@ -1,7 +1,7 @@
 #include "Ten18/Capture/CLEyeCapture.h"
 #include "Ten18/Expect.h"
 #include "Ten18/Timer.h"
-#include "Ten18/Image.h"
+#include "Ten18/Graphics/Image.h"
 #include "../Libraries/CLEyeMulticam.h"
 
 using namespace Ten18;
@@ -9,12 +9,13 @@ using namespace Ten18::Capture;
 
 int CLEyeCapture::Count()
 {
-    return 1; // CLEyeGetCameraCount();
+    return CLEyeGetCameraCount();
 }
 
-CaptureSource::Ptr CLEyeCapture::Get(int idx)
+CLEyeCapture* CLEyeCapture::Get(int idx)
 {
-    return MakeUniquePtr<CLEyeCapture>(CLEyeGetCameraUUID(idx));
+    const auto guid = CLEyeGetCameraUUID(idx);
+    return Ten18_NEW CLEyeCapture(guid);
 }
 
 CLEyeCapture::CLEyeCapture(const GUID& guid)
@@ -32,7 +33,7 @@ CLEyeCapture::CLEyeCapture(const GUID& guid)
     
     Expect.True = CLEyeCameraStart(mCam);
     */
-    mWidth = mHeight = 256;
+    mSize.x = mSize.y = 256;
     mBytesPerPixel = 4;
 }
 
@@ -45,7 +46,7 @@ CLEyeCapture::~CLEyeCapture()
 
 void CLEyeCapture::Tick()
 {
-    auto img = Image::New(mWidth, mHeight, mBytesPerPixel);
+    auto img = std::unique_ptr<Image>(static_cast<Image*>(Image::New(mSize, mBytesPerPixel)));
     
     auto gotNewFrame = true; // CLEyeCameraGetFrame(mCam, img->DataAs<unsigned char>(), 0);
     {

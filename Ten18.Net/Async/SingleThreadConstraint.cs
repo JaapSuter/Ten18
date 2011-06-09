@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Ten18.Async
 {
-    struct SingleThreadedConstraint
+    struct SingleThreadConstraint
     {
-        public static SingleThreadedConstraint Create()
+        public static SingleThreadConstraint Create()
         {
-            return new SingleThreadedConstraint(Thread.CurrentThread.ManagedThreadId);
+            return new SingleThreadConstraint(Thread.CurrentThread.ManagedThreadId);
         }
 
         public void Verify()
@@ -20,7 +20,7 @@ namespace Ten18.Async
                 throw new Exception("Method invocation from unexpected thread.");
         }
 
-        private SingleThreadedConstraint(int exclusiveThreadId)
+        private SingleThreadConstraint(int exclusiveThreadId)
         {
             mExclusiveThreadId = exclusiveThreadId;
         }

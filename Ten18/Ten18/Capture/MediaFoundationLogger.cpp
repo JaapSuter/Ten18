@@ -4,7 +4,7 @@
 #include "Ten18/Expect.h"
 #include "Ten18/OnExit.h"
 #include "Ten18/Timer.h"
-#include "Ten18/Image.h"
+#include "Ten18/Graphics/Image.h"
 
 using namespace Ten18;
 using namespace Ten18::Capture;

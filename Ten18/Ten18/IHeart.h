@@ -5,14 +5,12 @@
 
 namespace Ten18 {
     
-    namespace Interop {
-                    
     [uuid("37D42543-4326-4A49-9320-A1BF1716AB54")]
-    __interface __declspec(novtable) IAppDomainManagerEx : IUnknown
+    __interface __declspec(novtable) IHeart : IUnknown
     {
         virtual void __stdcall Rendezvous() = 0;
-        virtual void __stdcall Tick() = 0;
+        virtual void __stdcall Beat() = 0;
         virtual void __stdcall Farewell() = 0;
     };
+}
 
-}}

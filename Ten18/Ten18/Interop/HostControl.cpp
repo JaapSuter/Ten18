@@ -3,9 +3,10 @@
 #include "Ten18/Interop/Host.h"
 #include "Ten18/Interop/HostMalloc.h"
 #include "Ten18/Resources/Resources.h"
-#include "Ten18/Expect.h"
 #include "Ten18/COM/StackBasedSafeArray.h"
 #include "Ten18/COM/EmbeddedResourceStream.h"
+#include "Ten18/IHeart.h"
+#include "Ten18/Expect.h"
 
 using namespace Ten18;
 using namespace Ten18::Interop;
@@ -37,11 +38,9 @@ HRESULT STDMETHODCALLTYPE HostControl::SetAppDomainManager(DWORD dwAppDomainID, 
     UNREFERENCED_PARAMETER(dwAppDomainID);
     Ten18_ASSERT(dwAppDomainID == 1);
 
-    auto& ad = mHost->mAppDomainManagerEx;
+    Ten18_ASSERT(mHost->mHeart == nullptr);
+    Expect.HR = appDomainManagerAsUnknown->QueryInterface(__uuidof(mHost->mHeart), reinterpret_cast<void**>(&mHost->mHeart));
+    Ten18_ASSERT(mHost->mHeart != nullptr);
 
-    Ten18_ASSERT(ad == nullptr);
-    Expect.HR = appDomainManagerAsUnknown->QueryInterface(__uuidof(ad), reinterpret_cast<void**>(&ad));
-    Ten18_ASSERT(ad != nullptr);
-        
     return S_OK;
 }

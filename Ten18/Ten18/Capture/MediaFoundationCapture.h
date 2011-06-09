@@ -13,7 +13,7 @@ namespace Ten18 { namespace Capture {
         static void Shutdown();
 
         static int Count();
-        static Ptr Get(int idx);
+        static MediaFoundationCapture* Get(int idx);
 
         explicit MediaFoundationCapture(const wchar_t* symbolic, COM::COMPtr<IMFMediaSource>&& mediaSource);
         virtual ~MediaFoundationCapture();

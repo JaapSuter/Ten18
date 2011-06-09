@@ -9,10 +9,10 @@
 // ------------------------------------------------------------------------------
 namespace Ten18.Interop
 {
-    using System;
-    
-    
-    #line 1 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
+
+
+
+#line 1 "D:\Projects\Code\Ten18\Code\Ten18.Build\Interop\CppHeaderTemplate.tt"
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "10.0.0.0")]
     public partial class CppHeaderTemplate : CppHeaderTemplateBase
     {

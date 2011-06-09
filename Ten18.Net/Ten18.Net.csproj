@@ -50,16 +50,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Benchmark.cs" />
+    <Compile Include="Provider.cs" />
     <Compile Include="DebugTextWriter.cs" />
     <Compile Include="Interop\AppDomainManagerEx.cs" />
-    <Compile Include="Interop\IAppDomainManagerEx.cs" />
+    <Compile Include="IHeart.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Async\CoroutineAwaiterT.cs" />
     <Compile Include="Async\CoroutineSynchronizationContext.cs" />
-    <Compile Include="Async\SingleThreadedConstraint.cs" />
-    <Compile Include="Async\CoroutineScheduler.cs" />
+    <Compile Include="Async\SingleThreadConstraint.cs" />
+    <Compile Include="Async\Heart.cs" />
     <Compile Include="Util.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="EntryPoint.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

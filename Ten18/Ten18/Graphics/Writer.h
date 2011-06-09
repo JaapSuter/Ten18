@@ -3,7 +3,7 @@
 #include "Ten18/Graphics/Constants.h"
 #include "Ten18/COM/COMPtr.h"
 #include "Ten18/COM/ImplUnknown.h"
-#include "Ten18/Image.h"
+#include "Ten18/Graphics/Image.h"
 
 namespace Ten18 { namespace Graphics {
 

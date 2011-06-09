@@ -37,8 +37,6 @@ static void SetDebugName(const COM::COMPtr<T>& ptr, const char name[])
 Device::Device() : 
     mReposeInducedDwmFlushReq(), mDynamicTexturesLRU(), mFpsTex()
 {
-    Ten18_TRACER();
-
     UINT flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT 
                | Ten18_IF_DEBUG_ELSE(D3D11_CREATE_DEVICE_DEBUG, 0);
     auto f11 = D3D_FEATURE_LEVEL_11_0;

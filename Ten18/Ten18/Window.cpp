@@ -14,7 +14,7 @@ static int sWndProcReentrancyCount = 0;
 
 void* Window::New(const wchar_t* title)
 {
-    return new Window(title);
+    return Ten18_NEW Window(title);
 }
 
 Window::Window(const wchar_t* title)

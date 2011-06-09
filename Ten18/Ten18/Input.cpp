@@ -8,7 +8,7 @@ Input::Input()
 
 void* Input::New()
 {
-    return new Input();
+    return Ten18_NEW Input();
 }
 
 void __thiscall Input::get_MousePosition(XMFLOAT2& ret)

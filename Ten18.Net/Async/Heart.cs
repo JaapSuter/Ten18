@@ -9,11 +9,11 @@ using System.Diagnostics;
 
 namespace Ten18.Async
 {
-    class CoroutineScheduler : TaskScheduler
+    class Heart : TaskScheduler
     {
         public TaskFactory TaskFactory { get; private set; }
 
-        public CoroutineScheduler()
+        public Heart()
         {
             if (SynchronizationContext.Current != null)
                 throw new InvalidProgramException("SynchronizationContext.Current should not be set already.");            
@@ -46,7 +46,12 @@ namespace Ten18.Async
             return new CoroutineAwaiter(this);
         }
 
-        public void Tick()
+        public void Drain()
+        {
+
+        }
+
+        public void Beat()
         {
             Verify();
             Debug.Assert(mTryAgain.IsEmpty());
@@ -114,7 +119,7 @@ namespace Ten18.Async
         private Queue<Task> mQueued = new Queue<Task>();
         private Queue<Task> mTryAgain = new Queue<Task>();
         private Queue<Task> mAfterNextTick = new Queue<Task>();
-        private readonly SingleThreadedConstraint mSingleThreadedConstraint = SingleThreadedConstraint.Create();
+        private readonly SingleThreadConstraint mSingleThreadedConstraint = SingleThreadConstraint.Create();
         private readonly CoroutineSynchronizationContext mSynchronizationContext;
     }
 }

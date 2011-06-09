@@ -129,10 +129,10 @@
     <ClCompile Include="Ten18\Expect.cpp" />
     <ClCompile Include="Ten18\Graphics\Device.cpp" />
     <ClCompile Include="Ten18\Graphics\Display.cpp" />
+    <ClCompile Include="Ten18\Graphics\Image.cpp" />
     <ClCompile Include="Ten18\Graphics\SwapChain.cpp" />
     <ClCompile Include="Ten18\Graphics\Vertex.cpp" />
     <ClCompile Include="Ten18\Graphics\Writer.cpp" />
-    <ClCompile Include="Ten18\Image.cpp" />
     <ClCompile Include="Ten18\Input.cpp" />
     <ClCompile Include="Ten18\Interop\Host.cpp" />
     <ClCompile Include="Ten18\Interop\HostAssemblyManager.cpp" />
@@ -165,9 +165,10 @@
     <ClInclude Include="Ten18\Graphics\Constants.h" />
     <ClInclude Include="Ten18\Graphics\Device.h" />
     <ClInclude Include="Ten18\Graphics\Display.h" />
+    <ClInclude Include="Ten18\Graphics\Image.h" />
     <ClInclude Include="Ten18\Graphics\SwapChain.h" />
     <ClInclude Include="Ten18\Graphics\Writer.h" />
-    <ClInclude Include="Ten18\Image.h" />
+    <ClInclude Include="Ten18\IHeart.h" />
     <ClInclude Include="Ten18\Input.h" />
     <ClInclude Include="Ten18\Interop\Host.h" />
     <ClInclude Include="Ten18\Interop\HostAssemblyManager.h" />
@@ -177,9 +178,7 @@
     <ClInclude Include="Ten18\Interop\HostMalloc.h" />
     <ClInclude Include="Ten18\Interop\HostMemoryManager.h" />
     <ClInclude Include="Ten18\Interop\HostTaskManager.h" />
-    <ClInclude Include="Ten18\Interop\IAppDomainManagerEx.h" />
     <ClInclude Include="Ten18\OnExit.h" />
-    <ClInclude Include="Ten18\Program.h" />
     <ClInclude Include="Ten18\PCH.h" />
     <ClCompile Include="Ten18\PCH.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
