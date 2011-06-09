@@ -60,7 +60,7 @@ namespace Ten18.Interop
                 callingConv,
                 self.DeclaringType.FullName.Replace(".", "::"),
                 self.Name,
-                String.Join(", ", parameterDefs.Select(parameterDef => parameterDef.FullNameAsUndecorated())));
+                String.Join(",", parameterDefs.Select(parameterDef => parameterDef.FullNameAsUndecorated())));
         }
     }
 }

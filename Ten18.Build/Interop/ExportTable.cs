@@ -37,11 +37,11 @@ namespace Ten18.Interop
                 }
                 else if (ordinal != sOrdinals[export])
                 {
-                    Console.WriteLine("Native export ordinal [{0}] doesn't match managed ordinal [{1}]: {2}", ordinal, sOrdinals[export], export);
+                    Console.WriteLine("Managed import ordinal [{0}] doesn't match native export ordinal [{1}]: {2}", sOrdinals[export], ordinal, export);
                 }
                 else
                 {
-                    Console.WriteLine("Native export verified with managed ok: [{0}]: {1}", sOrdinals[export], export);
+                    Console.WriteLine("Managed export verified with native ordinal ok: [{0}]: {1}", sOrdinals[export], export);
                 }
             }
             

@@ -10,6 +10,15 @@ namespace Ten18 { namespace Interop {
 
     class Host
     {
+        static_assert(sizeof(bool) == sizeof(char), "");
+        static_assert(sizeof(wchar_t) == sizeof(char16_t), "");
+        static_assert(sizeof(std::int16_t) == sizeof(short), "");
+        static_assert(sizeof(std::int32_t) == sizeof(int), "");
+        static_assert(sizeof(std::int64_t) == sizeof(__int64), "");
+        static_assert(sizeof(std::uint16_t) == sizeof(unsigned short), "");
+        static_assert(sizeof(std::uint32_t) == sizeof(unsigned int), "");
+        static_assert(sizeof(std::uint64_t) == sizeof(unsigned __int64), "");
+
     public:
         
         Host();

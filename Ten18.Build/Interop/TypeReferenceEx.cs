@@ -53,33 +53,33 @@ namespace Ten18.Interop
                 case MetadataType.ByReference:
                     return constFix + FullNameAsCpp(self.GetElementType(), isConst: false) + "&";
                 case MetadataType.Byte:
-                    return "std::uint8_t";
+                    return "unsigned char";
                 case MetadataType.Char:
                     return "wchar_t";
                 case MetadataType.Double:
                     return "double";
                 case MetadataType.Int16:
-                    return "std::int16_t";
+                    return "short";
                 case MetadataType.Int32:
-                    return "std::int32_t";
+                    return "int";
                 case MetadataType.Int64:
-                    return "std::int64_t";
+                    return "__int64";
                 case MetadataType.IntPtr:
                     return "std::intptr_t";
                 case MetadataType.Pointer:
                     return constFix + FullNameAsCpp(self.GetElementType(), isConst: false) + "*";
                 case MetadataType.SByte:
-                    return "std::int8_t";
+                    return "char";
                 case MetadataType.Single:
                     return "float";
                 case MetadataType.String:
                     return "const wchar_t*";
                 case MetadataType.UInt16:
-                    return "std::uint16_t";
+                    return "unsigned short";
                 case MetadataType.UInt32:
-                    return "std::uint32_t";
+                    return "unsigned int";
                 case MetadataType.UInt64:
-                    return "std::uint64_t";
+                    return "unsigned __int64";
                 case MetadataType.UIntPtr:
                     return "std::uintptr_t";
                 case MetadataType.ValueType:
@@ -109,6 +109,10 @@ namespace Ten18.Interop
                     return FullNameAsUndecorated(self.GetElementType(), isConst: false) + constFix + "*";
                 case MetadataType.String:
                     return "wchar_t const *";
+                case MetadataType.IntPtr:
+                    return "int";
+                case MetadataType.UIntPtr:
+                    return "unsigned int";
                 default:
                     return FullNameAsCpp(self.GetElementType(), isConst);
             }            

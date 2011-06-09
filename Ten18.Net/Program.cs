@@ -33,7 +33,7 @@ namespace Ten18
             using (var window = new Window("Ten18"))
             {
                 window.MakeFullScreen();
-
+                
                 while (!window.HasClosed)
                 {
                     await mTaskScheduler.Yield();

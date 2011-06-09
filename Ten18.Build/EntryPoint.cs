@@ -99,15 +99,20 @@ namespace Ten18
         private static void EmbedAssembly(string name)
         {
             var path = Path.Combine(Paths.WorkingDir, name + ".dll");
-            var assemblyDef = AssemblyDefinition.ReadAssembly(path);
-            Debug.Assert(1 == assemblyDef.Modules.Count);
-            var postPolicy = (assemblyDef.MainModule.Attributes.HasFlag(ModuleAttributes.Required32Bit) && assemblyDef.MainModule.Architecture == TargetArchitecture.I386)
-                            ? ", processorarchitecture=x86"
-                            : ", processorarchitecture=msil";
-            var assemblyName = AssemblyName.GetAssemblyName(path);
-            var contentName = assemblyName.FullName + postPolicy;
+            if (!File.Exists(path))
+                Console.WriteLine("Unable to embed assembly, missing file: " + path);
+            else
+            {
+                var assemblyDef = AssemblyDefinition.ReadAssembly(path);
+                Debug.Assert(1 == assemblyDef.Modules.Count);
+                var postPolicy = (assemblyDef.MainModule.Attributes.HasFlag(ModuleAttributes.Required32Bit) && assemblyDef.MainModule.Architecture == TargetArchitecture.I386)
+                                ? ", processorarchitecture=x86"
+                                : ", processorarchitecture=msil";
+                var assemblyName = AssemblyName.GetAssemblyName(path);
+                var contentName = assemblyName.FullName + postPolicy;
 
-            Build.Index.Add(contentName, path);
+                Build.Index.Add(contentName, path);
+            }
         }
     }
 }

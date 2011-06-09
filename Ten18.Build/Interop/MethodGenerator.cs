@@ -17,6 +17,7 @@ using Mono.Cecil.Rocks;
 using Mono.Cecil.Cil;
 using Mono.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Security;
 
 namespace Ten18.Interop
 {
@@ -43,8 +44,6 @@ namespace Ten18.Interop
 
             mMethodDef = methodDef;
 
-            // Todo, Jaap Suter, May 2011, look into SuppressUnmanagedCodeSecurityAttribute
-
             var callConvAttribute = methodDef.IsStatic ? PInvokeAttributes.CallConvStdCall : PInvokeAttributes.CallConvThiscall;
 
             mPInvokeDef = new MethodDefinition(methodDef.Name, MethodAttributes.Private | MethodAttributes.PInvokeImpl | MethodAttributes.Static, methodDef.ReturnType);
@@ -52,6 +51,8 @@ namespace Ten18.Interop
             mPInvokeDef.IsPInvokeImpl = true;
             mPInvokeDef.IsPreserveSig = true;
             mPInvokeDef.IsHideBySig = true;
+            mPInvokeDef.HasSecurity = true;
+            mPInvokeDef.CustomAttributes.Add(new CustomAttribute(Globals.SupressUnmanagedCodeSecurityCtor));            
             mPInvokeDef.PInvokeInfo = new PInvokeInfo(PInvokeAttributes.BestFitDisabled
                                                     | PInvokeAttributes.CharSetUnicode
                                                     | PInvokeAttributes.NoMangle
@@ -71,16 +72,19 @@ namespace Ten18.Interop
                                         : new ParameterDefinition(parameterDef.Name, parameterDef.Attributes | ParameterAttributes.In, parameterDef.ParameterType.MakeByReferenceType());
 
                 if (pInvokeParameterDef.ParameterType.IsSame(Globals.String))
-                    pInvokeParameterDef.MarshalInfo = new MarshalInfo(NativeType.LPWStr);
+                    pInvokeParameterDef.SetMarshalInfo(NativeType.LPWStr);
 
                 if (pInvokeParameterDef.ParameterType.IsSame(Globals.Boolean))
-                    pInvokeParameterDef.MarshalInfo = new MarshalInfo(NativeType.U1);
+                    pInvokeParameterDef.SetMarshalInfo(NativeType.U1);
 
                 mPInvokeDef.Parameters.Add(pInvokeParameterDef);
             }
 
             if (mPInvokeDef.ReturnType.IsSame(Globals.Boolean))
+            {
                 mPInvokeDef.MethodReturnType.MarshalInfo = new MarshalInfo(NativeType.U1);
+                mPInvokeDef.MethodReturnType.HasFieldMarshal = true;
+            }
         }
 
         public void Generate(FieldDefinition cppThisPtr, CppHeaderTemplate cppHeaderTemplate)

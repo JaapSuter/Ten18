@@ -48,11 +48,8 @@ namespace Ten18.Interop
 
         private static void PostProcess(string assemblyFullPath)
         {
-            if (assemblyFullPath.Contains("Debug"))
-            {
-                Tool.Run(Paths.ILDasmExe, Paths.WorkingDir, "/SOURCE /OUT={0}.il {0}", assemblyFullPath);
-                Tool.Run(Paths.ILAsmExe, Paths.WorkingDir, "{0}.il /OUTPUT={0} /DLL /DEBUG /KEY={1}", assemblyFullPath, Paths.KeyFile);
-            }
+            Tool.Run(Paths.ILDasmExe, Paths.WorkingDir, "/SOURCE /OUT={0}.il {0}", assemblyFullPath);
+            Tool.Run(Paths.ILAsmExe, Paths.WorkingDir, "{0}.il /OUTPUT={0} /DLL /DEBUG /KEY={1}", assemblyFullPath, Paths.KeyFile);
             
             // Verify the MSIL, but ignore...
             //      * [IL]: Error: [found unmanaged pointer][expected unmanaged pointer] Unexpected type on the stack.(Error: 0x80131854)

@@ -14,6 +14,7 @@ using Microsoft.CSharp;
 using System.IO;
 using Mono.Cecil;
 using Mono.Cecil.Rocks;
+using System.Security;
 
 namespace Ten18.Interop
 {
@@ -22,6 +23,8 @@ namespace Ten18.Interop
         public const string NameOfCppThisPtrParameter = "cppThisPtr";
         
         public static ModuleReference PInvokeModuleRef { get; private set; }
+
+        public static MethodReference SupressUnmanagedCodeSecurityCtor { get; private set; }
         
         public static TypeReference Object { get; private set; }
         public static TypeReference Boolean { get; private set; }
@@ -39,8 +42,10 @@ namespace Ten18.Interop
             SizeOfRegister = System.IntPtr.Size;
             SizeOfVTableSlot = System.IntPtr.Size;
 
-            PInvokeModuleRef = new ModuleReference("Ten18.exe");            
+            PInvokeModuleRef = new ModuleReference("Ten18.exe");
             moduleDef.ModuleReferences.Add(PInvokeModuleRef);
+
+            SupressUnmanagedCodeSecurityCtor = moduleDef.Import(typeof(SuppressUnmanagedCodeSecurityAttribute).GetConstructor(Type.EmptyTypes));
 
             String = moduleDef.Import(typeof(string));
             Boolean = moduleDef.Import(typeof(bool));

@@ -29,6 +29,12 @@ namespace Ten18.Interop
             return self.ParameterType.FullNameAsUndecorated(!self.IsOut);
         }
 
+        public static void SetMarshalInfo(this ParameterDefinition self, NativeType nativeType)
+        {
+            self.MarshalInfo = new MarshalInfo(nativeType);
+            self.HasFieldMarshal = true;
+        }
+
         public static bool AreSameByType(this Collection<ParameterDefinition> a, Collection<ParameterDefinition> b)
         {
             var count = a.Count;

@@ -63,7 +63,7 @@ namespace Ten18.Interop
             var methodDefs = from methodDef in typeDef.Methods
                              where methodDef.IsAbstract
                              select methodDef;
-            
+
             foreach (var methodDef in methodDefs.ToArray())
                 new MethodGenerator(methodDef).Generate(cppThisPtr, cppHeaderTemplate);
         }

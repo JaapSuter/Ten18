@@ -3,4 +3,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <StartArguments>-ImplementInteropAssembly D:\Projects\Code\Ten18\Code\obj\x86\Debug\Ten18.Interop.dll -WorkingDir D:\Projects\Code\Ten18\Code\obj\x86\Debug -IsDebugging</StartArguments>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <StartArguments>-ImplementInteropAssembly D:\Projects\Code\Ten18\Code\obj\x86\Release\Ten18.Interop.dll -WorkingDir D:\Projects\Code\Ten18\Code\obj\x86\Release -IsDebugging</StartArguments>
+  </PropertyGroup>
 </Project>
