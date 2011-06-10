@@ -1,23 +1,23 @@
 #pragma once
 #include "Ten18/Graphics/Constants.h"
 #include "Ten18/COM/COMPtr.h"
+#include "Ten18/Memory.h"
 
 namespace Ten18 { 
     class Window;
     
     namespace Graphics {
 
-        class Device;
+        class GraphicsDevice;
 
     class SwapChain
     {
+        Ten18_NO_DEFAULT_OPERATOR_NEW_DELETE
     public:
         
-        explicit SwapChain(const std::function<void ()>& tick, Device& device, Window& window);
+        explicit SwapChain(HWND hwnd);
         void Tick();
 
-        Window& GetWindow() const { return mWindow; }
-        
     private:
         
         void Repose();
@@ -25,18 +25,16 @@ namespace Ten18 {
         SwapChain(const SwapChain&);
         SwapChain& operator = (const SwapChain&);
 
-        Window&             mWindow;
-        Device&             mDevice;
+        HWND                mHwnd;
+        GraphicsDevice&     mDevice;
 
-        std::function<void ()>      mTick;
-
-        bool                        mClientEmpty;
-        RECT                        mClientRect;
-        POINT                       mClientPos;
+        bool                mClientEmpty;
+        RECT                mClientRect;
+        POINT               mClientPos;
 
         COM::COMPtr<IDXGISwapChain>         mSwapChain;
         COM::COMPtr<ID3D11RenderTargetView> mRenderTargetView;
 
-        Constants                   mConstants;        
+        Constants           mConstants;        
     };
 }}

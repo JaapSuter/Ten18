@@ -248,10 +248,10 @@ HRESULT MediaFoundationCapture::OnReadSample(HRESULT hr, DWORD, DWORD dwStreamFl
                 auto srcRowPitch = width * srcBytesPerPixel;
                 auto srcRow = src + (height - 1) * srcRowPitch;
                 auto dstPix = img->DataAs<BYTE>();
-                for (int row = 0; row < width; ++row)
+                for (int row = 0; row < height; ++row)
                 {
                     auto srcPix = srcRow;
-                    for (int pix = 0; pix < height; ++pix)
+                    for (int pix = 0; pix < width; ++pix)
                     {   
                         const auto r = *srcPix++;
                         const auto g = *srcPix++;

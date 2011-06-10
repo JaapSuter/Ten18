@@ -1,5 +1,6 @@
 #include "Ten18/COM/COMPtr.h"
 #include "Ten18/COM/ImplUnknown.h"
+#include "Ten18/Memory.h"
 
 namespace Ten18 { namespace COM {
 
@@ -11,6 +12,7 @@ public:
 
 class COMPtrTestClass : public ICOMPtrTestInterface
 {
+    Ten18_CUSTOM_OPERATOR_NEW_DELETE
 public:
 
     Ten18_QUERY_INTERFACE_BEGIN(ICOMPtrTestInterface)

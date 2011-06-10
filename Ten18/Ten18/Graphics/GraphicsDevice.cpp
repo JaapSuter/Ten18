@@ -1,5 +1,5 @@
 #include "Ten18/PCH.h"
-#include "Ten18/Graphics/Device.h"
+#include "Ten18/Graphics/GraphicsDevice.h"
 #include "Ten18/Graphics/SwapChain.h"
 #include "Ten18/Graphics/Display.h"
 #include "Ten18/Graphics/Vertex.h"
@@ -16,12 +16,6 @@ using namespace Ten18;
 using namespace Ten18::Graphics;
 using namespace Ten18::COM;
 
-#ifdef _DEBUG
-    #define Ten18_IF_DEBUG_ELSE(a, b) (a)    
-#else
-    #define Ten18_IF_DEBUG_ELSE(a, b) (b)
-#endif
-
 template<class T>
 static void SetDebugName(const COM::COMPtr<T>& ptr, const char name[])
 {
@@ -34,7 +28,33 @@ static void SetDebugName(const COM::COMPtr<T>& ptr, const char name[])
     #endif
 }
 
-Device::Device() : 
+static GraphicsDevice* sGraphicsDevice = nullptr;
+
+void GraphicsDevice::Initialize()
+{
+    Ten18_ASSERT(sGraphicsDevice == nullptr);
+    sGraphicsDevice = Ten18_NEW GraphicsDevice();
+}
+
+void GraphicsDevice::Shutdown()
+{
+    Ten18_ASSERT(sGraphicsDevice != nullptr);
+    delete sGraphicsDevice;
+    sGraphicsDevice = nullptr;
+}
+
+GraphicsDevice& GraphicsDevice::Instance()
+{
+    Ten18_ASSERT(sGraphicsDevice != nullptr);
+    return *sGraphicsDevice;
+}
+
+void* GraphicsDevice::New()
+{    
+    return &GraphicsDevice::Instance();
+}
+
+GraphicsDevice::GraphicsDevice() : 
     mReposeInducedDwmFlushReq(), mDynamicTexturesLRU(), mFpsTex()
 {
     UINT flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT 
@@ -146,7 +166,7 @@ Device::Device() :
     mWriter.Initialize(*mDXGIAdapter1, *mD3D11Device);
 }
 
-void Device::InitializeShaders(const wchar_t* vsid, const wchar_t* psid, COM::COMPtr<ID3D11VertexShader>& vs, COM::COMPtr<ID3D11PixelShader>& ps)
+void GraphicsDevice::InitializeShaders(const wchar_t* vsid, const wchar_t* psid, COM::COMPtr<ID3D11VertexShader>& vs, COM::COMPtr<ID3D11PixelShader>& ps)
 {
     const auto& vsBlob = Content::Index::Get(vsid);
     Expect.HR = mD3D11Device->CreateVertexShader(vsBlob.Data, vsBlob.Size, nullptr, vs.AsTypedDoubleStar());    
@@ -163,7 +183,7 @@ void Device::InitializeShaders(const wchar_t* vsid, const wchar_t* psid, COM::CO
     }
 }
 
-Device::~Device()
+GraphicsDevice::~GraphicsDevice()
 {
     if (mImmediateContext)
     {
@@ -172,7 +192,7 @@ Device::~Device()
     }
 }
 
-void Device::Tick()
+void GraphicsDevice::Render()
 {
     TickFrameRate();
     
@@ -186,7 +206,7 @@ void Device::Tick()
 }
 
 
-void Device::CreateDynamicTextures(int width, int height)
+void GraphicsDevice::CreateDynamicTextures(int width, int height)
 {
     D3D11_TEXTURE2D_DESC td = {};    
     td.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -208,7 +228,7 @@ void Device::CreateDynamicTextures(int width, int height)
     mDynamicTexturesLRU = 0;
 }
 
-void Device::TickDynamicTextures(Image::Ptr&& img)
+void GraphicsDevice::TickDynamicTextures(Image::Ptr&& img)
 {
     if (!img)
     {
@@ -248,7 +268,7 @@ void Device::TickDynamicTextures(Image::Ptr&& img)
     mImmediateContext->PSSetShaderResources(0, 1, mDynamicShaderResourceViews[mDynamicTexturesLRU].AsUnsafeArrayOfOne());
 }
 
-void Device::TickFrameRate()
+void GraphicsDevice::TickFrameRate()
 {
     static auto sTimer = Timer::StartNew();
     static auto sCounter = 0;

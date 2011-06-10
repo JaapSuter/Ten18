@@ -7,9 +7,10 @@ namespace Ten18.Interop
     static class Globals
     {
         public const string NameOfCppThisPtrParameter = "cppThisPtr";
-        
-        public static ModuleReference PInvokeModuleRef { get; private set; }
+        public const string PInvokePrefix = "_";
 
+        public static ModuleReference PInvokeModuleRef { get; private set; }
+        
         public static MethodReference SupressUnmanagedCodeSecurityCtor { get; private set; }
         
         public static TypeReference Object { get; private set; }

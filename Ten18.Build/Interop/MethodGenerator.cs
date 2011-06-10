@@ -33,7 +33,7 @@ namespace Ten18.Interop
 
             var callConvAttribute = methodDef.IsStatic ? PInvokeAttributes.CallConvStdCall : PInvokeAttributes.CallConvThiscall;
 
-            mPInvokeDef = new MethodDefinition(methodDef.Name, MethodAttributes.Private | MethodAttributes.PInvokeImpl | MethodAttributes.Static, methodDef.ReturnType);
+            mPInvokeDef = new MethodDefinition(Globals.PInvokePrefix + methodDef.Name, MethodAttributes.Private | MethodAttributes.PInvokeImpl | MethodAttributes.Static, methodDef.ReturnType);
             mPInvokeDef.DeclaringType = mMethodDef.DeclaringType;
             mPInvokeDef.IsPInvokeImpl = true;
             mPInvokeDef.IsPreserveSig = true;

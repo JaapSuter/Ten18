@@ -4,6 +4,8 @@
 #include "Ten18/Timer.h"
 #include "Ten18/Tracer.h"
 #include "Ten18/Interop/Host.h"
+#include "Ten18/Capture/MediaFoundationCapture.h"
+#include "Ten18/Graphics/GraphicsDevice.h"
 
 using namespace Ten18;
 using namespace Ten18::Interop;
@@ -14,9 +16,18 @@ int __stdcall wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
     Expect.True = SetDllDirectory(L"");
     Expect.True = XMVerifyCPUSupport();
     Expect.HR = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE | COINIT_SPEED_OVER_MEMORY);
-    
+
     Timer::Initialize();
-    Host host;
+    Memory::Initialize();
+    Graphics::GraphicsDevice::Initialize();
+    Capture::MediaFoundationCapture::Initialize();    
+
+    Host host([]
+    {
+        Capture::MediaFoundationCapture::Shutdown();
+        Graphics::GraphicsDevice::Shutdown();
+        Memory::Shutdown();
+    });
 
     host.Run();
     

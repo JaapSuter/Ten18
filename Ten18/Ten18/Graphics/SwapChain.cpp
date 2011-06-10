@@ -1,7 +1,7 @@
 #include "Ten18/PCH.h"
 #include "Ten18/Window.h"
 #include "Ten18/Graphics/SwapChain.h"
-#include "Ten18/Graphics/Device.h"
+#include "Ten18/Graphics/GraphicsDevice.h"
 #include "Ten18/COM/EmbeddedResourceStream.h"
 #include "Ten18/Resources/Resources.h"
 #include "Ten18/Expect.h"
@@ -10,11 +10,10 @@ using namespace Ten18;
 using namespace Ten18::COM;
 using namespace Ten18::Graphics;
 
-SwapChain::SwapChain(const std::function<void ()>& tick, Device& device, Window& window)
+SwapChain::SwapChain(HWND hwnd)
     :
-mWindow(window),
-mDevice(device),
-mTick(tick),
+mHwnd(hwnd),
+mDevice(GraphicsDevice::Instance()),
 mSwapChain(),
 mRenderTargetView(),
 mClientEmpty(),
@@ -25,7 +24,7 @@ mClientPos()
     desc.BufferCount = 1;
     desc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    desc.OutputWindow = window.Handle();
+    desc.OutputWindow = mHwnd;
     desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
     desc.SampleDesc.Count = 1;
     desc.SampleDesc.Quality = 0;
@@ -34,20 +33,18 @@ mClientPos()
     mConstants.mWorld = XMMatrixIdentity();
     mConstants.mView = XMMatrixIdentity();
 
-    Expect.HR = device.mDXGIFactory1->CreateSwapChain(device.mD3D11Device.Raw(), &desc, mSwapChain.AsTypedDoubleStar());
-    Expect.HR = device.mDXGIFactory1->MakeWindowAssociation(window.Handle(), DXGI_MWA_NO_WINDOW_CHANGES);
+    Expect.HR = mDevice.mDXGIFactory1->CreateSwapChain(mDevice.mD3D11Device.Raw(), &desc, mSwapChain.AsTypedDoubleStar());
+    Expect.HR = mDevice.mDXGIFactory1->MakeWindowAssociation(mHwnd, DXGI_MWA_NO_WINDOW_CHANGES);
     
-    // window.OnRenderDo([&] (const Window&) { Tick(); });
-
-    device.mSwapChains.push_back(this);    
+    mDevice.mSwapChains.push_back(this);    
 }
 
 void SwapChain::Repose()
 {
     POINT clientPos = {};
     RECT clientRect = {};
-    Expect.True = ClientToScreen(mWindow.Handle(), &clientPos);
-    Expect.True = GetClientRect(mWindow.Handle(), &clientRect);
+    Expect.True = ClientToScreen(mHwnd, &clientPos);
+    Expect.True = GetClientRect(mHwnd, &clientRect);
 
     auto moved = (clientPos.x != mClientPos.x || clientPos.y != mClientPos.y);
     auto sized = !EqualRect(&clientRect, &mClientRect);
@@ -78,15 +75,13 @@ void SwapChain::Repose()
 
 void SwapChain::Tick()
 {
-    if (nullptr == mWindow.Handle())
+    if (nullptr == mHwnd)
         return;
 
     Repose();
 
     if (mClientEmpty)
         return;
-
-    mTick();
 
     static DWORD dwTimeStart = 0;
     DWORD dwTimeCur = GetTickCount();

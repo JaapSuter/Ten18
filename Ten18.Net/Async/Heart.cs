@@ -48,7 +48,7 @@ namespace Ten18.Async
 
         public void Drain()
         {
-
+            Beat();
         }
 
         public void Beat()

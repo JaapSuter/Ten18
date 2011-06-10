@@ -1,11 +1,13 @@
 #pragma once
 
 #include "Ten18/Assert.h"
+#include "Ten18/Memory.h"
 
 namespace Ten18 { namespace Graphics {
 
 class Image
 {
+    Ten18_CUSTOM_OPERATOR_NEW_DELETE
 public:
     typedef std::unique_ptr<Image> Ptr;
 
@@ -22,7 +24,7 @@ public:
     template<class T> const T* DataAs() const { return static_cast<T*>(mData); }
 
     const void* Data() const { return mData; }
-            void* Data()       { return mData; }
+          void* Data()       { return mData; }
 
     template<class Pixel>
     void ForEach(const std::function<Pixel (Pixel)>& func)

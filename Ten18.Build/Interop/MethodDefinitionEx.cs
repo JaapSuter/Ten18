@@ -25,7 +25,7 @@ namespace Ten18.Interop
                 staticOrNot,
                 self.ReturnType.FullNameAsCpp(isConst: false),
                 callingConv,
-                self.Name,
+                self.NameWithoutPInvokePrefix(),
                 String.Join(", ", parameterDefs.Select(parameterDef => parameterDef.FullNameAsCpp())));
         }
 
@@ -47,8 +47,13 @@ namespace Ten18.Interop
                 self.ReturnType.FullNameAsUndecorated(isConst: false),
                 callingConv,
                 self.DeclaringType.FullName.Replace(".", "::"),
-                self.Name,
+                self.NameWithoutPInvokePrefix(),
                 String.Join(",", parameterDefs.Select(parameterDef => parameterDef.FullNameAsUndecorated())));
+        }
+
+        public static string NameWithoutPInvokePrefix(this MethodDefinition self)
+        {
+            return self.Name.Substring(Globals.PInvokePrefix.Length);
         }
     }
 }

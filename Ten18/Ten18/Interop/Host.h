@@ -25,8 +25,10 @@ namespace Ten18 { namespace Interop {
         static_assert(int(unsigned char(-1)) == 255, "unsigned char is not behaving as expected");
 
     public:
-        
-        Host();
+
+        typedef std::function<void(void)> Action;
+
+        explicit Host(const Action& onExit = Action());
         ~Host();
 
         __declspec(noreturn) void Run();
@@ -59,5 +61,6 @@ namespace Ten18 { namespace Interop {
         ICLRRuntimeHost*        mRuntimeHost;
 
         IHeart*                 mHeart;
+        Action                  mOnExit;
     };
 }}

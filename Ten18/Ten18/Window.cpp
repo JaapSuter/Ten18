@@ -9,16 +9,10 @@
 namespace Ten18 {
    
 static ATOM sWndClass = 0;
-static volatile unsigned int sWndCount = 0;    
+static volatile unsigned int sWndCount = 0;
 static int sWndProcReentrancyCount = 0;
 
-void* Window::New(const wchar_t* title)
-{
-    return Ten18_NEW Window(title);
-}
-
-Window::Window(const wchar_t* title)
-    : mHwnd()  
+HWND Window::Create(Window& dst, const wchar_t* title)
 {
     const auto hInstance = static_cast<HINSTANCE>(GetModuleHandle(nullptr));
         
@@ -37,10 +31,21 @@ Window::Window(const wchar_t* title)
     const auto style = WS_OVERLAPPEDWINDOW;
     const auto styleEx = WS_EX_OVERLAPPEDWINDOW;
     
-    Expect.NotNull = mHwnd = CreateWindowEx(styleEx, MAKEINTATOM(sWndClass), title, style,
-        CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-        nullptr, nullptr, hInstance, this);
+    return Expect.NotNull
+         = dst.mHwnd
+         = CreateWindowEx(styleEx, MAKEINTATOM(sWndClass), title, style,
+                          CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+                          nullptr, nullptr, hInstance, &dst);
+}
 
+void* Window::New(const wchar_t* title)
+{
+    return Ten18_NEW Window(title);
+}
+
+Window::Window(const wchar_t* title)
+    : mHwnd(Create(*this, title)), mSwapChain(mHwnd)
+{
     Input::RawInput::Register(mHwnd);
 
     Expect.Zero = ShowWindow(mHwnd, SW_SHOWDEFAULT);
@@ -95,7 +100,10 @@ void Window::MakeFullScreen()
 {
 }
 
-void Window::Dispose() { delete this; }
+void Window::Dispose()
+{
+    delete this;
+}
 
 void Window::Close()
 {

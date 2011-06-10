@@ -80,7 +80,7 @@ static void EnumerateUsingEnumDisplayDevices()
 
     for (DWORD dev = 0; EnumDisplayDevices(0, dev, &dd, 0); ++dev)
     {
-        std::wprintf(L"[%d] Device Flags: 0x%X\n", dev, dd.StateFlags);                    
+        std::wprintf(L"[%d] GraphicsDevice Flags: 0x%X\n", dev, dd.StateFlags);                    
         std::wprintf(L"\tKey: %s\n", dd.DeviceKey);
         std::wprintf(L"\tName: %s\n", dd.DeviceName);
         std::wprintf(L"\tString: %s\n", dd.DeviceString);

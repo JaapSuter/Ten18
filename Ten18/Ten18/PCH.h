@@ -68,16 +68,17 @@
 #define WIN32_LEAN_AND_MEAN
 
 #ifdef _DEBUG
-    #define Ten18_NEW new(_CLIENT_BLOCK, __FILE__, __LINE__)
     #define Ten18_IF_DEBUG_ELSE(a, b) (a)
-
+    
+    // From MSDN: for the CRT functions to work correctly when using _CRTDBG_MAP_ALLOC, the #include statements must follow the order shown here...
     #define _CRTDBG_MAP_ALLOC
-
+    #include <stdlib.h>     
+    #include <crtdbg.h>
+    
     #define D3D_DEBUG_INFO
     #define D3DX10_DEBUG
     
 #elif defined NDEBUG
-    #define Ten18_NEW new
     #define Ten18_IF_DEBUG_ELSE(a, b) (b)
 #else
     #error "Neither _DEBUG or NDEBUG is defined."
@@ -172,24 +173,3 @@ extern "C"
 #undef D3DX10_DEBUG
 #undef WIN32_LEAN_AND_MEAN
 #undef STRICT
-
-namespace Ten18
-{    
-    template <class T>
-    inline std::unique_ptr<T> MakeUniquePtr() { return std::unique_ptr<T>(Ten18_NEW T()); }
-
-    template <class T, class A0>
-    inline std::unique_ptr<T> MakeUniquePtr(A0&& a0) { return std::unique_ptr<T>(Ten18_NEW T(a0)); }
-
-    template <class T, class A0, class A1>
-    inline std::unique_ptr<T> MakeUniquePtr(A0&& a0, A1&& a1) { return std::unique_ptr<T>(Ten18_NEW T(a0, a1)); }
-
-    template <class T, class A0, class A1, class A2>
-    inline std::unique_ptr<T> MakeUniquePtr(A0&& a0, A1&& a1, A2&& a2) { return std::unique_ptr<T>(Ten18_NEW T(a0, a1, a2)); }
-
-    template <class T, class A0, class A1, class A2, class A3>
-    inline std::unique_ptr<T> MakeUniquePtr(A0&& a0, A1&& a1, A2&& a2, A3&& a3) { return std::unique_ptr<T>(Ten18_NEW T(a0, a1, a2, a3)); }
-
-    template <class T, class A0, class A1, class A2, class A3, class A4>
-    inline std::unique_ptr<T> MakeUniquePtr(A0&& a0, A1&& a1, A2&& a2, A3&& a3, A4&& a4) { return std::unique_ptr<T>(Ten18_NEW T(a0, a1, a2, a3, a4)); }
-}

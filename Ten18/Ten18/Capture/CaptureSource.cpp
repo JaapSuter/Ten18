@@ -20,8 +20,6 @@ Graphics::Image::Ptr CaptureSource::Latest()
 
 void* CaptureSource::New()
 {
-    MediaFoundationCapture::Initialize();
-    
     if (MediaFoundationCapture::Count() > 0)
         return MediaFoundationCapture::Get(0);
     else if (CLEyeCapture::Count() > 0)

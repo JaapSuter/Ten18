@@ -127,7 +127,7 @@
     <ClCompile Include="Ten18\Console.cpp" />
     <ClCompile Include="Ten18\Content\Index.cpp" />
     <ClCompile Include="Ten18\Expect.cpp" />
-    <ClCompile Include="Ten18\Graphics\Device.cpp" />
+    <ClCompile Include="Ten18\Graphics\GraphicsDevice.cpp" />
     <ClCompile Include="Ten18\Graphics\Display.cpp" />
     <ClCompile Include="Ten18\Graphics\Image.cpp" />
     <ClCompile Include="Ten18\Graphics\SwapChain.cpp" />
@@ -143,6 +143,7 @@
     <ClCompile Include="Ten18\Interop\HostMemoryManager.cpp" />
     <ClCompile Include="Ten18\Interop\HostTaskManager.cpp" />
     <ClCompile Include="Ten18\Libraries.cpp" />
+    <ClCompile Include="Ten18\Memory.cpp" />
     <ClCompile Include="Ten18\Program.cpp" />
     <ClCompile Include="Ten18\RawInput.cpp" />
     <ClCompile Include="Ten18\Timer.cpp" />
@@ -163,7 +164,7 @@
     <ClInclude Include="Ten18\Content\Index.h" />
     <ClInclude Include="Ten18\Expect.h" />
     <ClInclude Include="Ten18\Graphics\Constants.h" />
-    <ClInclude Include="Ten18\Graphics\Device.h" />
+    <ClInclude Include="Ten18\Graphics\GraphicsDevice.h" />
     <ClInclude Include="Ten18\Graphics\Display.h" />
     <ClInclude Include="Ten18\Graphics\Image.h" />
     <ClInclude Include="Ten18\Graphics\SwapChain.h" />
@@ -178,6 +179,7 @@
     <ClInclude Include="Ten18\Interop\HostMalloc.h" />
     <ClInclude Include="Ten18\Interop\HostMemoryManager.h" />
     <ClInclude Include="Ten18\Interop\HostTaskManager.h" />
+    <ClInclude Include="Ten18\Memory.h" />
     <ClInclude Include="Ten18\OnExit.h" />
     <ClInclude Include="Ten18\PCH.h" />
     <ClCompile Include="Ten18\PCH.cpp">

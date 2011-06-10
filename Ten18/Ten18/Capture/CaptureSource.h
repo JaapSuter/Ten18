@@ -12,7 +12,7 @@ namespace Ten18 { namespace Capture {
         const XMFLOAT2A& Size() const { return mSize; }
         int BytesPerPixel() const { return mBytesPerPixel; }
         
-        virtual ~CaptureSource();
+        virtual ~CaptureSource() = 0;
         Graphics::Image::Ptr Latest();
 
         virtual void Tick() = 0;

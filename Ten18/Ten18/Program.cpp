@@ -1,21 +1,21 @@
-#include "Ten18/PCH.h"
-#include "Ten18/Expect.h"
-#include "Ten18/COM/EmbeddedResourceStream.h"
-#include "Ten18/Resources/Resources.h"
-#include "Ten18/COM/COMPtr.h"
-#include "Ten18/Interop/Host.h"
-#include "Ten18/Window.h"
-#include "Ten18/Graphics/Device.h"
-#include "Ten18/Graphics/Display.h"
-#include "Ten18/Graphics/SwapChain.h"
-#include "Ten18/Assert.h"
-#include "Ten18/Tracer.h"
-
 /*
+    #include "Ten18/PCH.h"
+    #include "Ten18/Expect.h"
+    #include "Ten18/COM/EmbeddedResourceStream.h"
+    #include "Ten18/Resources/Resources.h"
+    #include "Ten18/COM/COMPtr.h"
+    #include "Ten18/Interop/Host.h"
+    #include "Ten18/Window.h"
+    #include "Ten18/Graphics/GraphicsDevice.h"
+    #include "Ten18/Graphics/Display.h"
+    #include "Ten18/Graphics/SwapChain.h"
+    #include "Ten18/Assert.h"
+    #include "Ten18/Tracer.h"
+
     Window first(L"Ten18 Calibration");
     Window second(L"Ten18 Camera");
 
-    Device device;
+    GraphicsDevice device;
     
     SwapChain primary([&]
     {

@@ -1,35 +1,45 @@
 #pragma once
+
 #include "Ten18/Graphics/Constants.h"
 #include "Ten18/Graphics/Writer.h"
-#include "Ten18/COM/COMPtr.h"
 #include "Ten18/Graphics/Image.h"
+#include "Ten18/COM/COMPtr.h"
+#include "Ten18/Memory.h"
 
 namespace Ten18 { namespace Graphics {
 
-    class SwapChain;
+    class SwapChain;    
         
-    class Device
+    class GraphicsDevice
     {
+        Ten18_CUSTOM_OPERATOR_NEW_DELETE
     public:
 
-        Device();
-        ~Device();
+        static void Initialize();
+        static void Shutdown();
+        static GraphicsDevice& Instance();
 
-        void Tick();
+        void Render();
         
         void CreateDynamicTextures(int width, int height);
         void TickDynamicTextures(Image::Ptr&& img);
         void TickFrameRate();
 
+        #include "Ten18/Graphics/GraphicsDevice.Generated.h"
+
     private:
+
+        GraphicsDevice();
+        ~GraphicsDevice();
+        
     public: // Todo, April 2011, Jaap Suter needs to get things done.
 
         void InitializeShaders(const wchar_t* vsid, const wchar_t* psid, COM::COMPtr<ID3D11VertexShader>& vs, COM::COMPtr<ID3D11PixelShader>& ps);
 
         friend class SwapChain;
         
-        Device(const Device&);
-        Device& operator = (const Device&);
+        GraphicsDevice(const GraphicsDevice&);
+        GraphicsDevice& operator = (const GraphicsDevice&);
 
         bool                        mReposeInducedDwmFlushReq;
 

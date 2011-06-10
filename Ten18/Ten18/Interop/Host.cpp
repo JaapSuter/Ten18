@@ -1,8 +1,9 @@
 #include "Ten18/PCH.h"
 #include "Ten18/Interop/Host.h"
 #include "Ten18/Interop/HostControl.h"
-#include "Ten18/COM/COMPtr.h"
 #include "Ten18/Resources/Resources.h"
+#include "Ten18/Graphics/GraphicsDevice.h"
+#include "Ten18/COM/COMPtr.h"
 #include "Ten18/COM/StackBasedSafeArray.h"
 #include "Ten18/COM/EmbeddedResourceStream.h"
 #include "Ten18/Tracer.h"
@@ -14,7 +15,7 @@ using namespace Ten18::COM;
 
 namespace Ten18 {
     
-Host::Host() :
+Host::Host(const Action& onExit) :
     mControl(*this), 
     mAssemblyManager(*this),
     mAssemblyStore(*this),
@@ -25,7 +26,8 @@ Host::Host() :
     mRuntimeHost(),
     mClrControl(),
     mGCManager(),
-    mHeart()    
+    mHeart(),
+    mOnExit(onExit)
 {
     const auto dotNetRuntimeVersion = L"v4.0.30319";   
 
@@ -79,6 +81,7 @@ void Host::Run()
         else
         {
             mHeart->Beat();
+            Graphics::GraphicsDevice::Instance().Render();
         }
     }
 
@@ -89,8 +92,11 @@ void Host::Run()
     mHeart->Farewell();
     mHeart->Release();
     mHeart = nullptr;
+
+    if (mOnExit)
+        mOnExit();
     
-    Expect.HR = mRuntimeHost->Stop();    
+    Expect.HR = mRuntimeHost->Stop();
     Expect.HR = mMetaHost->ExitProcess(ec);
 }
 
