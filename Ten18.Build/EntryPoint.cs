@@ -4,7 +4,6 @@ using System.IO;
 using System.Reflection;
 using Mono.Cecil;
 using Ten18.Build;
-using Ten18.Interop;
 
 namespace Ten18
 {
@@ -12,10 +11,8 @@ namespace Ten18
     {
         public static int Main(string[] args)
         {
-            Console.WriteLine("Ten18.Build");
-            
             Args.Set(args);
-
+            
             if (Debugger.IsAttached)
                 MaybeThrowingMain();
             else
@@ -25,8 +22,11 @@ namespace Ten18
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
-                    Console.WriteLine(e);
+                    Console.WriteLine("Ten18.Build ran into a problem:");
+                    Console.WriteLine();
+                    Console.WriteLine("\t" + e.Message.Replace("\n", "\n\t"));
+                    Console.WriteLine();
+                    Console.WriteLine("\t" + e.StackTrace.ToString().Replace("\n", "\n\t"));
                     return -1;
                 }
     
@@ -35,28 +35,51 @@ namespace Ten18
 
         private static void MaybeThrowingMain()
         {
+            var debug = Args.Get("Debug", false) || Paths.WorkingDir.Contains("Debug");
+            
             var interopAssemblyPath = Args.Get<string>("ImplementInteropAssembly");
             if (interopAssemblyPath != null)
-                ImplementInteropAssembly(interopAssemblyPath);
+                Interop.AssemblyGenerator.Generate(interopAssemblyPath, debug);
 
-            if (Args.Get<bool>("EmbedContent"))
+            if (Args.Get<bool>("UpdateNativeExportTable"))
+                Interop.ExportTable.Update();
+
+            if (Args.Get<bool>("ProcessData"))
             {
-                CompileShaders();
-                EmbedAssemblies();
-                Build.Index.Add("Ten18.Content.Images.Panorama", Path.Combine(Paths.SolutionDir, @"Ten18.Content\Images\Panorama.jpg"));
+                CompileShaders(debug);
+                                
+                EmbedAssembly("Ten18.Interop.Generated");
+                EmbedAssembly("Ten18.Net");
+                EmbedAssembly("SlimMath");
+                EmbedAssembly("AsyncCtpLibrary");
+
+                EmbedImage("Ten18/Content/Images/Panorama.jpg");
+
                 Build.Index.GenerateHeaders();
             }
         }
 
-        private static void ImplementInteropAssembly(string assemblyPath)
+        private static void EmbedImage(string name)
         {
-            AssemblyGenerator.Generate(assemblyPath);
-        }
+            var srcFile = Path.Combine(Paths.SolutionDir, name.Replace("Ten18/Content", "Ten18.Content"));
+            var dstFile = Path.Combine(Paths.WorkingDir, name);
 
-        private static void CompileShaders()
+            if (File.GetLastWriteTime(dstFile) <= File.GetLastAccessTime(srcFile))
+            {
+                var dstDir = Path.GetDirectoryName(dstFile);
+                if (!Directory.Exists(dstDir))
+                    Directory.CreateDirectory(dstDir);
+                File.Copy(srcFile, dstFile, true);
+            }
+
+            Build.Index.Add(dstFile);
+        }
+        
+        private static void CompileShaders(bool debug)
         {
-            string flags = "/nologo /WX /Ges /Od /Op /O0 /Zi /Gdp ";
-            // Todo, Jaap Suter, May 2011, release flags:   /nologo /WX /Ges /O3 /Qstrip_reflect /Qstrip_debug
+            string flags = debug
+                         ? "/nologo /WX /Ges /Od /Op /O0 /Zi /Gdp "
+                         : "/nologo /WX /Ges /O3 /Qstrip_reflect /Qstrip_debug";
 
             var dir = Path.Combine(Args.Get<string>("WorkingDir"), "Ten18/Content/Shaders");
             if (!Directory.Exists(dir))
@@ -69,20 +92,21 @@ namespace Ten18
                 var vso = Path.Combine(dir, name + ".vso");
                 var pso = Path.Combine(dir, name + ".pso");
 
-                Tool.Run(Paths.FxcExe, Paths.WorkingDir, "{0} /Tvs_4_0 /EVS /Fo{1} {2}", flags, vso, shader);
-                Tool.Run(Paths.FxcExe, Paths.WorkingDir, "{0} /Tps_4_0 /EPS /Fo{1} {2}", flags, pso, shader);
+                var needsUpdate = File.GetLastWriteTime(vso) <= File.GetLastWriteTime(shader)
+                               || File.GetLastWriteTime(pso) <= File.GetLastWriteTime(shader);
 
-                Build.Index.Add("Ten18.Content.Shaders." + name + ".VS", vso);
-                Build.Index.Add("Ten18.Content.Shaders." + name + ".PS", pso);
+                if (needsUpdate)
+                {
+                    Console.WriteLine("Updating Vertex Shader: {0}", vso);
+                    Console.WriteLine("Updating Pixel Shader: {0}", pso);
+
+                    Tool.Run(Paths.FxcExe, Paths.WorkingDir, "{0} /Tvs_4_0 /EVS /Fo{1} {2}", flags, vso, shader);
+                    Tool.Run(Paths.FxcExe, Paths.WorkingDir, "{0} /Tps_4_0 /EPS /Fo{1} {2}", flags, pso, shader);                    
+                }
+                
+                Build.Index.Add(vso);
+                Build.Index.Add(pso);
             }
-        }
-
-        private static void EmbedAssemblies()
-        {
-            EmbedAssembly("Ten18.Interop.Generated");
-            EmbedAssembly("Ten18.Net");
-            EmbedAssembly("SlimMath");
-            EmbedAssembly("AsyncCtpLibrary");
         }
 
         private static void EmbedAssembly(string name)

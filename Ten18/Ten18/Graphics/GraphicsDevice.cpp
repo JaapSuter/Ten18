@@ -88,8 +88,8 @@ GraphicsDevice::GraphicsDevice() :
         { XMFLOAT3(hso + hsw, hsh, 0.5f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), XMFLOAT2( hsw / tsw, hsh / tsh) },
     };
 
-    InitializeShaders(L"Ten18.Content.Shaders.Capture.VS", L"Ten18.Content.Shaders.Capture.PS", mCaptureVertexShader, mCapturePixelShader);
-    InitializeShaders(L"Ten18.Content.Shaders.GrayCode.VS", L"Ten18.Content.Shaders.GrayCode.PS", mGrayCodeVertexShader, mGrayCodePixelShader);
+    InitializeShaders(L"Ten18/Content/Shaders/Capture.vso", L"Ten18/Content/Shaders/Capture.pso", mCaptureVertexShader, mCapturePixelShader);
+    InitializeShaders(L"Ten18/Content/Shaders/GrayCode.vso", L"Ten18/Content/Shaders/Capture.pso", mGrayCodeVertexShader, mGrayCodePixelShader);
 
     D3D11_BUFFER_DESC vbd = {};
     vbd.Usage = D3D11_USAGE_DEFAULT;
@@ -109,7 +109,7 @@ GraphicsDevice::GraphicsDevice() :
     Expect.HR = mD3D11Device->CreateBuffer(&cbd, NULL, mConstantBuffer.AsTypedDoubleStar());
     SetDebugName(mConstantBuffer, "Constant Buffer");
 
-    const auto& entry = Content::Index::Get(L"Ten18.Content.Images.Panorama");
+    const auto& entry = Content::Index::Get(L"Ten18/Content/Images/Panorama.jpg");
     Expect.HR = D3DX11CreateShaderResourceViewFromMemory(mD3D11Device.Raw(), entry.Data, entry.Size, nullptr, nullptr, mTextureRV.AsTypedDoubleStar(), nullptr);
     SetDebugName(mTextureRV, "Shader Resource View");
     

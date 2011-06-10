@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Ten18
 {
@@ -28,10 +29,8 @@ namespace Ten18
 
         public static T Get<T>(string name, Func<T, bool> predicate, Func<T> fallback)
         {
-            // Less than optimal? You bet...!
-            var prefix = '-';
-            var upToArg = sArgs.SkipWhile(arg => arg[0] != prefix || !arg.EndsWith(name));
-            
+            var upToArg = Find(name);
+
             if (typeof(T) == typeof(bool))
                 return UglyCast<T>(!upToArg.IsEmpty());
             else if (typeof(T) == typeof(string))
@@ -40,6 +39,13 @@ namespace Ten18
             Debug.Fail(String.Format("Commandline Argument '{0}' Has Unsupported Type '{1}'", name, typeof(T).FullName));
             return default(T);
 
+        }
+
+        private static IEnumerable<string> Find(string name)
+        {
+            // Less than optimal? You bet that's an understatement...!
+            var prefix = '-';
+            return sArgs.SkipWhile(arg => arg[0] != prefix || arg.Substring(1) != name);
         }
 
         private static To UglyCast<To>(object from) { return (To)from; }

@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Build\Args.cs" />
+    <Compile Include="NaturalStringComparer.cs" />
     <Compile Include="Build\Tool.cs" />
     <Compile Include="Build\Index.cs" />
     <Compile Include="Build\Paths.cs" />

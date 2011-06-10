@@ -37,6 +37,8 @@ namespace Ten18
 
         template <class Unk>
         void Release(Unk*& unknown) { if (unknown) unknown->Release(); unknown = nullptr; }
+
+        bool FileExists(const wchar_t *fileName);
     }
 
     template <class To, class From>

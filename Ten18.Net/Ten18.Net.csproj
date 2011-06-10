@@ -68,6 +68,7 @@
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>$(OutputPath)\Ten18.Build.exe -ImplementInteropAssembly $(TargetDir)Ten18.Interop.dll -WorkingDir $(SolutionIntermediateDir)</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>

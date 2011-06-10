@@ -28,7 +28,7 @@ VS_OUTPUT VS(float4 Pos : POSITION, float4 Color : COLOR, float2 Tex : TEXCOORD)
     output.Tex = Tex;
     return output;
 }
-
+ 
 uint BinaryToGray(uint n)
 {
     return (n >> 1) ^ n;

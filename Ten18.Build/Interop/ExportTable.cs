@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Ten18.Build;
+using System.Text;
+using System.Runtime.InteropServices;
 
 namespace Ten18.Interop
 {
@@ -27,25 +29,41 @@ namespace Ten18.Interop
         public static void Verify()
         {
             var lookup = GetNativeExports();
+            var output = new List<string>();
+            var success = true;
 
             foreach (var export in sOrdinals.Keys)
             {
                 int ordinal;
                 if (!lookup.TryGetValue(export, out ordinal))
                 {
-                    Console.WriteLine("Missing native export [{0}]: {1}", sOrdinals[export], export);
+                    output.Add(String.Format("\tExport {0} missing: {1} has no native implementation.", sOrdinals[export], export));
+                    success = false;
                 }
                 else if (ordinal != sOrdinals[export])
                 {
-                    Console.WriteLine("Managed import ordinal [{0}] doesn't match native export ordinal [{1}]: {2}", sOrdinals[export], ordinal, export);
+                    output.Add(String.Format("\tExport {0} ordinal mismatch: {1} has native ordinal {2}.", sOrdinals[export], export, ordinal));
+                    success = false;
                 }
                 else
                 {
-                    Console.WriteLine("Managed export verified with native ordinal ok: [{0}]: {1}", sOrdinals[export], export);
+                    output.Add(String.Format("\tExport {0} ok: {1}", sOrdinals[export], export));
                 }
             }
-            
-            var lines = from kvp in lookup
+
+            if (!success)
+            {
+                output.Sort(new NaturalStringComparer());
+                var message = String.Join(Environment.NewLine, output.StartWith("Interop Verification Errors: "));
+                throw new Exception(message);
+            }
+        }
+
+        public static void Update()
+        {
+            Console.WriteLine("Updating Native Export Table: {0}", sExportsFile);
+
+            var lines = from kvp in GetNativeExports()
                         orderby kvp.Value
                         select kvp.Key;
 
@@ -96,9 +114,11 @@ namespace Ten18.Interop
             //     0x20000 Disable expansion of __ptr64 keyword
             var undecorationFlags = 0x8000;
             var undecoratedPrefix = "is :- ";
-            return Tool.Run(Paths.UndName, Paths.MsPdbDllDir, "{0} {1}", undecorationFlags.ToString(), decoratedName)
-                        .Split('\n')
-                        .First(l => l.StartsWith(undecoratedPrefix))
+            
+            var lines = Tool.Run(Paths.UndName, Paths.MsPdbDllDir, "{0} {1}", undecorationFlags.ToString(), decoratedName)
+                            .Split('\n');
+
+            return lines.First(l => l.StartsWith(undecoratedPrefix))
                         .Replace(undecoratedPrefix, "")
                         .Trim('\"')
                         .Replace("(void)", "()");

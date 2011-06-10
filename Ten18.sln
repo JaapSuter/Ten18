@@ -2,25 +2,32 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ten18.Interop", "Ten18.Interop\Ten18.Interop.csproj", "{202A67BE-EC74-4F9A-872C-BB59CDC1595E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D084C3C0-BB71-4FF6-8741-FE71478E4A45} = {D084C3C0-BB71-4FF6-8741-FE71478E4A45}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ten18.Build", "Ten18.Build\Ten18.Build.csproj", "{D084C3C0-BB71-4FF6-8741-FE71478E4A45}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ten18.Net", "Ten18.Net\Ten18.Net.csproj", "{F066F00D-681B-4385-B363-0000BA000000}"
 	ProjectSection(ProjectDependencies) = postProject
 		{202A67BE-EC74-4F9A-872C-BB59CDC1595E} = {202A67BE-EC74-4F9A-872C-BB59CDC1595E}
-		{D084C3C0-BB71-4FF6-8741-FE71478E4A45} = {D084C3C0-BB71-4FF6-8741-FE71478E4A45}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ten18", "Ten18\Ten18.vcxproj", "{B8FF81B5-9B26-4931-8353-0000BA000000}"
-	ProjectSection(ProjectDependencies) = postProject
-		{F066F00D-681B-4385-B363-0000BA000000} = {F066F00D-681B-4385-B363-0000BA000000}
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D972F0EF-AC70-462E-993F-08EA55767D55}"
 	ProjectSection(SolutionItems) = preProject
 		LICENSE = LICENSE
 		README = README
 		Ten18.proj = Ten18.proj
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ten18.Content", "Ten18.Content", "{1DDD046E-CBE4-4AAF-B56C-3911C9CFBB6B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shaders", "Shaders", "{FB1038F3-00DA-450D-A3D4-A064DD4A6BFD}"
+	ProjectSection(SolutionItems) = preProject
+		Ten18.Content\Shaders\Capture.fx = Ten18.Content\Shaders\Capture.fx
+		Ten18.Content\Shaders\GrayCode.fx = Ten18.Content\Shaders\GrayCode.fx
 	EndProjectSection
 EndProject
 Global
@@ -76,5 +83,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1DDD046E-CBE4-4AAF-B56C-3911C9CFBB6B} = {D972F0EF-AC70-462E-993F-08EA55767D55}
+		{FB1038F3-00DA-450D-A3D4-A064DD4A6BFD} = {1DDD046E-CBE4-4AAF-B56C-3911C9CFBB6B}
 	EndGlobalSection
 EndGlobal

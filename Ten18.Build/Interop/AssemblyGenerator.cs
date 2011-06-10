@@ -9,9 +9,26 @@ namespace Ten18.Interop
 {
     static class AssemblyGenerator
     {
-        public static void Generate(string assemblyPath)
+        public static void Generate(string assemblyPath, bool debug)
         {
             var generatedPath = Path.ChangeExtension(assemblyPath, ".Generated.dll");
+
+            var needsUpdate =  File.GetLastWriteTime(generatedPath) <= File.GetLastWriteTime(assemblyPath)
+                            || File.GetLastWriteTime(generatedPath) <= File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location);
+
+            if (needsUpdate)
+            {
+                Console.WriteLine("Updating Interop Assembly: {0}", generatedPath); 
+                Update(assemblyPath, generatedPath, debug);                
+            }
+            else
+            {
+                Console.WriteLine("Interop Assembly Up To Date: {0}", generatedPath);
+            }
+        }
+
+        private static void Update(string assemblyPath, string generatedPath, bool debug)
+        {
             var assemblyDef = AssemblyDefinition.ReadAssembly(assemblyPath, new ReaderParameters(ReadingMode.Immediate));
             var moduleDef = assemblyDef.MainModule;
 
@@ -22,29 +39,33 @@ namespace Ten18.Interop
             Debug.Assert(assemblyDef.Modules.Count == 1);
 
             Globals.Initialize(moduleDef);
-            
+
             foreach (var typeDef in moduleDef.Types)
-                if (typeDef.IsEnum) {} else
-                if (typeDef.IsValueType) {} else
-                if (typeDef.IsClass && typeDef.IsAbstract) ClassGenerator.Generate(typeDef);
+                if (typeDef.IsEnum) { }
+                else
+                    if (typeDef.IsValueType) { }
+                    else
+                        if (typeDef.IsClass && typeDef.IsAbstract) ClassGenerator.Generate(typeDef);
 
             assemblyDef.Name.Name = assemblyDef.Name.Name + ".Generated";
-            assemblyDef.Write(generatedPath, new WriterParameters { 
+            assemblyDef.Write(generatedPath, new WriterParameters
+            {
                 WriteSymbols = false,
                 StrongNameKeyPair = new StrongNameKeyPair(File.ReadAllBytes(Paths.KeyFile)),
             });
 
-            PostProcess(generatedPath);
+            PostProcess(generatedPath, debug); ;
 
             ExportTable.Verify();
-
-            Console.WriteLine("Updated: {0}", generatedPath);
         }
 
-        private static void PostProcess(string assemblyFullPath)
+        private static void PostProcess(string assemblyFullPath, bool debug)
         {
-            Tool.Run(Paths.ILDasmExe, Paths.WorkingDir, "/SOURCE /OUT={0}.il {0}", assemblyFullPath);
-            Tool.Run(Paths.ILAsmExe, Paths.WorkingDir, "{0}.il /OUTPUT={0} /DLL /DEBUG /KEY={1}", assemblyFullPath, Paths.KeyFile);
+            if (debug)
+            {
+                Tool.Run(Paths.ILDasmExe, Paths.WorkingDir, "/SOURCE /OUT={0}.il {0}", assemblyFullPath);
+                Tool.Run(Paths.ILAsmExe, Paths.WorkingDir, "{0}.il /OUTPUT={0} /DLL /DEBUG /KEY={1}", assemblyFullPath, Paths.KeyFile);
+            }
             
             // Verify the MSIL, but ignore...
             //      * [IL]: Error: [found unmanaged pointer][expected unmanaged pointer] Unexpected type on the stack.(Error: 0x80131854)

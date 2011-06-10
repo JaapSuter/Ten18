@@ -35,14 +35,19 @@ namespace Ten18.Build
             var exited = proc.WaitForExit(maxTimeOutMs);
             proc.CancelOutputRead();
             proc.CancelErrorRead();
+
+            var output = stdout + Environment.NewLine + stderr;
             if (!exited || proc.ExitCode != 0)
-            {   
-                Console.WriteLine(stdout + Environment.NewLine + stderr);
-                throw exited ? new TimeoutException(String.Format("Child process failed (exit code = {0}: {1} {2})", proc.ExitCode, proc.StartInfo.FileName, proc.StartInfo.Arguments))
-                             : new TimeoutException(String.Format("Child process timed out: {0} {1}", proc.StartInfo.FileName, proc.StartInfo.Arguments));
+            {
+                throw new Exception(String.Format("Child process {0}, exit code = {1}:\n\t{2} {3}\n\t{4}",
+                            exited ? "failed" : "timed out",
+                            proc.ExitCode,
+                            proc.StartInfo.FileName,
+                            proc.StartInfo.Arguments,
+                            output.Replace("\n", "\n\t")));
             }
 
-            return stdout + Environment.NewLine + stderr;
+            return output;
         }        
     }
 }

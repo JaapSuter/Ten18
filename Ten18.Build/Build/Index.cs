@@ -3,14 +3,30 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 namespace Ten18.Build
 {
     static class Index
     {
+        public static void Add(string path)
+        {
+            var normalized = Path.GetFullPath(path);
+            var prefix = Path.GetFullPath(Paths.WorkingDir);
+            if (!normalized.StartsWith(prefix))
+                throw new Exception(
+                    String.Format("Content that derives its name from its path must live in the working directory...({0}). So {1} is a no go...",
+                        prefix, path));
+
+            var name = normalized.Substring(prefix.Length).Replace('\\', '/');
+
+            Add(name, path);
+        }
+
         public static void Add(string name, string path)
         {
-            sEntries.Add(Asciify(name), path);
+            if (sEmbedContent)
+                sEntries.Add(Asciify(name), path);
         }
 
         public static void GenerateHeaders()
@@ -18,8 +34,8 @@ namespace Ten18.Build
             var dir = Path.Combine(Args.Get<string>("WorkingDir"), "Ten18/Content");
             if (!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
-            
-            var header = Path.Combine(dir, "Index.Generated.h");            
+
+            var header = Path.Combine(dir, "Index.Generated.h");
             using (var tw = File.CreateText(header))
             {
                 tw.WriteLine("#include \"Ten18/Content/Index.h\"");
@@ -31,20 +47,19 @@ namespace Ten18.Build
                 {
                     var bytes = File.ReadAllBytes(path);
 
-                    var isConst = NeedsInteropPatch(path) ? " " : "const ";
                     var code = new StringBuilder();
                     bytes.Run(b => code.Append((sbyte)b).Append(", "));
-                    tw.WriteLine("static __declspec(align(16)) {0}char DataForEntry{1:000}[{2:000}] = {{ {3} }};", isConst, idx, bytes.Length, code);
+                    tw.WriteLine("static __declspec(align(16)) char DataForEntry{0:000}[{1:000}] = {{ {2} }};", idx, bytes.Length, code);
                     return default(Unit);
 
                 }).Run();
                 
                 tw.WriteLine("static const int NumEntries = {0};", sEntries.Count);
-                tw.WriteLine("static const Index::Entry Table[NumEntries] = {");
+                tw.WriteLine("static const Index::Entry Table[NumEntries + 1] = {");
                 
                 sEntries.Keys.Select((name, idx) =>
                 {
-                    tw.WriteLine("    {{ \"{0}\", sizeof(DataForEntry{1:000}), DataForEntry{1:000}, {2} }},", name, idx, NeedsInteropPatch(name) ? "true" : "false");
+                    tw.WriteLine("    {{ \"{0}\", sizeof(DataForEntry{1:000}), DataForEntry{1:000} }},", name, idx);
                     return default(Unit);
                 }).Run();
 
@@ -61,10 +76,7 @@ namespace Ten18.Build
             return new string(Encoding.ASCII.GetChars(ascii));
         }
 
-        private static bool NeedsInteropPatch(string str)
-        {
-            return str.ToUpperInvariant().Contains("Ten18.Interop.Generated".ToUpperInvariant());
-        }
+        private static readonly bool sEmbedContent = Args.Get<bool>("EmbedContent");
 
         private static Dictionary<string, string> sEntries = new Dictionary<string, string>();
     }

@@ -69,8 +69,11 @@
       <EnableDPIAwareness>true</EnableDPIAwareness>
     </Manifest>
     <PreBuildEvent>
-      <Command>$(SolutionIntermediateDir)Ten18.Build.exe -EmbedContent -WorkingDir $(SolutionIntermediateDir)</Command>
+      <Command>$(SolutionIntermediateDir)Ten18.Build.exe -WorkingDir $(SolutionIntermediateDir) -ProcessData</Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>$(SolutionIntermediateDir)Ten18.Build.exe -WorkingDir $(SolutionIntermediateDir) -UpdateNativeExportTable</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -114,8 +117,11 @@
       <EnableDPIAwareness>true</EnableDPIAwareness>
     </Manifest>
     <PreBuildEvent>
-      <Command>$(SolutionIntermediateDir)Ten18.Build.exe -EmbedContent -WorkingDir $(SolutionIntermediateDir)</Command>
+      <Command>$(SolutionIntermediateDir)Ten18.Build.exe -WorkingDir $(SolutionIntermediateDir) -ProcessData</Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>$(SolutionIntermediateDir)Ten18.Build.exe -WorkingDir $(SolutionIntermediateDir) -UpdateNativeExportTable</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Ten18\Assert.cpp" />

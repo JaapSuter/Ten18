@@ -29,6 +29,11 @@ std::vector<HMODULE> Ten18::Util::EnumerateModules()
     return modules;
 }
 
+bool Ten18::Util::FileExists(const wchar_t *fileName)
+{
+    return INVALID_FILE_ATTRIBUTES != GetFileAttributes(fileName);
+}
+
 int Ten18::Util::EnumerateNativeThreads(bool traceFullInfo, const char* msg)
 {
     UNREFERENCED_PARAMETER(traceFullInfo);

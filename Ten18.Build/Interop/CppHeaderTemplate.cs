@@ -23,7 +23,7 @@ namespace Ten18.Interop
             var code = TransformText();
             File.WriteAllText(mCppHeaderFile, code);
 
-            Console.WriteLine("Updated: {0}", mCppHeaderFile);
+            Console.WriteLine("Updating C++ Header File: {0}", mCppHeaderFile);
         }
 
         private string mCppHeaderFile;

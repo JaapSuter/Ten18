@@ -33,8 +33,7 @@ namespace Ten18.Build
 
             Debug.Assert(File.Exists(Path.Combine(slnDir, "Ten18.sln")));
             SolutionDir = slnDir;
-            Console.WriteLine(SolutionDir);
-
+            
             KeyFile = Path.Combine(slnDir, "Ten18.snk");
             Debug.Assert(File.Exists(KeyFile));
 
