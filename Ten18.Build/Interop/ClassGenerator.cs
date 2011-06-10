@@ -2,6 +2,8 @@
 using System.Linq;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+using Mono.Cecil.Rocks;
+using System;
 
 namespace Ten18.Interop
 {
@@ -10,17 +12,26 @@ namespace Ten18.Interop
         public static void Generate(TypeDefinition typeDef)
         {
             Debug.Assert(typeDef.IsClass);
-            Debug.Assert(typeDef.IsAbstract);
 
-            var cppThisPtr = new FieldDefinition("mCppThisPtr", FieldAttributes.InitOnly | FieldAttributes.Private, Globals.VoidStar);
-            typeDef.Fields.Add(cppThisPtr);
-            typeDef.IsAbstract = false;
-            typeDef.IsSealed = true;
+            var noThisPointer = typeDef.IsAbstract && typeDef.IsSealed;
+            
+            var cppThisPtr = noThisPointer
+                           ? (FieldDefinition) null
+                           : new FieldDefinition("mCppThisPtr", FieldAttributes.InitOnly | FieldAttributes.Private, Globals.VoidStar);
 
-            CreateExplicitDefaultConstructorIfNoneDefined(typeDef);
+            if (noThisPointer)
+            {
+                Debug.Assert(!typeDef.Methods.Any(md => !md.IsStatic));
+            }
+            else
+            {
+                typeDef.Fields.Add(cppThisPtr);
+                
+                CreateExplicitDefaultConstructorIfNoneDefined(typeDef);
 
-            PatchConstructors(typeDef, cppThisPtr);
-
+                PatchConstructors(typeDef, cppThisPtr);
+            }
+            
             var cppHeaderTemplate = new CppHeaderTemplate(typeDef);
             GenerateMethods(typeDef, cppThisPtr, cppHeaderTemplate);
 
@@ -57,7 +68,7 @@ namespace Ten18.Interop
         private static void GenerateMethods(TypeDefinition typeDef, FieldDefinition cppThisPtr, CppHeaderTemplate cppHeaderTemplate)
         {
             var methodDefs = from methodDef in typeDef.Methods
-                             where methodDef.IsAbstract
+                             where methodDef.HasNativeAttribute()
                              select methodDef;
 
             foreach (var methodDef in methodDefs.ToArray())

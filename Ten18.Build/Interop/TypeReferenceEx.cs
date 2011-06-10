@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Linq;
+using System.Diagnostics;
 using Mono.Cecil;
 
 namespace Ten18.Interop
@@ -78,9 +80,7 @@ namespace Ten18.Interop
                 case MetadataType.Void:
                     return "void";
                 default:
-                    var error = "[Unhandled C++ Type For: " + self.FullName + "]";
-                    Debug.Fail(error);
-                    return error;
+                    return self.FullName.Replace(".", "::") + "*";
             }
         }
 
@@ -99,6 +99,8 @@ namespace Ten18.Interop
                     return "int";
                 case MetadataType.UIntPtr:
                     return "unsigned int";
+                case MetadataType.Class:
+                    return self.FullName.Replace(".", "::") + " *";
                 default:
                     return FullNameAsCpp(self.GetElementType(), isConst);
             }            

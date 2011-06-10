@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Security;
 using Mono.Cecil;
+using Mono.Cecil.Rocks;
 
 namespace Ten18.Interop
 {
@@ -12,6 +14,8 @@ namespace Ten18.Interop
         public static ModuleReference PInvokeModuleRef { get; private set; }
         
         public static MethodReference SupressUnmanagedCodeSecurityCtor { get; private set; }
+
+        public static TypeReference NativeAttribute { get; private set; }
         
         public static TypeReference Object { get; private set; }
         public static TypeReference Boolean { get; private set; }
@@ -31,6 +35,8 @@ namespace Ten18.Interop
 
             PInvokeModuleRef = new ModuleReference("Ten18.exe");
             moduleDef.ModuleReferences.Add(PInvokeModuleRef);
+
+            NativeAttribute = moduleDef.GetType("Ten18.NativeAttribute");
 
             SupressUnmanagedCodeSecurityCtor = moduleDef.Import(typeof(SuppressUnmanagedCodeSecurityAttribute).GetConstructor(Type.EmptyTypes));
 

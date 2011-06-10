@@ -33,6 +33,11 @@ namespace Ten18.Build
             proc.BeginErrorReadLine();
             proc.BeginOutputReadLine();
             var exited = proc.WaitForExit(maxTimeOutMs);
+
+            // If we exited properly, wait again without a timeout, which per little known MSDN trickery will flush asynchronous stdout and stderr...
+            if (exited)
+                proc.WaitForExit();
+
             proc.CancelOutputRead();
             proc.CancelErrorRead();
 

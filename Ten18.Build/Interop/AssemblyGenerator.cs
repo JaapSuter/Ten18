@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -41,11 +42,8 @@ namespace Ten18.Interop
             Globals.Initialize(moduleDef);
 
             foreach (var typeDef in moduleDef.Types)
-                if (typeDef.IsEnum) { }
-                else
-                    if (typeDef.IsValueType) { }
-                    else
-                        if (typeDef.IsClass && typeDef.IsAbstract) ClassGenerator.Generate(typeDef);
+                if (typeDef.IsClass && typeDef.Methods.Any(md => md.HasNativeAttribute()))
+                    ClassGenerator.Generate(typeDef);
 
             assemblyDef.Name.Name = assemblyDef.Name.Name + ".Generated";
             assemblyDef.Write(generatedPath, new WriterParameters
@@ -54,9 +52,17 @@ namespace Ten18.Interop
                 StrongNameKeyPair = new StrongNameKeyPair(File.ReadAllBytes(Paths.KeyFile)),
             });
 
-            PostProcess(generatedPath, debug); ;
+            PostProcess(generatedPath, debug);
 
-            ExportTable.Verify();
+            try
+            {
+                ExportTable.Verify();
+            }
+            catch (Exception)
+            {
+                File.Delete(generatedPath);
+                throw;
+            }
         }
 
         private static void PostProcess(string assemblyFullPath, bool debug)
@@ -72,6 +78,7 @@ namespace Ten18.Interop
             //      * [IL]: Error: [found unmanaged pointer] Expected ByRef on the stack.(Error: 0x80131860)
             //      * [IL]: Error: [found ref 'System.String'] Expected numeric type on the stack.(Error: 0x8013185D)
             //      * [IL]: Error: Instruction cannot be verified.(Error: 0x8013186E)
+                        
             Tool.Run(Paths.PEVerifyExe, Paths.WorkingDir, "{0} /VERBOSE /NOLOGO /HRESULT /IGNORE=0x80131854,0x80131860,0x8013185D,0x8013186E", assemblyFullPath);
         }
     }

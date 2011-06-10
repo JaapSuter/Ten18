@@ -152,6 +152,7 @@
     <ClCompile Include="Ten18\Memory.cpp" />
     <ClCompile Include="Ten18\Program.cpp" />
     <ClCompile Include="Ten18\RawInput.cpp" />
+    <ClCompile Include="Ten18\Services.cpp" />
     <ClCompile Include="Ten18\Timer.cpp" />
     <ClCompile Include="Ten18\Tracer.cpp" />
     <ClCompile Include="Ten18\Util.cpp" />
@@ -193,6 +194,7 @@
     </ClCompile>
     <ClInclude Include="Ten18\RawInput.h" />
     <ClInclude Include="Ten18\Scoped.h" />
+    <ClInclude Include="Ten18\Services.h" />
     <ClInclude Include="Ten18\Timer.h" />
     <ClInclude Include="Ten18\Tracer.h" />
     <ClInclude Include="Ten18\Util.h" />

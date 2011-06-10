@@ -48,8 +48,7 @@ namespace Ten18
             {
                 CompileShaders(debug);
                                 
-                EmbedAssembly("Ten18.Interop.Generated");
-                EmbedAssembly("Ten18.Net");
+                EmbedAssembly("Ten18.Net.Generated");
                 EmbedAssembly("SlimMath");
                 EmbedAssembly("AsyncCtpLibrary");
 

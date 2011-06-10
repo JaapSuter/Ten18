@@ -43,13 +43,15 @@
     <Reference Include="System.Reactive.ClientProfile, Version=1.0.2856.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Reactive.ExtendedProfile, Version=1.0.2856.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Reactive.Testing, Version=1.0.2856.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="Ten18.Interop.Generated, Version=1.0.1.8, Culture=neutral, PublicKeyToken=39a56a431d4ba826, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\obj\x86\Debug\Ten18.Interop.Generated.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Benchmark.cs" />
+    <Compile Include="Capture\CaptureSource.cs" />
+    <Compile Include="Graphics\GraphicsDevice.cs" />
+    <Compile Include="Graphics\Image.cs" />
+    <Compile Include="Input.cs" />
+    <Compile Include="InputEvent.cs" />
+    <Compile Include="NativeAttribute.cs" />
     <Compile Include="Provider.cs" />
     <Compile Include="DebugTextWriter.cs" />
     <Compile Include="Interop\AppDomainManagerEx.cs" />
@@ -59,13 +61,14 @@
     <Compile Include="Async\CoroutineSynchronizationContext.cs" />
     <Compile Include="Async\SingleThreadConstraint.cs" />
     <Compile Include="Async\Heart.cs" />
+    <Compile Include="Services.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="EntryPoint.cs" />
+    <Compile Include="Window.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>$(OutputPath)\Ten18.Build.exe -ImplementInteropAssembly  $(TargetPath) -WorkingDir $(SolutionIntermediateDir)</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>

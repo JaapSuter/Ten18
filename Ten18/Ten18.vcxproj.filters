@@ -103,6 +103,9 @@
     <ClCompile Include="Ten18\Memory.cpp">
       <Filter>Ten18</Filter>
     </ClCompile>
+    <ClCompile Include="Ten18\Services.cpp">
+      <Filter>Ten18</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ten18\PCH.h">
@@ -214,6 +217,9 @@
       <Filter>Ten18\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Ten18\Memory.h">
+      <Filter>Ten18</Filter>
+    </ClInclude>
+    <ClInclude Include="Ten18\Services.h">
       <Filter>Ten18</Filter>
     </ClInclude>
   </ItemGroup>

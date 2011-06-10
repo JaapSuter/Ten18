@@ -1,19 +1,20 @@
-﻿using Ten18.Graphics;
-using System;
+﻿using System;
 using SlimMath;
+using Ten18.Graphics;
 
 namespace Ten18.Capture
 {
-    public abstract class CaptureSource : IDisposable
+    public class CaptureSource : IDisposable
     {
         public CaptureSource()
         {
             WhenFrame = null;
         }
 
-        public abstract void Dispose();
+        [Native]
+        public extern void Dispose();
 
-        public abstract Vector2 Size { get; }
+        public extern Vector2 Size { [Native] get; }
 
         public IObservable<Image> WhenFrame { get; private set; }
     }

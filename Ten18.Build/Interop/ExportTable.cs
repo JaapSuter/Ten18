@@ -115,16 +115,20 @@ namespace Ten18.Interop
             var undecorationFlags = 0x8000;
             var undecoratedPrefix = "is :- ";
             
-            var lines = Tool.Run(Paths.UndName, Paths.MsPdbDllDir, "{0} {1}", undecorationFlags.ToString(), decoratedName)
-                            .Split('\n');
+            var output = Tool.Run(Paths.UndName, Paths.MsPdbDllDir, "{0} {1}", undecorationFlags.ToString(), decoratedName);
+            var found = output.Split('\n').FirstOrDefault(l => l.Trim().StartsWith(undecoratedPrefix));
+            
+            if (found != null)
+                return found.Replace(undecoratedPrefix, "")
+                            .Trim('\"')
+                            .Replace("(void)", "()");
 
-            return lines.First(l => l.StartsWith(undecoratedPrefix))
-                        .Replace(undecoratedPrefix, "")
-                        .Trim('\"')
-                        .Replace("(void)", "()");
+            Console.WriteLine("Error trying to undecorate: {0}", decoratedName);
+            Console.WriteLine("Undname output: {0}", output);
+            return "UndecorateError";
         }
 
-        private static readonly string sExportsFile = Path.Combine(Paths.WorkingDir, "Ten18.Interop.Native.Exports.txt");
+        private static readonly string sExportsFile = Path.Combine(Paths.WorkingDir, "Ten18.Net.Imports.txt");
         private static readonly IDictionary<string, int> sOrdinals = Initialize();
 
         private static IDictionary<string, int> Initialize()

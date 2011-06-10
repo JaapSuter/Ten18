@@ -27,10 +27,11 @@ namespace Ten18.Interop
         public MethodGenerator(MethodDefinition methodDef)
         {
             Debug.Assert(!methodDef.IsConstructor);
-            Debug.Assert(methodDef.IsAbstract);
-
+            Debug.Assert(methodDef.HasNativeAttribute());
+                        
             mMethodDef = methodDef;
-
+            mMethodDef.RemoveNativeAttribute();
+            
             var callConvAttribute = methodDef.IsStatic ? PInvokeAttributes.CallConvStdCall : PInvokeAttributes.CallConvThiscall;
 
             mPInvokeDef = new MethodDefinition(Globals.PInvokePrefix + methodDef.Name, MethodAttributes.Private | MethodAttributes.PInvokeImpl | MethodAttributes.Static, methodDef.ReturnType);
@@ -136,10 +137,8 @@ namespace Ten18.Interop
         {
             Debug.Assert(ctorDef.IsConstructor);
 
-            // We're specifying this factory method as both abstract and static. That doesn't make sense in the CLR, but the method won't actually
-            // be abstract then anymore, just static. Abstract is merely a marker that tells this program to provide an interop export
-            // based implementation. Perhaps it'd be better to introduce a "CustomDllImportAttribute" type instead, but alas... no time.
-            var methodDef = new MethodDefinition("New", MethodAttributes.Static | MethodAttributes.Abstract | MethodAttributes.Assembly, Globals.Void.MakePointerType());
+            var methodDef = new MethodDefinition("New", MethodAttributes.Static | MethodAttributes.Assembly, Globals.Void.MakePointerType());
+            methodDef.CustomAttributes.Add(new CustomAttribute(Globals.NativeAttribute.Resolve().GetConstructors().First(ctor => !ctor.HasParameters)));
             ctorDef.Parameters.Run(p => methodDef.Parameters.Add(new ParameterDefinition(p.Name, p.Attributes, p.ParameterType)));
 
             typeDef.Methods.Add(methodDef);

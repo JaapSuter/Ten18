@@ -54,6 +54,11 @@ void* GraphicsDevice::New()
     return &GraphicsDevice::Instance();
 }
 
+void GraphicsDevice::Placeholder()
+{
+
+}
+
 GraphicsDevice::GraphicsDevice() : 
     mReposeInducedDwmFlushReq(), mDynamicTexturesLRU(), mFpsTex()
 {

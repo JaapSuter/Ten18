@@ -32,7 +32,7 @@ namespace Ten18 { namespace Content
                 if (mIsEmbedded)
                     return;
                 
-                if (!Data)
+                if (Data)
                     Memory::Free(const_cast<char*>(Data));
                 Data = nullptr;
             }

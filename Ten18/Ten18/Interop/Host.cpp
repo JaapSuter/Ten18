@@ -52,7 +52,7 @@ Host::Host(const Action& onExit) :
     const DWORD maxGen0Size = 2 * 1024 * 1024;
     Expect.HR = mGCManager->SetGCStartupLimits(segmentSize, maxGen0Size);
 
-    const auto assemblyName = L"Ten18.Net, Version=1.0.1.8, PublicKeyToken=39a56a431d4ba826, culture=neutral";
+    const auto assemblyName = L"Ten18.Net.Generated, Version=1.0.1.8, PublicKeyToken=39a56a431d4ba826, culture=neutral";
     const auto domainManager = L"Ten18.Interop.AppDomainManagerEx";
     Expect.HR = mClrControl->SetAppDomainManagerType(assemblyName, domainManager);
 
