@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitignore" />
+    <None Include="LICENSE" />
+    <None Include="README" />
+    <None Include="src\Ten18\Graphics\Shaders\Common.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Ten18\Assert.cpp" />
+    <ClCompile Include="src\Ten18\Capture\CaptureSource.cpp" />
+    <ClCompile Include="src\Ten18\Capture\CLEyeCapture.cpp" />
+    <ClCompile Include="src\Ten18\Capture\MediaFoundationCapture.cpp" />
+    <ClCompile Include="src\Ten18\Capture\MediaFoundationLogger.cpp" />
+    <ClCompile Include="src\Ten18\COM\COMPtr.cpp" />
+    <ClCompile Include="src\Ten18\Console.cpp" />
+    <ClCompile Include="src\Ten18\Expect.cpp" />
+    <ClCompile Include="src\Ten18\Graphics\Display.cpp" />
+    <ClCompile Include="src\Ten18\Graphics\GraphicsDevice.cpp" />
+    <ClCompile Include="src\Ten18\Graphics\Image.cpp" />
+    <ClCompile Include="src\Ten18\Graphics\SwapChain.cpp" />
+    <ClCompile Include="src\Ten18\Graphics\TextureLoader.cpp" />
+    <ClCompile Include="src\Ten18\Graphics\Vertex.cpp" />
+    <ClCompile Include="src\Ten18\Graphics\Writer.cpp" />
+    <ClCompile Include="src\Ten18\Input.cpp" />
+    <ClCompile Include="src\Ten18\Libraries.cpp" />
+    <ClCompile Include="src\Ten18\Memory.cpp" />
+    <ClCompile Include="src\Ten18\PCH.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\Ten18\RawInput.cpp" />
+    <ClCompile Include=".\src\Ten18\Format.cpp" />
+    <ClCompile Include="src\Ten18\Timer.cpp" />
+    <ClCompile Include="src\Ten18\Tracer.cpp" />
+    <ClCompile Include="src\Ten18\Util.cpp" />
+    <ClCompile Include="src\Ten18\Window.cpp" />
+    <ClCompile Include="src\Ten18\WinMain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Ten18\Assert.h" />
+    <ClInclude Include="src\Ten18\Capture\CaptureSource.h" />
+    <ClInclude Include="src\Ten18\Capture\CLEyeCapture.h" />
+    <ClInclude Include="src\Ten18\Capture\MediaFoundationCapture.h" />
+    <ClInclude Include="src\Ten18\Capture\MediaFoundationLogger.h" />
+    <ClInclude Include="src\Ten18\COM\COMArray.h" />
+    <ClInclude Include="src\Ten18\COM\COMPtr.h" />
+    <ClInclude Include="src\Ten18\COM\EmbeddedResourceStream.h" />
+    <ClInclude Include="src\Ten18\COM\ImplUnknown.h" />
+    <ClInclude Include="src\Ten18\COM\StackBasedSafeArray.h" />
+    <ClInclude Include="src\Ten18\Console.h" />
+    <ClInclude Include="src\Ten18\Expect.h" />
+    <ClInclude Include="src\Ten18\Graphics\Constants.h" />
+    <ClInclude Include="src\Ten18\Graphics\Display.h" />
+    <ClInclude Include="src\Ten18\Graphics\GraphicsDevice.h" />
+    <ClInclude Include="src\Ten18\Graphics\Image.h" />
+    <ClInclude Include="src\Ten18\Graphics\SwapChain.h" />
+    <ClInclude Include="src\Ten18\Graphics\TextureLoader.h" />
+    <ClInclude Include="src\Ten18\Graphics\Util.h" />
+    <ClInclude Include="src\Ten18\Graphics\Vertex.h" />
+    <ClInclude Include="src\Ten18\Graphics\Writer.h" />
+    <ClInclude Include="src\Ten18\Input.h" />
+    <ClInclude Include="src\Ten18\Memory.h" />
+    <ClInclude Include="src\Ten18\OnExit.h" />
+    <ClInclude Include="src\Ten18\PCH.h" />
+    <ClInclude Include="src\Ten18\Preprocessor.h" />
+    <ClInclude Include="src\Ten18\RawInput.h" />
+    <ClInclude Include="src\Ten18\Scoped.h" />
+    <ClInclude Include=".\src\Ten18\Format.h" />
+    <ClInclude Include="src\Ten18\Timer.h" />
+    <ClInclude Include="src\Ten18\Tracer.h" />
+    <ClInclude Include="src\Ten18\Util.h" />
+    <ClInclude Include="src\Ten18\Window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="src\Ten18\Graphics\Shaders\PSCapture.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.1</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="src\Ten18\Graphics\Shaders\PSGrayCode.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.1</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="src\Ten18\Graphics\Shaders\VSTwoDeeShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.1</ShaderModel>
+    </FxCompile>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>Ten18</ProjectName>
+    <ProjectGuid>{B8FF81B5-9B26-4931-8353-0000BA000000}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <VCTargetsPath Condition="'$(VCTargetsPath11)' != '' and '$(VSVersion)' == '' and $(VisualStudioVersion) == ''">$(VCTargetsPath11)</VCTargetsPath>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IntDir>$(SolutionDir)obj\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IntDir>$(SolutionDir)obj\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <OpenMPSupport>false</OpenMPSupport>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>_DEBUG</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Ten18/PCH.h</PrecompiledHeaderFile>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <ForcedIncludeFiles>Ten18/PCH.h</ForcedIncludeFiles>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\lib;$(IncludePath)</AdditionalIncludeDirectories>
+      <SDLCheck>true</SDLCheck>
+      <SmallerTypeCheck>true</SmallerTypeCheck>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <CompileAsManaged>false</CompileAsManaged>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <EnablePREfast>false</EnablePREfast>
+      <ErrorReporting>None</ErrorReporting>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <LargeAddressAware>true</LargeAddressAware>
+      <TargetMachine>MachineX86</TargetMachine>
+      <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
+      <ShowProgress>NotSet</ShowProgress>
+      <AdditionalLibraryDirectories>$(SolutionDir)\lib;$(LibraryPath)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
+      <AdditionalOptions>noarg.obj noenv.obj %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+    <Manifest>
+      <EnableDPIAwareness>true</EnableDPIAwareness>
+    </Manifest>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+    <FxCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableOptimizations>true</DisableOptimizations>
+      <EnableDebuggingInformation>true</EnableDebuggingInformation>
+      <ShaderType>Pixel</ShaderType>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <VariableName>%(Filename)</VariableName>
+      <HeaderFileOutput>$(ProjectDir)src\Ten18\Graphics\Shaders\%(Filename).h</HeaderFileOutput>
+      <ObjectFileOutput />
+    </FxCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Full</Optimization>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <OpenMPSupport>false</OpenMPSupport>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <PreprocessorDefinitions>NDEBUG</PreprocessorDefinitions>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <OmitFramePointers>false</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <StringPooling>true</StringPooling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Ten18/PCH.h</PrecompiledHeaderFile>
+      <CompileAsManaged>false</CompileAsManaged>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ForcedIncludeFiles>Ten18/PCH.h</ForcedIncludeFiles>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\lib;$(IncludePath)</AdditionalIncludeDirectories>
+      <ErrorReporting>None</ErrorReporting>
+      <UseFullPaths>true</UseFullPaths>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <LargeAddressAware>true</LargeAddressAware>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)\lib;$(LibraryPath)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
+      <AdditionalOptions>noarg.obj noenv.obj %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+    <Manifest>
+      <EnableDPIAwareness>true</EnableDPIAwareness>
+    </Manifest>
+    <FxCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <HeaderFileOutput>$(ProjectDir)src\Ten18\Graphics\Shaders\%(Filename).h</HeaderFileOutput>
+      <VariableName>%(Filename)</VariableName>
+      <ObjectFileOutput />
+      <DisableOptimizations>false</DisableOptimizations>
+      <EnableDebuggingInformation>false</EnableDebuggingInformation>
+      <ShaderType>Pixel</ShaderType>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </FxCompile>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

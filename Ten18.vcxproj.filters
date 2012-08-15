@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include=".gitignore" />
+    <None Include="LICENSE" />
+    <None Include="README" />
+    <None Include="src\Ten18\Graphics\Shaders\Common.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Ten18\Capture\CaptureSource.cpp" />
+    <ClCompile Include="src\Ten18\Capture\CLEyeCapture.cpp" />
+    <ClCompile Include="src\Ten18\Capture\MediaFoundationCapture.cpp" />
+    <ClCompile Include="src\Ten18\Capture\MediaFoundationLogger.cpp" />
+    <ClCompile Include="src\Ten18\COM\COMPtr.cpp" />
+    <ClCompile Include="src\Ten18\Graphics\Display.cpp" />
+    <ClCompile Include="src\Ten18\Graphics\GraphicsDevice.cpp" />
+    <ClCompile Include="src\Ten18\Graphics\Image.cpp" />
+    <ClCompile Include="src\Ten18\Graphics\SwapChain.cpp" />
+    <ClCompile Include="src\Ten18\Graphics\TextureLoader.cpp" />
+    <ClCompile Include="src\Ten18\Graphics\Vertex.cpp" />
+    <ClCompile Include="src\Ten18\Graphics\Writer.cpp" />
+    <ClCompile Include="src\Ten18\Assert.cpp" />
+    <ClCompile Include="src\Ten18\Console.cpp" />
+    <ClCompile Include="src\Ten18\Expect.cpp" />
+    <ClCompile Include="src\Ten18\Input.cpp" />
+    <ClCompile Include="src\Ten18\Libraries.cpp" />
+    <ClCompile Include="src\Ten18\Memory.cpp" />
+    <ClCompile Include="src\Ten18\PCH.cpp" />
+    <ClCompile Include="src\Ten18\RawInput.cpp" />
+    <ClCompile Include="src\Ten18\Timer.cpp" />
+    <ClCompile Include="src\Ten18\Tracer.cpp" />
+    <ClCompile Include="src\Ten18\Util.cpp" />
+    <ClCompile Include="src\Ten18\Window.cpp" />
+    <ClCompile Include="src\Ten18\WinMain.cpp" />
+    <ClCompile Include=".\src\Ten18\Format.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Ten18\Capture\CaptureSource.h" />
+    <ClInclude Include="src\Ten18\Capture\CLEyeCapture.h" />
+    <ClInclude Include="src\Ten18\Capture\MediaFoundationCapture.h" />
+    <ClInclude Include="src\Ten18\Capture\MediaFoundationLogger.h" />
+    <ClInclude Include="src\Ten18\COM\COMArray.h" />
+    <ClInclude Include="src\Ten18\COM\COMPtr.h" />
+    <ClInclude Include="src\Ten18\COM\EmbeddedResourceStream.h" />
+    <ClInclude Include="src\Ten18\COM\ImplUnknown.h" />
+    <ClInclude Include="src\Ten18\COM\StackBasedSafeArray.h" />
+    <ClInclude Include="src\Ten18\Graphics\Constants.h" />
+    <ClInclude Include="src\Ten18\Graphics\Display.h" />
+    <ClInclude Include="src\Ten18\Graphics\GraphicsDevice.h" />
+    <ClInclude Include="src\Ten18\Graphics\Image.h" />
+    <ClInclude Include="src\Ten18\Graphics\SwapChain.h" />
+    <ClInclude Include="src\Ten18\Graphics\TextureLoader.h" />
+    <ClInclude Include="src\Ten18\Graphics\Vertex.h" />
+    <ClInclude Include="src\Ten18\Graphics\Writer.h" />
+    <ClInclude Include="src\Ten18\Assert.h" />
+    <ClInclude Include="src\Ten18\Console.h" />
+    <ClInclude Include="src\Ten18\Expect.h" />
+    <ClInclude Include="src\Ten18\Input.h" />
+    <ClInclude Include="src\Ten18\Memory.h" />
+    <ClInclude Include="src\Ten18\OnExit.h" />
+    <ClInclude Include="src\Ten18\PCH.h" />
+    <ClInclude Include="src\Ten18\RawInput.h" />
+    <ClInclude Include="src\Ten18\Scoped.h" />
+    <ClInclude Include="src\Ten18\Timer.h" />
+    <ClInclude Include="src\Ten18\Tracer.h" />
+    <ClInclude Include="src\Ten18\Util.h" />
+    <ClInclude Include="src\Ten18\Window.h" />
+    <ClInclude Include="src\Ten18\Preprocessor.h" />
+    <ClInclude Include=".\src\Ten18\Format.h" />
+    <ClInclude Include="src\Ten18\Graphics\Util.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="src\Ten18\Graphics\Shaders\PSCapture.hlsl" />
+    <FxCompile Include="src\Ten18\Graphics\Shaders\PSGrayCode.hlsl" />
+    <FxCompile Include="src\Ten18\Graphics\Shaders\VSTwoDeeShader.hlsl" />
+  </ItemGroup>
+</Project>

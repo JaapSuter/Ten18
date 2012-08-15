@@ -5,8 +5,6 @@
 *.bak
 *.ilk
 *.log
-*.lib
-!Libraries/CLEyeMulticam.lib
 *.sbr
 *.sdf
 *.opensdf
