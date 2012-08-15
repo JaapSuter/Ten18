@@ -51,7 +51,7 @@ namespace Ten18 { namespace Graphics {
         COM::COMPtr<IDXGIFactory2>              mDXGIFactory2;
         COM::COMPtr<ID3D11Device1>              mD3D11Device1;
         COM::COMPtr<ID3D11Debug>                mD3D11Debug;
-        COM::COMPtr<ID3D11DeviceContext>        mImmediateContext;
+        COM::COMPtr<ID3D11DeviceContext1>       mImmediateContext1;
 
         Writer                                  mWriter;
 

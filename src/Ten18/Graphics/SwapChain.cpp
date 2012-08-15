@@ -90,15 +90,15 @@ void SwapChain::Tick()
     float t = (dwTimeCur - dwTimeStart) / 1000.0f;
     Ten18_UNUSED(t);
 
-    mDevice.mImmediateContext->ClearRenderTargetView(mRenderTargetView.Raw(), DirectX::Colors::Black.f);
+    mDevice.mImmediateContext1->ClearRenderTargetView(mRenderTargetView.Raw(), DirectX::Colors::Black.f);
 
     D3D11_VIEWPORT vp = {};
     vp.Width = static_cast<float>(mClientRect.right - mClientRect.left);
     vp.Height = static_cast<float>(mClientRect.bottom - mClientRect.top);
     vp.MaxDepth = 1.0f;
 
-    mDevice.mImmediateContext->RSSetViewports(1, &vp);
-    mDevice.mImmediateContext->OMSetRenderTargets(1, mRenderTargetView.AsUnsafeArrayOfOne(), nullptr);
+    mDevice.mImmediateContext1->RSSetViewports(1, &vp);
+    mDevice.mImmediateContext1->OMSetRenderTargets(1, mRenderTargetView.AsUnsafeArrayOfOne(), nullptr);
 
     auto near = 0.0f;
     auto far = 1.0f;
@@ -120,13 +120,13 @@ void SwapChain::Tick()
     mConstants.mBitStep = (BitStepCounter / DivBitStep) % MaxBitStep;
     ++BitStepCounter;
     
-    mDevice.mImmediateContext->UpdateSubresource(mDevice.mConstantBuffer.Raw(), 0, nullptr, &mConstants, 0, 0);
-    mDevice.mImmediateContext->Draw(3, 0);
+    mDevice.mImmediateContext1->UpdateSubresource(mDevice.mConstantBuffer.Raw(), 0, nullptr, &mConstants, 0, 0);
+    mDevice.mImmediateContext1->Draw(3, 0);
 
     if (mDevice.mFpsTex)
     {
-        mDevice.mImmediateContext->PSSetShaderResources(0, 1, &mDevice.mFpsTex);
-        mDevice.mImmediateContext->Draw(4, 0);
+        mDevice.mImmediateContext1->PSSetShaderResources(0, 1, &mDevice.mFpsTex);
+        mDevice.mImmediateContext1->Draw(4, 0);
     }
 
     DXGI_PRESENT_PARAMETERS pp = {};

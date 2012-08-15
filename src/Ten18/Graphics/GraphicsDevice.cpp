@@ -58,15 +58,20 @@ GraphicsDevice::GraphicsDevice() :
     
     auto featureLevel = D3D_FEATURE_LEVEL();
     const auto driverType = D3D_DRIVER_TYPE_HARDWARE;
-                            
-    COM::COMPtr<ID3D11Device> device;
-    Ten18_EXPECT.HR = D3D11CreateDevice(nullptr, driverType, nullptr,
-                                  flags, nullptr, 0, D3D11_SDK_VERSION,
-                                  device.AsTypedDoubleStar(), &featureLevel, mImmediateContext.AsTypedDoubleStar());
-    SetDebugName(mD3D11Device1, "D3D11Device");
-    SetDebugName(mImmediateContext, "ImmediateContext");
+                       
+    {
+        COM::COMPtr<ID3D11Device> device;
+        COM::COMPtr<ID3D11DeviceContext> immediateContext;
+        Ten18_EXPECT.HR = D3D11CreateDevice(nullptr, driverType, nullptr,
+                                    flags, nullptr, 0, D3D11_SDK_VERSION,
+                                    device.AsTypedDoubleStar(), &featureLevel, immediateContext.AsTypedDoubleStar());
+        
+        device.QueryInto(mD3D11Device1);
+        SetDebugName(mD3D11Device1, "D3D11Device1");
 
-    Ten18_EXPECT.True = device.TryQueryInto(mD3D11Device1);
+        immediateContext.QueryInto(mImmediateContext1);
+        SetDebugName(mImmediateContext1, "ImmediateContext1");
+    }
 
     if (flags & D3D11_CREATE_DEVICE_DEBUG)
         mD3D11Device1.QueryInto(mD3D11Debug);
@@ -155,22 +160,23 @@ GraphicsDevice::GraphicsDevice() :
 
     // UINT stride = sizeof(Vertex);
     // UINT offset = 0;
-    // mImmediateContext->IASetVertexBuffers(0, 1, mVertexBuffer.AsUnsafeArrayOfOne(), &stride, &offset);
-    // mImmediateContext->IASetIndexBuffer(nullptr, DXGI_FORMAT_R16_UINT, 0);
-    mImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    mImmediateContext->IASetInputLayout(mVertexLayout.Raw());
+    // mImmediateContext1->IASetVertexBuffers(0, 1, mVertexBuffer.AsUnsafeArrayOfOne(), &stride, &offset);
+    // mImmediateContext1->IASetIndexBuffer(nullptr, DXGI_FORMAT_R16_UINT, 0);
+    // mImmediateContext1->IASetInputLayout(mVertexLayout.Raw());
+    mImmediateContext1->IASetInputLayout(nullptr);
+    mImmediateContext1->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    
+    mImmediateContext1->OMSetBlendState(mAlphaBlendState.Raw(), 0, UINT_MAX);
+    mImmediateContext1->RSSetState(mRasterizerState.Raw());
 
-    mImmediateContext->OMSetBlendState(mAlphaBlendState.Raw(), 0, UINT_MAX);
-    mImmediateContext->RSSetState(mRasterizerState.Raw());
+    mImmediateContext1->PSSetShaderResources(0, 1, mTextureRV.AsUnsafeArrayOfOne());
+    mImmediateContext1->PSSetSamplers(0, 1, mSamplerLinear.AsUnsafeArrayOfOne());
 
-    mImmediateContext->PSSetShaderResources(0, 1, mTextureRV.AsUnsafeArrayOfOne());
-    mImmediateContext->PSSetSamplers(0, 1, mSamplerLinear.AsUnsafeArrayOfOne());
-
-    mImmediateContext->PSSetShader(mCapturePixelShader.Raw(), nullptr, 0);
-    mImmediateContext->PSSetConstantBuffers(0, 1, mConstantBuffer.AsUnsafeArrayOfOne());
+    mImmediateContext1->PSSetShader(mCapturePixelShader.Raw(), nullptr, 0);
+    mImmediateContext1->PSSetConstantBuffers(0, 1, mConstantBuffer.AsUnsafeArrayOfOne());
         
-    mImmediateContext->VSSetShader(mTwoDeeVertexShader.Raw(), nullptr, 0);
-    mImmediateContext->VSSetConstantBuffers(0, 1, mConstantBuffer.AsUnsafeArrayOfOne());
+    mImmediateContext1->VSSetShader(mTwoDeeVertexShader.Raw(), nullptr, 0);
+    mImmediateContext1->VSSetConstantBuffers(0, 1, mConstantBuffer.AsUnsafeArrayOfOne());
 
     mWriter.Initialize(*mDXGIAdapter2, *mDXGIDevice2, *mD3D11Device1);
 }
@@ -198,10 +204,10 @@ void GraphicsDevice::InitializeShaders()
 
 GraphicsDevice::~GraphicsDevice()
 {
-    if (mImmediateContext)
+    if (mImmediateContext1)
     {
-        mImmediateContext->ClearState();
-        mImmediateContext->Flush();
+        mImmediateContext1->ClearState();
+        mImmediateContext1->Flush();
     }
 }
 
@@ -310,7 +316,7 @@ void GraphicsDevice::TickDynamicTextures(Image::Ptr&& img)
 {
     if (!img)
     {
-        mImmediateContext->PSSetShaderResources(0, 1, mDynamicShaderResourceViews[mDynamicTexturesLRU].AsUnsafeArrayOfOne());
+        mImmediateContext1->PSSetShaderResources(0, 1, mDynamicShaderResourceViews[mDynamicTexturesLRU].AsUnsafeArrayOfOne());
         return;
     }
 
@@ -322,7 +328,7 @@ void GraphicsDevice::TickDynamicTextures(Image::Ptr&& img)
     // Todo, Jaap Suter, April 2011: figure out why D3D11_MAP_FLAG_DO_NOT_WAIT doesn't jive with D3D11_MAP_WRITE_DISCARD here.
     D3D11_MAPPED_SUBRESOURCE msr = {};
     {
-        auto hr = mImmediateContext->Map(lru.Raw(), 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
+        auto hr = mImmediateContext1->Map(lru.Raw(), 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
         if (hr == DXGI_ERROR_WAS_STILL_DRAWING)
         {
             DebugOut("DXGI_ERROR_WAS_STILL_DRAWING");
@@ -330,7 +336,7 @@ void GraphicsDevice::TickDynamicTextures(Image::Ptr&& img)
         }
         else Ten18_EXPECT.HR = hr;
 
-        OnExit oe([&] { mImmediateContext->Unmap(lru.Raw(), 0); });
+        OnExit oe([&] { mImmediateContext1->Unmap(lru.Raw(), 0); });
     }
 
     if (static_cast<int>(msr.RowPitch) == img->RowPitch())
@@ -343,7 +349,7 @@ void GraphicsDevice::TickDynamicTextures(Image::Ptr&& img)
         memcpy_s(dst, len, src, len);
     }
 
-    mImmediateContext->PSSetShaderResources(0, 1, mDynamicShaderResourceViews[mDynamicTexturesLRU].AsUnsafeArrayOfOne());
+    mImmediateContext1->PSSetShaderResources(0, 1, mDynamicShaderResourceViews[mDynamicTexturesLRU].AsUnsafeArrayOfOne());
 }
 
 void GraphicsDevice::TickFrameRate()

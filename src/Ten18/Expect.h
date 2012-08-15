@@ -20,7 +20,7 @@ namespace Ten18 {
             {
                 if (static_cast<T>(mT) != t)
                     if (Ten18::Assert::ReportFailure(nullptr, tSourceFile, tLineNumber, nullptr, S_OK, GetLastError()))
-                        __debugbreak();
+                        DebugBreak();
                 return t;
             }
 
@@ -40,7 +40,7 @@ namespace Ten18 {
             {
                 if (static_cast<T>(mT) == t)
                     if (Ten18::Assert::ReportFailure(nullptr, tSourceFile, tLineNumber, nullptr, S_OK, GetLastError()))
-                        __debugbreak();
+                        DebugBreak();
                 return t;
             }
 
@@ -56,7 +56,7 @@ namespace Ten18 {
                 static_assert(std::is_scalar<T>::value, "");
                 if (!t)
                     if (Ten18::Assert::ReportFailure(nullptr, tSourceFile, tLineNumber, nullptr, S_OK, GetLastError()))
-                        __debugbreak();
+                        DebugBreak();
                 
                 return t;
             }
@@ -71,7 +71,7 @@ namespace Ten18 {
             {
                 if (FAILED(hr))
                     if (Ten18::Assert::ReportFailure(nullptr, tSourceFile, tLineNumber, nullptr, hr))
-                        __debugbreak();
+                        DebugBreak();
 		    
                 return hr;
             }

@@ -21,10 +21,11 @@ namespace Ten18
 #define Ten18_UNUSED(x) _CRT_UNUSED(x)
 
 #ifdef Ten18_DEBUG
-    #define Ten18_ASSERT_FMT(expr, fmt, ...) __analysis_assume(!!(expr)); (void) ((!!(expr)) \
-        || (!::Ten18::Assert::ReportFailure(#expr, __FILE__, __LINE__, ::Ten18::Format(fmt, __VA_ARGS__).c_str())) \
-        || (__debugbreak(), 0))
-
+    #define Ten18_ASSERT_FMT(expr, fmt, ...) \
+        ((!!(expr)) || \
+        (!::Ten18::Assert::ReportFailure(#expr, __FILE__, __LINE__, ::Ten18::Format(fmt, __VA_ARGS__).c_str()))) || \
+        (DebugBreak(), 0); \
+        __analysis_assume(!!(expr))        
     #define Ten18_ASSERT(expr) Ten18_ASSERT_FMT(expr, "??")
 
     #define Ten18_FAIL_FMT(fmt, ...) Ten18_ASSERT_FMT(false && "Ten18_FAIL_FMT", fmt, __VA_ARGS__)
